@@ -1,5 +1,6 @@
 ﻿//using UnityEngine;
 //using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -41,7 +42,7 @@ public sealed class CSVLoader {// : MonoBehaviour {
         string allData = sr.ReadToEnd();
 
         //  「,」と改行で分けて配列に格納
-        string[] cell = allData.Split(new string[] { ",", "\r\n" }, System.StringSplitOptions.None);
+        string[] cell = allData.Split(new string[] { ",", Environment.NewLine }, System.StringSplitOptions.None);
 
         //  格納
         foreach(string str in cell)
@@ -72,7 +73,7 @@ public sealed class CSVLoader {// : MonoBehaviour {
         while(!sr.EndOfStream)
         {
             string str = sr.ReadLine();
-            string[] cell = str.Split(new string[] { ",", "\r\n" }, System.StringSplitOptions.None);
+            string[] cell = str.Split(new string[] { ",", Environment.NewLine }, System.StringSplitOptions.None);
 
             foreach(string row in cell)
             {

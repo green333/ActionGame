@@ -38,4 +38,29 @@ public class CSVLoaderTest
         }
     }
 
+
+    public static TestCaseData[] loadCSVExceptHeaderProvider = new[]
+    {
+        // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"aiueo","あいうえお","123test" }).SetName("test loadCSVAll() SUCCEED"),
+        
+        // パスが間違っているときのテスト
+        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("test loadCSVAll() FAILED")
+    };
+
+    [TestCaseSource("loadCSVExceptHeaderProvider")]
+    public void TestLoadCSVExceptHeader(string filepath, List<string> funcRetResult)
+    {
+        int headerLine = 1;
+        List<string> result = csvLoader.LoadCSVExceptHeader(filepath, headerLine);
+
+        if (result == null)
+        {
+            Assert.AreEqual(result, funcRetResult);
+        }
+        else
+        {
+            Assert.AreEqual(result.ToArray(), funcRetResult.ToArray());
+        }
+    }
 }

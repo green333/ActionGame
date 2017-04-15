@@ -3,18 +3,24 @@ using UnityEditor;
 using NUnit.Framework;
 using System.Collections.Generic;
 
+/// <summary>
+/// CSV読み込みテストクラス
+/// </summary>
 [TestFixture]
 public class CSVLoaderTest
 {
     private CSVLoader csvLoader = null;
 
+    /// <summary>
+    /// テスト開始時一番初めに呼ばれる
+    /// </summary>
     [SetUp]
     public void TestInit()
     {
-        // CSVのインスタンスを取得
         csvLoader = CSVLoader.Instance;
     }
 
+    /// <summary> LoadCSVAll()のテスト結果 </summary>
     public static TestCaseData[] loadCSVAllProvider = new[]
     {
         // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
@@ -24,11 +30,15 @@ public class CSVLoaderTest
         new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("test loadCSVAll() FAILED")
     };
 
+    /// <summary>
+    /// LoadCSVAll()のテストを行う
+    /// </summary>
     [TestCaseSource("loadCSVAllProvider")]
     public void TestLoadCSVAll(string filepath, List<string> funcRetResult)
     {
         List<string> result = csvLoader.LoadCSVAll(filepath);
 
+        // 失敗した場合nullが返るため、nullの時は変数比較を行う。(ToArray()ができないため。)
         if (result == null)
         {
             Assert.AreEqual(result, funcRetResult);
@@ -38,7 +48,7 @@ public class CSVLoaderTest
         }
     }
 
-
+    /// <summary> LoadCSVExceptHeader()のテスト結果 </summary>
     public static TestCaseData[] loadCSVExceptHeaderProvider = new[]
     {
         // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
@@ -48,12 +58,16 @@ public class CSVLoaderTest
         new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("test loadCSVAll() FAILED")
     };
 
+    /// <summary>
+    /// TestLoadCSVExceptHeader()のテストを行う
+    /// </summary>
     [TestCaseSource("loadCSVExceptHeaderProvider")]
     public void TestLoadCSVExceptHeader(string filepath, List<string> funcRetResult)
     {
         int headerLine = 1;
         List<string> result = csvLoader.LoadCSVExceptHeader(filepath, headerLine);
 
+        // 失敗した場合nullが返るため、nullの時は変数比較を行う。(ToArray()ができないため。)
         if (result == null)
         {
             Assert.AreEqual(result, funcRetResult);

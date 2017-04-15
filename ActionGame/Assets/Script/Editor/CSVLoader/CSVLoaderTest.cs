@@ -24,10 +24,10 @@ public class CSVLoaderTest
     public static TestCaseData[] loadCSVAllProvider = new[]
     {
         // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
-        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"1","2","3","4","5","aiueo","あいうえお","123test" }).SetName("パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト"),
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"1","2","3","4","5","aiueo","あいうえお","123test" }).SetName("test loadCSVAll() SUCCEED"),
         
         // パスが間違っているときのテスト
-        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("パスが間違っているときのテスト")
+        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("test loadCSVAll() FAILED")
     };
 
     /// <summary>
@@ -52,13 +52,13 @@ public class CSVLoaderTest
     public static TestCaseData[] loadCSVExceptHeaderProvider = new[]
     {
         // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
-        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"1","2","3","4","5","aiueo","あいうえお","123test" },0).SetName("パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト"),
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"1","2","3","4","5","aiueo","あいうえお","123test" },0).SetName("test loadCSVAll() SUCCEED"),
 
         // headerLineが機能しているかのテスト
-        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"aiueo","あいうえお","123test" },1).SetName("headerLineが機能しているかのテスト"),
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"aiueo","あいうえお","123test" },1).SetName("work check headerLine"),
         
         // パスが間違っているときのテスト
-        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null,1).SetName("パスが間違っているときのテスト")
+        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null,1).SetName("test loadCSVAll() FAILED")
     };
 
     /// <summary>

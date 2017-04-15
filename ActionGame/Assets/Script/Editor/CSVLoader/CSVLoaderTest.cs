@@ -52,19 +52,21 @@ public class CSVLoaderTest
     public static TestCaseData[] loadCSVExceptHeaderProvider = new[]
     {
         // パスが正しく、日本語、英語、数字が正常に読み込まれているかのテスト
-        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"aiueo","あいうえお","123test" }).SetName("test loadCSVAll() SUCCEED"),
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"1","2","3","4","5","aiueo","あいうえお","123test" },0).SetName("test loadCSVAll() SUCCEED"),
+
+        // headerLineが機能しているかのテスト
+        new TestCaseData(Application.dataPath + "/Script/Editor/CSVLoader/fixture_loadVCSVAll.csv", new List<string> {"aiueo","あいうえお","123test" },1).SetName("work check headerLine"),
         
         // パスが間違っているときのテスト
-        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null).SetName("test loadCSVAll() FAILED")
+        new TestCaseData(Application.dataPath + "/CSVLoader/fixture_loadVCSVAll.csv",null,1).SetName("test loadCSVAll() FAILED")
     };
 
     /// <summary>
     /// TestLoadCSVExceptHeader()のテストを行う
     /// </summary>
     [TestCaseSource("loadCSVExceptHeaderProvider")]
-    public void TestLoadCSVExceptHeader(string filepath, List<string> funcRetResult)
+    public void TestLoadCSVExceptHeader(string filepath, List<string> funcRetResult,int headerLine)
     {
-        int headerLine = 1;
         List<string> result = csvLoader.LoadCSVExceptHeader(filepath, headerLine);
 
         // 失敗した場合nullが返るため、nullの時は変数比較を行う。(ToArray()ができないため。)

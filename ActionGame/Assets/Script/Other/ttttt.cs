@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System;
 
 [Serializable]
-public class Unko
+public class Hoge
 {
     public string name;
     public int coin;
 
-    public Unko(string name, int coin)
+    public Hoge(string name, int coin)
     {
         this.name = name;
         this.coin = coin;
@@ -36,15 +36,27 @@ public class ttttt : MonoBehaviour {
         //{
         //    Debug.Log(i.ToString() + "：" + intList[i]);
         //}
-        Unko unko = new Unko("名前", 1000);
-        PlayerPrefsWrap.Instance.SaveGeneric<Unko>("me", unko);
-        Unko tinko = PlayerPrefsWrap.Instance.LoadGeneric<Unko>("me");
-        Debug.Log(tinko.name);
-        Debug.Log(tinko.coin);
+        Hoge hoge = new Hoge("名前", 1000);
+        PlayerPrefsWrap.Instance.SaveGeneric<Hoge>("me", hoge);
+        Hoge fuga = PlayerPrefsWrap.Instance.LoadGeneric<Hoge>("me");
+        Debug.Log(fuga.name);
+        Debug.Log(fuga.coin);
+        
+        //  BGM
+        SoundUtil.Instance.PlayBGM("bgm01");
     }
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+        //  SE
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            SoundUtil.Instance.PlaySE("se01");
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SoundUtil.Instance.PlaySE("se02");
+        }
 	}
 }

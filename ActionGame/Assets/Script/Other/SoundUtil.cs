@@ -85,7 +85,7 @@ public class SoundUtil{
         if (soundPlayerObj == null)
         {
             //  AudioSource コンポーネントが付いたゲームオブジェクトを生成
-            soundPlayerObj = new GameObject("SoundObj");
+            soundPlayerObj = Camera.main.gameObject;
             soundPlayerObj.AddComponent<AudioSource>();
 
             //  生成したオブジェクトから AudioSource コンポーネントを取得

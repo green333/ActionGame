@@ -43,7 +43,8 @@ public class ttttt : MonoBehaviour {
         Debug.Log(fuga.coin);
         
         //  BGM
-        SoundUtil.Instance.PlayBGM("bgm01");
+        SoundUtil.Instance.LoadBGM();
+        SoundUtil.Instance.PlayBGM(1);
     }
 	
 	// Update is called once per frame

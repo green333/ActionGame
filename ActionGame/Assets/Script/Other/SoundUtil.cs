@@ -35,6 +35,9 @@ public class SoundUtil{
     /// <summary> オーディオクリップ </summary>
     private AudioClip audioClip;
 
+    /// <summary> BGM用オーディオクリップリスト </summary>
+    private AudioClip[] audioCLipBGMList;
+
     /// <summary> オーディオソース </summary>
     private AudioSource audioSource;
 
@@ -66,10 +69,18 @@ public class SoundUtil{
     }
 
     /// <summary>
+    /// リソースからBGMデータをロード
+    /// </summary>
+    public void LoadBGM()
+    {
+        if (audioCLipBGMList != null) return;
+        audioCLipBGMList = Resources.LoadAll<AudioClip>(BGM_BASE_PASH);
+    }
+
+    /// <summary>
     /// BGM再生
     /// </summary>
-    /// <param name="filePath"></param>
-    public void PlayBGM(string filePath)
+    public void PlayBGM(int id)
     {
         if (soundPlayerObj == null)
         {
@@ -81,15 +92,15 @@ public class SoundUtil{
             audioSource = soundPlayerObj.GetComponent<AudioSource>();
         }
 
-        //  リソースからサウンドデータをロード
-        audioClip = (AudioClip)Resources.Load(BGM_BASE_PASH + filePath);
-        if (audioClip == null)
+        // エラー処理
+        if (audioCLipBGMList.Length <= id || id < 0)
         {
+            Debug.Log("存在しないBGMIDを指定しています。");
             return;
         }
 
         //  AudioClip を登録
-        audioSource.clip = audioClip;
+        audioSource.clip = audioCLipBGMList[id];
         //  ループ再生設定
         audioSource.loop = true;
         //  再生

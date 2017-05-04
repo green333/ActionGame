@@ -27,7 +27,7 @@ public class ScriptableObjectCreater : UnityEditor.Editor
             return;
         }
 
-        int columnNum = 24;
+        int columnNum = 27;
 
         for(int i = columnNum; i < list.Count -1;)
         {
@@ -39,6 +39,7 @@ public class ScriptableObjectCreater : UnityEditor.Editor
             param.hp = int.Parse(list[i++]);
             param.atk = int.Parse(list[i++]);
             param.def = int.Parse(list[i++]);
+            param.mgc = int.Parse(list[i++]);
             param.spd = int.Parse(list[i++]);
             param.exp = int.Parse(list[i++]);
             instance.list.Add(param);

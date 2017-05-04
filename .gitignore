@@ -20,6 +20,10 @@ ExportedObj/
 
 # masterdata
 MasterData/
+/MasterParameter.cs
+/MasterParameter.cs.meta
+/ScriptableObjectCreater.cs
+/ScriptableObjectCreater.cs.meta
 
 # Unity3D generated meta files
 *.pidb.meta

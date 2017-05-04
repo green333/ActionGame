@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class LoadEnemyBaseMaster : MonoBehaviour {
 
-    LoadEnemyBaseMaster instance;
+    static LoadEnemyBaseMaster instance;
     EnemyBaseMaster master;
 
-    public LoadEnemyBaseMaster GetInstance { get { return instance; } }
+    static public LoadEnemyBaseMaster GetInstance { get { return instance; } }
 
     void Awake()
     {

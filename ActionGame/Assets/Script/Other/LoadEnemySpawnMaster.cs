@@ -3,10 +3,10 @@ using System.Collections;
 
 public class LoadEnemySpawnMaster : MonoBehaviour{
 
-    LoadEnemySpawnMaster instance;
+    static LoadEnemySpawnMaster instance;
     EnemySpawnMaster master;
 
-    public LoadEnemySpawnMaster GetInstance { get { return instance; } }
+    static public LoadEnemySpawnMaster GetInstance { get { return instance; } }
 
     /// <summary>
     /// 初期化時に敵出現マスタを読み込む

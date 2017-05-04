@@ -1,0 +1,6 @@
+int,int,string,int,string,int,string,int
+stage_id,chapter_id,enemy1_name,enemy1_lvpm,enemy2_name,enemy2_lvpm,enemy3_name,enemy3_lvpm
+ステージID,章,敵１,レベル幅,敵２,レベル幅,敵３,レベル幅
+1,1,オオカミ,3,兵隊,3,おかしの兵隊,3
+1,2,オオカミ,3,兵隊,3,おかしの兵隊,3
+1,3,オオカミ,3,兵隊,3,おかしの兵隊,3

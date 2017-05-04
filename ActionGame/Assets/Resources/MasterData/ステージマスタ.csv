@@ -1,0 +1,6 @@
+string,int,int,int,int,int
+name,id,chapter1_id,chapter2_id,chapter3_id,chapter4_id
+名前,ID,第一章,第二章,第三章,第四章
+ステージ１,1,1,1,1,1
+ステージ２,2,1,1,1,1
+ステージ３,3,1,1,1,1

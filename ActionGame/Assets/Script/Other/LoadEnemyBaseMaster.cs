@@ -60,19 +60,27 @@ public class LoadEnemyBaseMaster : MonoBehaviour {
         if (enemyLv2 > 100) { enemyLv2 = 100; }
         if (enemyLv3 > 100) { enemyLv3 = 100; }
 
+        int isGet = 0;
         foreach (EnemyBaseMaster.Param param in master.list)
         {
             if(param.name == esMasterParam.enemy1_name && param.level == enemyLv1)
             {
                 eneymInfoList.Add(param);
+                ++isGet;
             }
             if(param.name == esMasterParam.enemy2_name && param.level == enemyLv2)
             {
                 eneymInfoList.Add(param);
+                ++isGet;
             }
             if (param.name == esMasterParam.enemy3_name && param.level == enemyLv3)
             {
                 eneymInfoList.Add(param);
+                ++isGet;
+            }
+            if (++isGet == 3)
+            {
+                break;
             }
         }
     }

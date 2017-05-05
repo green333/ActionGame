@@ -2,17 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LoadEnemyBaseMaster : MonoBehaviour {
+public class LoadEnemyBaseMaster
+{ 
+    /// <summary>
+    /// インスタンス
+    /// </summary>
+    static readonly LoadEnemyBaseMaster instance = new LoadEnemyBaseMaster();
 
-    static LoadEnemyBaseMaster instance;
+    /// <summary>
+    /// 敵基本マスタを格納する変数
+    /// </summary>
     EnemyBaseMaster master;
 
-    static public LoadEnemyBaseMaster GetInstance { get { return instance; } }
+    /// <summary>
+    /// インスタンスを取得
+    /// </summary>
+    static public LoadEnemyBaseMaster Instace { get { return instance; } }
 
-    void Awake()
+    /// <summary>
+    /// 初期化時に敵基本マスタを読み込む
+    /// </summary>
+    public void Initialize()
     {
-        instance = new LoadEnemyBaseMaster();
-        if(null == (master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster")))
+        if (null == (master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster")))
         {
             Debug.Log("failed to Resources.Load<EnemyBaseMaster>");
         }

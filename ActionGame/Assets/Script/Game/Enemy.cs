@@ -26,19 +26,19 @@ public class Enemy : MonoBehaviour {
 	void Start () {
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;
-        EnemySpawnMaster.Param enemySpawnParam = LoadEnemySpawnMaster.GetInstance.GetEnemySpawanInfo(SaveData.Instance.stageId, SaveData.Instance.chapter);
-        LoadEnemyBaseMaster.GetInstance.GetEnemyInfo(out baseParamList, enemySpawnParam);
-        LoadEnemyGrowthMaster.GetInstance.GetEnemyInfo(out growthParamList, baseParamList, enemySpawnParam, 1);
+        EnemySpawnMaster.Param enemySpawnParam = LoadEnemySpawnMaster.Instace.GetEnemySpawanInfo(SaveData.Instance.stageId, SaveData.Instance.chapter);
+        LoadEnemyBaseMaster.Instace.GetEnemyInfo(out baseParamList, enemySpawnParam);
+        LoadEnemyGrowthMaster.Instace.GetEnemyInfo(out growthParamList, baseParamList, enemySpawnParam, 1);
 
-        foreach(EnemyGrowthMaster.Param p in this.growthParamList)
-        {
-            Debug.Log("lv :"+p.level.ToString());
-        }
+        //foreach(EnemyGrowthMaster.Param p in this.growthParamList)
+        //{
+        //    Debug.Log("lv :"+p.level.ToString());
+        //}
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update () {
 	
 	}
 }

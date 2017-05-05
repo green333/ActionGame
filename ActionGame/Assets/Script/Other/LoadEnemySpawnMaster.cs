@@ -1,20 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadEnemySpawnMaster : MonoBehaviour{
+public class LoadEnemySpawnMaster
+{
+    /// <summary>
+    /// インスタンス
+    /// </summary>
+    static readonly LoadEnemySpawnMaster instance = new LoadEnemySpawnMaster();
 
-    static LoadEnemySpawnMaster instance;
+    /// <summary>
+    /// 敵出現マスタを格納する変数
+    /// </summary>
     EnemySpawnMaster master;
 
-    static public LoadEnemySpawnMaster GetInstance { get { return instance; } }
+    /// <summary>
+    /// インスタンスを取得
+    /// </summary>
+    static public LoadEnemySpawnMaster Instace { get { return instance; } }
 
     /// <summary>
     /// 初期化時に敵出現マスタを読み込む
     /// </summary>
-    void Awake()
+    public void Initialize()
     {
-        instance = new LoadEnemySpawnMaster();
-        if(null == (master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster")))
+        if (null == (master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster")))
         {
             Debug.Log("failed to Resources.Load<EnemySpawnMaster>");
         }

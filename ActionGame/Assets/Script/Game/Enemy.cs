@@ -30,11 +30,10 @@ public class Enemy : MonoBehaviour {
         LoadEnemyBaseMaster.Instace.GetEnemyInfo(out baseParamList, enemySpawnParam);
         LoadEnemyGrowthMaster.Instace.GetEnemyInfo(out growthParamList, baseParamList, enemySpawnParam, 1);
 
-        //foreach(EnemyGrowthMaster.Param p in this.growthParamList)
-        //{
-        //    Debug.Log("lv :"+p.level.ToString());
-        //}
-
+        foreach (EnemyGrowthMaster.Param p in this.growthParamList)
+        {
+            Debug.Log("lv :" + p.level.ToString());
+        }
     }
 
     // Update is called once per frame

@@ -12,7 +12,10 @@ public class LoadEnemyBaseMaster : MonoBehaviour {
     void Awake()
     {
         instance = new LoadEnemyBaseMaster();
-        master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster");
+        if(null == (master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster")))
+        {
+            Debug.Log("failed to Resources.Load<EnemyBaseMaster>");
+        }
     }
 
     /// <summary>

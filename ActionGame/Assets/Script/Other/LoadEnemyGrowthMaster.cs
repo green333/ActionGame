@@ -13,7 +13,10 @@ public class LoadEnemyGrowthMaster : MonoBehaviour {
     void Awake()
     {
         instance = new LoadEnemyGrowthMaster();
-        master = Resources.Load<EnemyGrowthMaster>("MasterData/EnemyGrowthMaster");
+        if(null == (master = Resources.Load<EnemyGrowthMaster>("MasterData/EnemyGrowthMaster")))
+        {
+            Debug.Log("failed to Resources.Load<EnemyGrowthMaster>");
+        }
     }
 
     

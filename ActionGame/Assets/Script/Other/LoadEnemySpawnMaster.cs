@@ -14,7 +14,11 @@ public class LoadEnemySpawnMaster : MonoBehaviour{
     void Awake()
     {
         instance = new LoadEnemySpawnMaster();
-        master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster");
+        if(null == (master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster")))
+        {
+            Debug.Log("failed to Resources.Load<EnemySpawnMaster>");
+        }
+        
     }
 
     /// <summary>

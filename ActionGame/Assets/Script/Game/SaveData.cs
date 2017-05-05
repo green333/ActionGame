@@ -7,6 +7,14 @@ using System.Collections;
 public class SaveData
 {
     /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    private SaveData()
+    {
+
+    }
+
+    /// <summary>
     /// シングルトン
     /// </summary>
     private static SaveData instance = new SaveData();

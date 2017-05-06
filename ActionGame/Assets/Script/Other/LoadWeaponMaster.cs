@@ -29,4 +29,23 @@ public class LoadWeaponMaster{
         }
     }
 
+    /// <summary>
+    /// 指定した名前に一致する武器情報を取得する
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public WeaponMaster.Param getWeaponInfo(string name)
+    {
+        int index = 0;
+        foreach (WeaponMaster.Param param in master.list)
+        {
+            if (param.name == name)
+            {
+                break;
+            }
+            ++index;
+        }
+
+        return master.list[index];
+    }
 }

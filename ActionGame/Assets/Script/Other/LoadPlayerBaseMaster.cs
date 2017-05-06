@@ -28,4 +28,14 @@ public class LoadPlayerBaseMaster{
             Debug.Log("failed to Resources.Load<PlayerBaseMaster>");
         }
     }
+
+    /// <summary>
+    /// 指定したレベルに一致するプレイヤー情報を取得する
+    /// </summary>
+    /// <param name="lv"></param>
+    /// <returns></returns>
+    public PlayerBaseMaster.Param GetPlayerInfo(int lv)
+    {
+        return master.list[lv - 1];
+    }
 }

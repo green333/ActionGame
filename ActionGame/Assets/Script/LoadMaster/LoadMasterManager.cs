@@ -10,5 +10,7 @@ public class LoadMasterManager : MonoBehaviour {
         LoadEnemySpawnMaster.Instace.Initialize();
         LoadPlayerBaseMaster.Instace.Initialize();
         LoadWeaponMaster.Instace.Initialize();
+        LoadItemMaster.Instace.Initialize();
+        LoadStageMaster.Instace.Initialize();
     }
 }

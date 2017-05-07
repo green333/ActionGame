@@ -39,10 +39,8 @@ public class SaveData
     /// <summary> ステージID </summary>
     public int stageId { get; set; }
 
-    /// <summary> プレイヤーステータス </summary>
-    public PlayerBaseMaster.Param playerParam { get; set; }
-    /// <summary> プレイヤーの武器パラメーター </summary>
-    public WeaponMaster.Param playerWeaponParam { get; set; }
+    /// <summary> プレイヤー(キャラクター？)ステータス </summary>
+    public CharacterStatus characterStatus { get; set; }
 
     /// <summary>
     /// セーブ

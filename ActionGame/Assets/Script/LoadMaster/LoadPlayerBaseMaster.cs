@@ -19,6 +19,11 @@ public class LoadPlayerBaseMaster{
     static public LoadPlayerBaseMaster Instace { get { return instance; } }
 
     /// <summary>
+    /// プレイヤーのレベル上限値
+    /// </summary>
+    static readonly int PLAYER_LEVEL_MAX = 100;
+
+    /// <summary>
     /// 初期化時にプレイヤー基本マスタを読み込む
     /// </summary>
     public void Initialize()
@@ -36,6 +41,7 @@ public class LoadPlayerBaseMaster{
     /// <returns></returns>
     public PlayerBaseMaster.Param GetPlayerInfo(int lv)
     {
-        return master.list[lv - 1];
+        // 指定したレベルがレベル上限以上ならレベル上限の情報を返す
+        return ((lv >= PLAYER_LEVEL_MAX) ? master.list[PLAYER_LEVEL_MAX - 1] : master.list[lv - 1]);
     }
 }

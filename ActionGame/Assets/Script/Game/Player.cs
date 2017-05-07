@@ -26,116 +26,131 @@ public class Player : MonoBehaviour {
 
     /// <summary> プレイヤー基本パラメータ </summary>
     PlayerBaseMaster.Param baseParam;
+
     /// <summary> プレイヤー進化後パラメータ </summary>
     PlayerBaseMaster.Param nextBaseParam;
+
     /// <summary> プレイヤー武器パラメータ </summary>
     WeaponMaster.Param weaponParam;
 
     /// <summary> レベルアップフラグ </summary>
     bool isLevelUp;
-    /// <summary> 経験値 </summary>
-    int exp;
 
-    // Use this for initialization
-	void Start () {
-
-        exp = 0;
-
+    /// <summary>
+    /// セーブデータが存在する場合は、セーブデータから取得し、なければプレイヤーの初期情報を取得する
+    /// </summary>
+    void LoadPlayerData()
+    {
         //  ロード出来たらロードしてnullならマスターから取得
         if (SaveData.Instance.Load(SaveData.KEY_SLOT_1) == null)
         {
             //  初期レベル
-            baseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(PLAYER_INIT_LEVEL);
-            weaponParam = LoadWeaponMaster.Instace.getWeaponInfo(PLAYER_INIT_WEAPON);
-
-            //  次レベル
-            nextBaseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(PLAYER_INIT_LEVEL + 1);
+            baseParam       = LoadPlayerBaseMaster.Instace.GetPlayerInfo(PLAYER_INIT_LEVEL);
+            baseParam.exp  = 0;
+            weaponParam     = LoadWeaponMaster.Instace.getWeaponInfo(PLAYER_INIT_WEAPON);
         }
         else
         {
             //  現在レベル
-            baseParam = SaveData.Instance.Load(SaveData.KEY_SLOT_1).characterStatus.param;
-            weaponParam = SaveData.Instance.Load(SaveData.KEY_SLOT_1).characterStatus.weaponParam;
-
-            //  次レベル
-            int nextLv = SaveData.Instance.Load(SaveData.KEY_SLOT_1).characterStatus.param.level + 1;
-            nextBaseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(nextLv);
+            SaveData saveData = SaveData.Instance.Load(SaveData.KEY_SLOT_1);
+            baseParam       = saveData.playerParam;
+            weaponParam     = saveData.weaponParam;
         }
 
-        Debug.Log("-----------プレイヤーデータ-----------");
-        Debug.Log("level：" + this.baseParam.level);
-        Debug.Log("hp：" + this.baseParam.hp);
-        Debug.Log("atk：" + this.baseParam.atk);
-        Debug.Log("def：" + this.baseParam.def);
-        Debug.Log("mgc：" + this.baseParam.mgc);
-        Debug.Log("spd：" + this.baseParam.spd);
-        Debug.Log("next_exp：" + this.baseParam.next_exp);
-        Debug.Log("--------------------------------------");
+        // 次のレベルのステータスを取得する
+        nextBaseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(baseParam.level + 1);
+    }
 
-        Debug.Log("-----------プレイヤー武器データ-----------");
-        Debug.Log("name：" + this.weaponParam.name);
-        Debug.Log("id：" + this.weaponParam.id);
-        Debug.Log("type：" + this.weaponParam.type);
-        Debug.Log("atk：" + this.weaponParam.atk);
-        Debug.Log("--------------------------------------");
+    // Use this for initialization
+    void Start () {
 
-	}
+        // プレイヤーのデータを読み込む
+        LoadPlayerData();
+    }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        LevelUp();
+
         //  Aキーで経験値加算
         if(Input.GetKeyDown(KeyCode.A))
         {
-            AddExp(1);
+            AddExp(1000);
         }
 
-        //  レベルアップに必要な経験値を得たらレベルアップフラグを立てる
-        if (this.exp >= this.baseParam.next_exp)
-        {
-            this.isLevelUp = true;
-        }
-
-        //  レベルアップフラグが立っていたら
-        if (this.isLevelUp)
-        {
-            //  マスターから現在レベル +1 の情報を取得
-            baseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(this.baseParam.level + 1);
-            Debug.Log("-----------レベルアップ後プレイヤーデータ-----------");
-            Debug.Log("level：" + this.baseParam.level);
-            Debug.Log("hp：" + this.baseParam.hp);
-            Debug.Log("atk：" + this.baseParam.atk);
-            Debug.Log("def：" + this.baseParam.def);
-            Debug.Log("mgc：" + this.baseParam.mgc);
-            Debug.Log("spd：" + this.baseParam.spd);
-            Debug.Log("next_exp：" + this.baseParam.next_exp);
-            Debug.Log("--------------------------------------");
-
-            nextBaseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(this.baseParam.level + 1);
-            Debug.Log("-----------レベルアップ後次レベルプレイヤーデータ-----------");
-            Debug.Log("level：" + this.nextBaseParam.level);
-            Debug.Log("hp：" + this.nextBaseParam.hp);
-            Debug.Log("atk：" + this.nextBaseParam.atk);
-            Debug.Log("def：" + this.nextBaseParam.def);
-            Debug.Log("mgc：" + this.nextBaseParam.mgc);
-            Debug.Log("spd：" + this.nextBaseParam.spd);
-            Debug.Log("next_exp：" + this.nextBaseParam.next_exp);
-            Debug.Log("--------------------------------------");
-
-            //  取得経験値が次レベルのレベルアップ必要値未満ならレベルアップを止める
-            if(this.exp < nextBaseParam.next_exp)
-            {
-                this.isLevelUp = false;
-            }
-        }
 	}
 
     /// <summary>
-    /// 経験値加算
+    /// 経験値加算(レベルアップが可能ならフラグを立てる)
     /// </summary>
     /// <param name="value"></param>
     void AddExp(int value)
     {
-        this.exp += value;
+        // すでにレベルがMAXなら加算処理はする必要ないのでreturn
+        if(this.baseParam.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+        {
+            return;
+        }
+
+        // 加算
+        this.baseParam.exp += value;
+
+        // レベルアップが可能ならフラグを立てる
+        if(this.baseParam.exp >= this.nextBaseParam.exp)
+        {
+            isLevelUp = true;
+        }
+    }
+
+    /// <summary>
+    /// レベルアップが可能ならレベルアップを行う
+    /// </summary>
+    void LevelUp()
+    {
+        // レベルアップが可能でなければreturn
+        if(isLevelUp == false)
+        {
+            return;
+        }
+
+        int subExp = 0;
+        
+        while(true)
+        {
+            
+            // 必要経験値に満たしているかを算出する
+            subExp = this.baseParam.exp - this.nextBaseParam.exp;
+
+            // 0を下回す場合、レベルアップに必要な経験値に到達していないのでbreak;
+            if (subExp < 0) { break; }
+
+            Debug.Log("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
+            LoadPlayerBaseMaster.Instace.DebugLog(this.baseParam);
+            Debug.Log("-----------------------------------------------------------------------------------------");
+
+            // 次のレベルのステータスを現在のステータスに反映させる。
+            this.baseParam     = this.nextBaseParam;
+
+            Debug.Log("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
+            LoadPlayerBaseMaster.Instace.DebugLog(this.baseParam);
+            Debug.Log("-----------------------------------------------------------------------------------------");
+
+            // 現在のレベルが上限かどうかをチェック
+            if (this.baseParam.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            {
+                this.baseParam.exp = 0;
+                break;
+            }
+
+            // 差分を現在の経験値に格納
+            this.baseParam.exp = subExp;
+
+            // 次のレベルのステータスを取得
+            this.nextBaseParam = LoadPlayerBaseMaster.Instace.GetPlayerInfo(this.nextBaseParam.level + 1);
+
+        }
+
+        isLevelUp = false;
     }
 }

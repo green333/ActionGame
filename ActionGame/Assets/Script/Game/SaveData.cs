@@ -40,7 +40,10 @@ public class SaveData
     public int stageId { get; set; }
 
     /// <summary> プレイヤー(キャラクター？)ステータス </summary>
-    public CharacterStatus characterStatus { get; set; }
+    public PlayerBaseMaster.Param playerParam { get; set; }
+
+    /// <summary> 武器情報  </summary>
+    public WeaponMaster.Param weaponParam { get; set; }
 
     /// <summary>
     /// セーブ

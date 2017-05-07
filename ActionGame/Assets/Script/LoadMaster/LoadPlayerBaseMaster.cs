@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadPlayerBaseMaster{
+public class LoadPlayerBaseMaster
+{
 
     /// <summary>
     /// インスタンス
@@ -21,7 +22,7 @@ public class LoadPlayerBaseMaster{
     /// <summary>
     /// プレイヤーのレベル上限値
     /// </summary>
-    static readonly int PLAYER_LEVEL_MAX = 100;
+    static public readonly int PLAYER_LEVEL_MAX = 100;
 
     /// <summary>
     /// 初期化時にプレイヤー基本マスタを読み込む
@@ -43,5 +44,20 @@ public class LoadPlayerBaseMaster{
     {
         // 指定したレベルがレベル上限以上ならレベル上限の情報を返す
         return ((lv >= PLAYER_LEVEL_MAX) ? master.list[PLAYER_LEVEL_MAX - 1] : master.list[lv - 1]);
+    }
+
+    /// <summary>
+    /// 引数に渡したプレイヤーパラメーターをログに出力する
+    /// </summary>
+    /// <param name="param"></param>
+    public void DebugLog(PlayerBaseMaster.Param param)
+    {
+        Debug.Log("level = " + param.level);
+        Debug.Log("hp    = " + param.hp);
+        Debug.Log("atk   = " + param.atk);
+        Debug.Log("def   = " + param.def);
+        Debug.Log("mgc   = " + param.mgc);
+        Debug.Log("spd   = " + param.spd);
+        Debug.Log("exp   = " + param.exp);
     }
 }

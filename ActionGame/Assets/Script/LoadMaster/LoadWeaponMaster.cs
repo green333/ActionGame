@@ -46,6 +46,12 @@ public class LoadWeaponMaster{
             ++index;
         }
 
-        return master.list[index];
+        WeaponMaster.Param temp = new WeaponMaster.Param();
+        temp.name   = master.list[index].name;
+        temp.id     = master.list[index].id;
+        temp.type   = master.list[index].type;
+        temp.atk    = master.list[index].atk;
+
+        return temp;
     }
 }

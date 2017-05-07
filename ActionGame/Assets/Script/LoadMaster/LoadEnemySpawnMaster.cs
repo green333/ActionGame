@@ -49,7 +49,18 @@ public class LoadEnemySpawnMaster
             ++index;
         }
 
-        return master.list[index];
+        EnemySpawnMaster.Param temp = new EnemySpawnMaster.Param();
+        temp.chapter_id = master.list[index].chapter_id;
+        temp.enemy1_lvpm            = master.list[index].enemy1_lvpm;
+        temp.enemy1_name            = master.list[index].enemy1_name;
+        temp.enemy1_respawn_time    = master.list[index].enemy1_respawn_time;
+        temp.enemy2_lvpm            = master.list[index].enemy2_lvpm;
+        temp.enemy2_name            = master.list[index].enemy2_name;
+        temp.enemy2_respawn_time    = master.list[index].enemy2_respawn_time;
+        temp.enemy3_lvpm            = master.list[index].enemy3_lvpm;
+        temp.enemy3_name            = master.list[index].enemy3_name;
+
+        return temp;
     }
 	
 }

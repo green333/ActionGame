@@ -48,7 +48,12 @@ public class LoadEnemyBaseMaster
             ++index;
         }
 
-        return master.list[index];
+        EnemyBaseMaster.Param temp = new EnemyBaseMaster.Param();
+        temp.id    = master.list[index].id;
+        temp.index = master.list[index].index;
+        temp.name  = master.list[index].name;
+
+        return temp;
     }
 
     /// <summary>

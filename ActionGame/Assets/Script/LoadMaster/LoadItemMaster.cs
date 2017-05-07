@@ -47,6 +47,13 @@ public class LoadItemMaster{
             ++index;
         }
 
-        return master.list[index];
+        ItemMaster.Param temp = new ItemMaster.Param();
+        temp.name   = master.list[index].name;
+        temp.id     = master.list[index].id;
+        temp.kind   = master.list[index].kind;
+        temp.effect = master.list[index].effect;
+        temp.desc   = master.list[index].desc;
+
+        return temp;
     }
 }

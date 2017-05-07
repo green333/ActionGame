@@ -42,8 +42,22 @@ public class LoadPlayerBaseMaster
     /// <returns></returns>
     public PlayerBaseMaster.Param GetPlayerInfo(int lv)
     {
+        // くっそめんどくさいが、メンバ変数を一つ一つ移さないと、
+        // ポインタ扱いなのかしらないが外で取得した変数をいじるとこちらの値も変わってしまうくそ仕様。
+        PlayerBaseMaster.Param temp = new PlayerBaseMaster.Param();
+
         // 指定したレベルがレベル上限以上ならレベル上限の情報を返す
-        return ((lv >= PLAYER_LEVEL_MAX) ? master.list[PLAYER_LEVEL_MAX - 1] : master.list[lv - 1]);
+        PlayerBaseMaster.Param temp2  =((lv >= PLAYER_LEVEL_MAX) ? master.list[PLAYER_LEVEL_MAX - 1] : master.list[lv - 1]);
+     
+        temp.hp    = temp2.hp;
+        temp.atk   = temp2.atk;
+        temp.def   = temp2.def;
+        temp.next_exp = temp2.next_exp;
+        temp.spd   = temp2.spd;
+        temp.mgc   = temp2.mgc;
+        temp.level = temp2.level;
+
+        return temp;
     }
 
     /// <summary>
@@ -58,6 +72,6 @@ public class LoadPlayerBaseMaster
         Debug.Log("def   = " + param.def);
         Debug.Log("mgc   = " + param.mgc);
         Debug.Log("spd   = " + param.spd);
-        Debug.Log("exp   = " + param.exp);
+        Debug.Log("next_exp   = " + param.next_exp);
     }
 }

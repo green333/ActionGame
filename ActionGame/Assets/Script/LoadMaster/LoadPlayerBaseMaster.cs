@@ -51,17 +51,17 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     }
 
     /// <summary>
-    /// 引数に渡したプレイヤーパラメーターをログに出力する
+    /// プレイヤー基本パラメーターをログに出力する
     /// </summary>
     /// <param name="param"></param>
     public void DebugLog(PlayerBaseMaster.Param param)
     {
-        Debug.Log("level = " + param.level);
-        Debug.Log("hp    = " + param.hp);
-        Debug.Log("atk   = " + param.atk);
-        Debug.Log("def   = " + param.def);
-        Debug.Log("mgc   = " + param.mgc);
-        Debug.Log("spd   = " + param.spd);
+        Debug.Log("level      = " + param.level);
+        Debug.Log("hp         = " + param.hp);
+        Debug.Log("atk        = " + param.atk);
+        Debug.Log("def        = " + param.def);
+        Debug.Log("mgc        = " + param.mgc);
+        Debug.Log("spd        = " + param.spd);
         Debug.Log("next_exp   = " + param.next_exp);
     }
 }

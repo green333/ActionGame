@@ -77,4 +77,16 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
             }
         }
     }
+
+
+    /// <summary>
+    /// 敵基本パラメーターをログに出力する
+    /// </summary>
+    /// <param name="param"></param>
+    public void DebugLog(EnemyBaseMaster.Param param)
+    {
+        Debug.Log("id    = " + param.id);
+        Debug.Log("name  = " + param.name);
+        Debug.Log("index = " + param.index);
+    }
 }

@@ -71,5 +71,22 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
             growthListParam.Add(master.list[indexList[index++]]);
         }
     }
+
+    /// <summary>
+    /// 敵成長パラメーターをログに出力する
+    /// </summary>
+    /// <param name="param"></param>
+    public void DebugLog(EnemyGrowthMaster.Param param)
+    {
+        Debug.Log("id    = " + param.id);
+        Debug.Log("name  = " + param.name);
+        Debug.Log("level = " + param.level);
+        Debug.Log("hp    = " + param.hp);
+        Debug.Log("atk   = " + param.atk);
+        Debug.Log("def   = " + param.def);
+        Debug.Log("mgc   = " + param.mgc);
+        Debug.Log("spd   = " + param.spd);
+        Debug.Log("exp   = " + param.exp);
+    }
 }
 

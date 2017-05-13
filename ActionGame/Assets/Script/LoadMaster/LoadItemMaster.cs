@@ -46,4 +46,17 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
 
         return temp;
     }
+    
+    /// <summary>
+    /// アイテムパラメーターをログに出力する
+    /// </summary>
+    /// <param name="param"></param>
+    public void DebugLog(ItemMaster.Param param)
+    {
+        Debug.Log("id     = " + param.id);
+        Debug.Log("name   = " + param.name);
+        Debug.Log("kind   = " + param.kind);
+        Debug.Log("effect = " + param.effect);
+        Debug.Log("desc   = " + param.desc);
+    }
 }

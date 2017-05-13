@@ -45,4 +45,16 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
 
         return temp;
     }
+
+    /// <summary>
+    /// 武器パラメーターをログに出力する
+    /// </summary>
+    /// <param name="parma"></param>
+    public void DebugLog(WeaponMaster.Param parma)
+    {
+        Debug.Log("id   =" + parma.id);
+        Debug.Log("name =" + parma.name);
+        Debug.Log("type =" + parma.type);
+        Debug.Log("atk  =" + parma.atk);
+    }
 }

@@ -19,4 +19,20 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
         }
     }
 
+    /// <summary>
+    /// ステージパラメーターをログに出力する
+    /// </summary>
+    /// <param name="param"></param>
+    public void DebugLog(StageMaster.Param param)
+    {
+        Debug.Log("id              = " + param.id);
+        Debug.Log("name            = " + param.name);
+        Debug.Log("chapter         = " + param.chapter);
+        Debug.Log("normal_bgm_name = " + param.normal_bgm_name);
+        Debug.Log("event_bgm_name  = " + param.event_bgm_name);
+        Debug.Log("battle_bgm_name = " + param.battle_bgm_name);
+        Debug.Log("boss_bgm_name   = " + param.boss_bgm_name);
+
+    }
+
 }

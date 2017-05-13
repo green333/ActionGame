@@ -1,22 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-public class LoadItemMaster{
-
-    /// <summary>
-    /// インスタンス
-    /// </summary>
-    static readonly LoadItemMaster instance = new LoadItemMaster();
-
+   
+public class LoadItemMaster : BaseSingleton<LoadItemMaster>
+{
     /// <summary>
     /// アイテムマスタを格納する変数
     /// </summary>
     ItemMaster master;
-
-    /// <summary>
-    /// インスタンスを取得
-    /// </summary>
-    static public LoadItemMaster Instace { get { return instance; } }
 
     /// <summary>
     /// 初期化時にアイテムマスタを読み込む

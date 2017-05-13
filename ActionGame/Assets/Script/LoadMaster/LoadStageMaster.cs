@@ -1,22 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadStageMaster{
-   
-    /// <summary>
-    /// インスタンス
-    /// </summary>
-    static readonly LoadStageMaster instance = new LoadStageMaster();
-
+public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
+{
     /// <summary>
     /// ステージマスタを格納する変数
     /// </summary>
     StageMaster master;
-
-    /// <summary>
-    /// インスタンスを取得
-    /// </summary>
-    static public LoadStageMaster Instace { get { return instance; } }
 
     /// <summary>
     /// 初期化時にステージマスタを読み込む

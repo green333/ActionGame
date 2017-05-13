@@ -2,22 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LoadEnemyGrowthMaster
+public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
 {
-    /// <summary>
-    /// インスタンス
-    /// </summary>
-    static readonly LoadEnemyGrowthMaster instance = new LoadEnemyGrowthMaster();
-
     /// <summary>
     /// 敵成長マスタを格納する変数
     /// </summary>
     EnemyGrowthMaster master;
-
-    /// <summary>
-    /// インスタンスを取得
-    /// </summary>
-    static public LoadEnemyGrowthMaster Instace { get { return instance; } }
 
     /// <summary>
     /// 初期化時に敵成長マスタを読み込む

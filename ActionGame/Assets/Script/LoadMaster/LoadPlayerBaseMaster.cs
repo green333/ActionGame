@@ -1,23 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadPlayerBaseMaster
+public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
 {
-
-    /// <summary>
-    /// インスタンス
-    /// </summary>
-    static readonly LoadPlayerBaseMaster instance = new LoadPlayerBaseMaster();
 
     /// <summary>
     /// プレイヤー基本マスタを格納する変数
     /// </summary>
     PlayerBaseMaster master;
-
-    /// <summary>
-    /// インスタンスを取得
-    /// </summary>
-    static public LoadPlayerBaseMaster Instace { get { return instance; } }
 
     /// <summary>
     /// プレイヤーのレベル上限値

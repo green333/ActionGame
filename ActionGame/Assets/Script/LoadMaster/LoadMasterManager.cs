@@ -5,12 +5,14 @@ public class LoadMasterManager : MonoBehaviour {
 
 	void Awake()
     {
-        LoadEnemyBaseMaster.Instace.Initialize();
-        LoadEnemyGrowthMaster.Instace.Initialize();
-        LoadEnemySpawnMaster.Instace.Initialize();
-        LoadPlayerBaseMaster.Instace.Initialize();
-        LoadWeaponMaster.Instace.Initialize();
-        LoadItemMaster.Instace.Initialize();
-        LoadStageMaster.Instace.Initialize();
+        // マスタデータをここで読み込む。
+        // マスタデータを読み込むクラスを追加したときは、ここに同じように初期化を行ってください。
+        LoadEnemyBaseMaster.Instance.Initialize();
+        LoadEnemyGrowthMaster.Instance.Initialize();
+        LoadEnemySpawnMaster.Instance.Initialize();
+        LoadPlayerBaseMaster.Instance.Initialize();
+        LoadWeaponMaster.Instance.Initialize();
+        LoadItemMaster.Instance.Initialize();
+        LoadStageMaster.Instance.Initialize();
     }
 }

@@ -43,7 +43,7 @@ public class Player : MonoBehaviour {
         {
             status = new CharacterStatus();
             //  初期レベル
-            status.param = LoadPlayerBaseMaster.Instace.GetPlayerInfo(PLAYER_INIT_LEVEL);
+            status.param = LoadPlayerBaseMaster.Instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
             status.exp   = 0;
         }
         else
@@ -111,7 +111,7 @@ public class Player : MonoBehaviour {
         int subExp = 0;
 
         Debug.Log("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.Instace.DebugLog(this.status.param);
+        LoadPlayerBaseMaster.Instance.DebugLog(this.status.param);
         Debug.Log("-----------------------------------------------------------------------------------------");
         while (true)
         {
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour {
             this.status.exp = subExp;
            
             // 次のレベルのステータスを取得
-            this.status.param = LoadPlayerBaseMaster.Instace.GetPlayerInfo(this.status.param.level + 1);
+            this.status.param = LoadPlayerBaseMaster.Instance.GetPlayerInfo(this.status.param.level + 1);
 
             if(this.status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
@@ -136,7 +136,7 @@ public class Player : MonoBehaviour {
 
         }
         Debug.Log("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.Instace.DebugLog(this.status.param);
+        LoadPlayerBaseMaster.Instance.DebugLog(this.status.param);
         Debug.Log("-----------------------------------------------------------------------------------------");
         isLevelUp = false;
     }

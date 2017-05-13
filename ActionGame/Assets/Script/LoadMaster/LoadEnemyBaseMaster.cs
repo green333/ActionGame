@@ -2,22 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LoadEnemyBaseMaster
+public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
 { 
-    /// <summary>
-    /// インスタンス
-    /// </summary>
-    static readonly LoadEnemyBaseMaster instance = new LoadEnemyBaseMaster();
-
+  
     /// <summary>
     /// 敵基本マスタを格納する変数
     /// </summary>
     EnemyBaseMaster master;
-
-    /// <summary>
-    /// インスタンスを取得
-    /// </summary>
-    static public LoadEnemyBaseMaster Instace { get { return instance; } }
 
     /// <summary>
     /// 初期化時に敵基本マスタを読み込む

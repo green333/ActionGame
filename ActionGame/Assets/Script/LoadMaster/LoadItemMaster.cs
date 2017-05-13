@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-   
+
+/// <summary>
+/// アイテム情報
+/// </summary>
+public class ItemInfo
+{
+    public ItemMaster.Param param;
+    public int num;
+}
+
 public class LoadItemMaster : BaseSingleton<LoadItemMaster>
 {
     /// <summary>

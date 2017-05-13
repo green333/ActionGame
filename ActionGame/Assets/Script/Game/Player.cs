@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+[RequireComponent(typeof(LoadMasterManager))]
 public class Player : MonoBehaviour {
 
     /*
@@ -21,17 +23,19 @@ public class Player : MonoBehaviour {
     /// マスター取得時初期レベルと武器用定数
     /// 必要があれば後でしかるべきところに定義しなおす
     /// </summary>
-    const int PLAYER_INIT_LEVEL = 1;
-    const string PLAYER_INIT_WEAPON = "マシュ";
+    private const int PLAYER_INIT_LEVEL = 1;
+    private const string PLAYER_INIT_WEAPON = "マシュ";
+
+    /// <summary> アイテムリスト </summary>
+    private List<ItemInfo> itemList;
 
     /// <summary> プレイヤー基本パラメータ </summary>
-    CharacterStatus status = null;
-
+    private CharacterStatus status = null;
     /// <summary> プレイヤー武器パラメータ </summary>
-    WeaponMaster.Param weaponParam = null;
+    private WeaponMaster.Param weaponParam = null;
 
     /// <summary> レベルアップフラグ </summary>
-    bool isLevelUp = false;
+    private bool isLevelUp = false;
 
     /// <summary>
     /// セーブデータが存在する場合は、セーブデータから取得し、なければプレイヤーの初期情報を取得する

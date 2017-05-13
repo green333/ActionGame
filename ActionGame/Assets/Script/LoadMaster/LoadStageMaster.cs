@@ -15,7 +15,7 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
     {
         if (null == (master = Resources.Load<StageMaster>("MasterData/StageMaster")))
         {
-            Debug.Log("failed to Resources.Load<StageMaster>");
+            LogExtensions.Red("failed to Resources.Load<StageMaster>");
         }
     }
 
@@ -25,13 +25,13 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
     /// <param name="param"></param>
     public void DebugLog(StageMaster.Param param)
     {
-        Debug.Log("id              = " + param.id);
-        Debug.Log("name            = " + param.name);
-        Debug.Log("chapter         = " + param.chapter);
-        Debug.Log("normal_bgm_name = " + param.normal_bgm_name);
-        Debug.Log("event_bgm_name  = " + param.event_bgm_name);
-        Debug.Log("battle_bgm_name = " + param.battle_bgm_name);
-        Debug.Log("boss_bgm_name   = " + param.boss_bgm_name);
+        LogExtensions.Black("id              = " + param.id);
+        LogExtensions.Black("name            = " + param.name);
+        LogExtensions.Black("chapter         = " + param.chapter);
+        LogExtensions.Black("normal_bgm_name = " + param.normal_bgm_name);
+        LogExtensions.Black("event_bgm_name  = " + param.event_bgm_name);
+        LogExtensions.Black("battle_bgm_name = " + param.battle_bgm_name);
+        LogExtensions.Black("boss_bgm_name   = " + param.boss_bgm_name);
 
     }
 

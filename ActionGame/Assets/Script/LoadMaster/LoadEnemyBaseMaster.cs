@@ -17,7 +17,7 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     {
         if (null == (master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster")))
         {
-            Debug.Log("failed to Resources.Load<EnemyBaseMaster>");
+            LogExtensions.Red("failed to Resources.Load<EnemyBaseMaster>");
         }
     }
 
@@ -85,8 +85,8 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemyBaseMaster.Param param)
     {
-        Debug.Log("id    = " + param.id);
-        Debug.Log("name  = " + param.name);
-        Debug.Log("index = " + param.index);
+        LogExtensions.Black("id    = " + param.id);
+        LogExtensions.Black("name  = " + param.name);
+        LogExtensions.Black("index = " + param.index);
     }
 }

@@ -30,7 +30,7 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     {
         if (null == (master = Resources.Load<PlayerBaseMaster>("MasterData/PlayerBaseMaster")))
         {
-            Debug.Log("failed to Resources.Load<PlayerBaseMaster>");
+            LogExtensions.Red("failed to Resources.Load<PlayerBaseMaster>");
         }
     }
 
@@ -65,12 +65,12 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     /// <param name="param"></param>
     public void DebugLog(PlayerBaseMaster.Param param)
     {
-        Debug.Log("level      = " + param.level);
-        Debug.Log("hp         = " + param.hp);
-        Debug.Log("atk        = " + param.atk);
-        Debug.Log("def        = " + param.def);
-        Debug.Log("mgc        = " + param.mgc);
-        Debug.Log("spd        = " + param.spd);
-        Debug.Log("next_exp   = " + param.next_exp);
+        LogExtensions.Black("level      = " + param.level);
+        LogExtensions.Black("hp         = " + param.hp);
+        LogExtensions.Black("atk        = " + param.atk);
+        LogExtensions.Black("def        = " + param.def);
+        LogExtensions.Black("mgc        = " + param.mgc);
+        LogExtensions.Black("spd        = " + param.spd);
+        LogExtensions.Black("next_exp   = " + param.next_exp);
     }
 }

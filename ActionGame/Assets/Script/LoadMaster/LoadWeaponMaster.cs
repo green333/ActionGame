@@ -16,7 +16,7 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     {
         if (null == (master = Resources.Load<WeaponMaster>("MasterData/WeaponMaster")))
         {
-            Debug.Log("failed to Resources.Load<WeaponMaster>");
+            LogExtensions.Red("failed to Resources.Load<WeaponMaster>");
         }
     }
 
@@ -52,9 +52,9 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     /// <param name="parma"></param>
     public void DebugLog(WeaponMaster.Param parma)
     {
-        Debug.Log("id   =" + parma.id);
-        Debug.Log("name =" + parma.name);
-        Debug.Log("type =" + parma.type);
-        Debug.Log("atk  =" + parma.atk);
+        LogExtensions.Black("id   =" + parma.id);
+        LogExtensions.Black("name =" + parma.name);
+        LogExtensions.Black("type =" + parma.type);
+        LogExtensions.Black("atk  =" + parma.atk);
     }
 }

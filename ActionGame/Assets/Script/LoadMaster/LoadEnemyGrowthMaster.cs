@@ -16,7 +16,7 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
     {
         if(null == (master = Resources.Load<EnemyGrowthMaster>("MasterData/EnemyGrowthMaster")))
         {
-            Debug.Log("failed to Resources.Load<EnemyGrowthMaster>");
+            LogExtensions.Red("failed to Resources.Load<EnemyGrowthMaster>");
         }
     }
 
@@ -78,15 +78,15 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemyGrowthMaster.Param param)
     {
-        Debug.Log("id    = " + param.id);
-        Debug.Log("name  = " + param.name);
-        Debug.Log("level = " + param.level);
-        Debug.Log("hp    = " + param.hp);
-        Debug.Log("atk   = " + param.atk);
-        Debug.Log("def   = " + param.def);
-        Debug.Log("mgc   = " + param.mgc);
-        Debug.Log("spd   = " + param.spd);
-        Debug.Log("exp   = " + param.exp);
+        LogExtensions.Black("id    = " + param.id);
+        LogExtensions.Black("name  = " + param.name);
+        LogExtensions.Black("level = " + param.level);
+        LogExtensions.Black("hp    = " + param.hp);
+        LogExtensions.Black("atk   = " + param.atk);
+        LogExtensions.Black("def   = " + param.def);
+        LogExtensions.Black("mgc   = " + param.mgc);
+        LogExtensions.Black("spd   = " + param.spd);
+        LogExtensions.Black("exp   = " + param.exp);
     }
 }
 

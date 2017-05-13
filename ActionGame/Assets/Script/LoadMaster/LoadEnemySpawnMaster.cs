@@ -15,7 +15,7 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     {
         if (null == (master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster")))
         {
-            Debug.Log("failed to Resources.Load<EnemySpawnMaster>");
+            LogExtensions.Red("failed to Resources.Load<EnemySpawnMaster>");
         }
         
     }
@@ -59,14 +59,14 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemySpawnMaster.Param param)
     {
-        Debug.Log("chapter_id          = " + param.chapter_id);
-        Debug.Log("enemy1_lvpm         = " + param.enemy1_lvpm);
-        Debug.Log("enemy1_name         = " + param.enemy1_name);
-        Debug.Log("enemy1_respawn_time = " + param.enemy1_respawn_time);
-        Debug.Log("enemy2_lvpm         = " + param.enemy2_lvpm);
-        Debug.Log("enemy2_name         = " + param.enemy2_name);
-        Debug.Log("enemy2_respawn_time = " + param.enemy2_respawn_time);
-        Debug.Log("enemy3_lvpm         = " + param.enemy3_lvpm);
-        Debug.Log("enemy3_name         = " + param.enemy3_name);
+        LogExtensions.Black("chapter_id          = " + param.chapter_id);
+        LogExtensions.Black("enemy1_lvpm         = " + param.enemy1_lvpm);
+        LogExtensions.Black("enemy1_name         = " + param.enemy1_name);
+        LogExtensions.Black("enemy1_respawn_time = " + param.enemy1_respawn_time);
+        LogExtensions.Black("enemy2_lvpm         = " + param.enemy2_lvpm);
+        LogExtensions.Black("enemy2_name         = " + param.enemy2_name);
+        LogExtensions.Black("enemy2_respawn_time = " + param.enemy2_respawn_time);
+        LogExtensions.Black("enemy3_lvpm         = " + param.enemy3_lvpm);
+        LogExtensions.Black("enemy3_name         = " + param.enemy3_name);
     }
 }

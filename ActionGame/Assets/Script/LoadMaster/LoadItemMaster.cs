@@ -24,7 +24,7 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     {
         if (null == (master = Resources.Load<ItemMaster>("MasterData/ItemMaster")))
         {
-            Debug.Log("failed to Resources.Load<ItemMaster>");
+            LogExtensions.Red("failed to Resources.Load<ItemMaster>");
         }
     }
 
@@ -62,10 +62,10 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     /// <param name="param"></param>
     public void DebugLog(ItemMaster.Param param)
     {
-        Debug.Log("id     = " + param.id);
-        Debug.Log("name   = " + param.name);
-        Debug.Log("kind   = " + param.kind);
-        Debug.Log("effect = " + param.effect);
-        Debug.Log("desc   = " + param.desc);
+        LogExtensions.Black("id     = " + param.id);
+        LogExtensions.Black("name   = " + param.name);
+        LogExtensions.Black("kind   = " + param.kind);
+        LogExtensions.Black("effect = " + param.effect);
+        LogExtensions.Black("desc   = " + param.desc);
     }
 }

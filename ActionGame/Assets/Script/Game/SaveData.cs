@@ -39,7 +39,7 @@ public class SaveData
     /// <summary> ステージID </summary>
     public int stageId { get; set; }
 
-    /// <summary> プレイヤー(キャラクター？)ステータス </summary>
+    /// <summary> プレイヤーステータス </summary>
     public CharacterStatus playerParam { get; set; }
 
     /// <summary> 武器情報  </summary>

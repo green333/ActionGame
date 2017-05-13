@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// プレイヤー基本パラメータ
+/// </summary>
+public class CharacterStatus
+{
+    public PlayerBaseMaster.Param param;
+    public int exp;
+}
+
 public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
 {
 

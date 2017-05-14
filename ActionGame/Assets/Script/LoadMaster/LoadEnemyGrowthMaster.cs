@@ -7,7 +7,7 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
     /// <summary>
     /// 敵成長マスタを格納する変数
     /// </summary>
-    EnemyGrowthMaster master;
+    EnemyGrowthMaster master = null;
 
     /// <summary>
     /// 初期化時に敵成長マスタを読み込む
@@ -16,7 +16,7 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
     {
         if(null == (master = Resources.Load<EnemyGrowthMaster>("MasterData/EnemyGrowthMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<EnemyGrowthMaster>");
+            LogExtensions.OutputError("failed to resources load enemy growth master");
         }
     }
 
@@ -78,15 +78,15 @@ public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemyGrowthMaster.Param param)
     {
-        LogExtensions.Black("id    = " + param.id);
-        LogExtensions.Black("name  = " + param.name);
-        LogExtensions.Black("level = " + param.level);
-        LogExtensions.Black("hp    = " + param.hp);
-        LogExtensions.Black("atk   = " + param.atk);
-        LogExtensions.Black("def   = " + param.def);
-        LogExtensions.Black("mgc   = " + param.mgc);
-        LogExtensions.Black("spd   = " + param.spd);
-        LogExtensions.Black("exp   = " + param.exp);
+        LogExtensions.OutputInfo("id    = " + param.id);
+        LogExtensions.OutputInfo("name  = " + param.name);
+        LogExtensions.OutputInfo("level = " + param.level);
+        LogExtensions.OutputInfo("hp    = " + param.hp);
+        LogExtensions.OutputInfo("atk   = " + param.atk);
+        LogExtensions.OutputInfo("def   = " + param.def);
+        LogExtensions.OutputInfo("mgc   = " + param.mgc);
+        LogExtensions.OutputInfo("spd   = " + param.spd);
+        LogExtensions.OutputInfo("exp   = " + param.exp);
     }
 }
 

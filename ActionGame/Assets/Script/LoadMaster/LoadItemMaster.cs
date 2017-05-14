@@ -15,7 +15,7 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     /// <summary>
     /// アイテムマスタを格納する変数
     /// </summary>
-    ItemMaster master;
+    ItemMaster master = null;
 
     /// <summary>
     /// 初期化時にアイテムマスタを読み込む
@@ -24,7 +24,7 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     {
         if (null == (master = Resources.Load<ItemMaster>("MasterData/ItemMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<ItemMaster>");
+            LogExtensions.OutputError("failed to resources load item master");
         }
     }
 
@@ -36,14 +36,23 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     public ItemMaster.Param GetItemInfo(string name)
     {
         int index = 0;
+        bool bChecked = false;
 
         foreach(ItemMaster.Param param in master.list)
         {
             if(param.name == name)
             {
+                bChecked = true;
                 break;
             }
             ++index;
+        }
+
+        if(bChecked == false)
+        {
+            // 指定した名前に一致するデータがない
+            LogExtensions.OutputWarn("there is no item master matching the There is no data matching the specified name, name = " + name);
+            return null;
         }
 
         ItemMaster.Param temp = new ItemMaster.Param();
@@ -62,10 +71,10 @@ public class LoadItemMaster : BaseSingleton<LoadItemMaster>
     /// <param name="param"></param>
     public void DebugLog(ItemMaster.Param param)
     {
-        LogExtensions.Black("id     = " + param.id);
-        LogExtensions.Black("name   = " + param.name);
-        LogExtensions.Black("kind   = " + param.kind);
-        LogExtensions.Black("effect = " + param.effect);
-        LogExtensions.Black("desc   = " + param.desc);
+        LogExtensions.OutputInfo("id     = " + param.id);
+        LogExtensions.OutputInfo("name   = " + param.name);
+        LogExtensions.OutputInfo("kind   = " + param.kind);
+        LogExtensions.OutputInfo("effect = " + param.effect);
+        LogExtensions.OutputInfo("desc   = " + param.desc);
     }
 }

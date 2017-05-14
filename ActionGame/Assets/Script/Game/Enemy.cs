@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour {
 
         foreach (EnemyGrowthMaster.Param p in this.growthParamList)
         {
-            Debug.Log("lv :" + p.level.ToString());
+            LoadEnemyGrowthMaster.Instance.DebugLog(p);
         }
     }
 

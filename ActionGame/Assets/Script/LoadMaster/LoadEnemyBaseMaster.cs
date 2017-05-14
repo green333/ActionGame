@@ -8,7 +8,7 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     /// <summary>
     /// 敵基本マスタを格納する変数
     /// </summary>
-    EnemyBaseMaster master;
+    EnemyBaseMaster master = null;
 
     /// <summary>
     /// 初期化時に敵基本マスタを読み込む
@@ -17,7 +17,7 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     {
         if (null == (master = Resources.Load<EnemyBaseMaster>("MasterData/EnemyBaseMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<EnemyBaseMaster>");
+            LogExtensions.OutputError("failed to resources load enemy base master");
         }
     }
 
@@ -29,14 +29,23 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     public EnemyBaseMaster.Param GetEnemyInfo(string name)
     {
         int index = 0;
+        bool bChecked = false;
 
         foreach (EnemyBaseMaster.Param param in master.list)
         {
             if (param.name == name)
             {
+                bChecked = true;
                 break;
             }
             ++index;
+        }
+
+        if(bChecked == false)
+        {
+            // 指定した名前に一致するデータがない
+            LogExtensions.OutputWarn("there is no enemy base master matching the There is no data matching the specified name = " + name);
+            return null;
         }
 
         EnemyBaseMaster.Param temp = new EnemyBaseMaster.Param();
@@ -56,19 +65,16 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     {
         eneymInfoList = new List<EnemyBaseMaster.Param>();
 
+        int index = 0;
+
+        string[] checkList = { esMasterParam.enemy1_name, esMasterParam.enemy2_name, esMasterParam.enemy3_name };
+
         foreach (EnemyBaseMaster.Param param in master.list)
         {
-            if(param.name == esMasterParam.enemy1_name)
+            if(param.name == checkList[index])
             {
                 eneymInfoList.Add(param);
-            }
-            if(param.name == esMasterParam.enemy2_name)
-            {
-                eneymInfoList.Add(param);
-            }
-            if (param.name == esMasterParam.enemy3_name)
-            {
-                eneymInfoList.Add(param);
+                ++index;
             }
 
             if (eneymInfoList.Count >= 3)
@@ -85,8 +91,8 @@ public class LoadEnemyBaseMaster : BaseSingleton<LoadEnemyBaseMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemyBaseMaster.Param param)
     {
-        LogExtensions.Black("id    = " + param.id);
-        LogExtensions.Black("name  = " + param.name);
-        LogExtensions.Black("index = " + param.index);
+        LogExtensions.OutputInfo("id    = " + param.id);
+        LogExtensions.OutputInfo("name  = " + param.name);
+        LogExtensions.OutputInfo("index = " + param.index);
     }
 }

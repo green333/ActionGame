@@ -6,7 +6,7 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
     /// <summary>
     /// ステージマスタを格納する変数
     /// </summary>
-    StageMaster master;
+    StageMaster master = null;
 
     /// <summary>
     /// 初期化時にステージマスタを読み込む
@@ -15,7 +15,7 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
     {
         if (null == (master = Resources.Load<StageMaster>("MasterData/StageMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<StageMaster>");
+            LogExtensions.OutputError("failed to resources load stage master");
         }
     }
 
@@ -25,13 +25,13 @@ public class LoadStageMaster :  BaseSingleton<LoadStageMaster>
     /// <param name="param"></param>
     public void DebugLog(StageMaster.Param param)
     {
-        LogExtensions.Black("id              = " + param.id);
-        LogExtensions.Black("name            = " + param.name);
-        LogExtensions.Black("chapter         = " + param.chapter);
-        LogExtensions.Black("normal_bgm_name = " + param.normal_bgm_name);
-        LogExtensions.Black("event_bgm_name  = " + param.event_bgm_name);
-        LogExtensions.Black("battle_bgm_name = " + param.battle_bgm_name);
-        LogExtensions.Black("boss_bgm_name   = " + param.boss_bgm_name);
+        LogExtensions.OutputInfo("id              = " + param.id);
+        LogExtensions.OutputInfo("name            = " + param.name);
+        LogExtensions.OutputInfo("chapter         = " + param.chapter);
+        LogExtensions.OutputInfo("normal_bgm_name = " + param.normal_bgm_name);
+        LogExtensions.OutputInfo("event_bgm_name  = " + param.event_bgm_name);
+        LogExtensions.OutputInfo("battle_bgm_name = " + param.battle_bgm_name);
+        LogExtensions.OutputInfo("boss_bgm_name   = " + param.boss_bgm_name);
 
     }
 

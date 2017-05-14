@@ -16,7 +16,7 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     /// <summary>
     /// プレイヤー基本マスタを格納する変数
     /// </summary>
-    PlayerBaseMaster master;
+    PlayerBaseMaster master = null;
 
     /// <summary>
     /// プレイヤーのレベル上限値
@@ -30,7 +30,7 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     {
         if (null == (master = Resources.Load<PlayerBaseMaster>("MasterData/PlayerBaseMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<PlayerBaseMaster>");
+            LogExtensions.OutputError("failed to resources load player base master");
         }
     }
 
@@ -41,6 +41,12 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     /// <returns></returns>
     public PlayerBaseMaster.Param GetPlayerInfo(int lv)
     {
+        if(lv < 0 || lv > PLAYER_LEVEL_MAX)
+        {
+            LogExtensions.OutputWarn("there is no player base master matching the There is no data matching the specified lv = " + lv);
+            return null;
+        }
+
         // くっそめんどくさいが、メンバ変数を一つ一つ移さないと、
         // ポインタ扱いなのかしらないが外で取得した変数をいじるとこちらの値も変わってしまうくそ仕様。
         PlayerBaseMaster.Param temp = new PlayerBaseMaster.Param();
@@ -65,12 +71,12 @@ public class LoadPlayerBaseMaster : BaseSingleton<LoadPlayerBaseMaster>
     /// <param name="param"></param>
     public void DebugLog(PlayerBaseMaster.Param param)
     {
-        LogExtensions.Black("level      = " + param.level);
-        LogExtensions.Black("hp         = " + param.hp);
-        LogExtensions.Black("atk        = " + param.atk);
-        LogExtensions.Black("def        = " + param.def);
-        LogExtensions.Black("mgc        = " + param.mgc);
-        LogExtensions.Black("spd        = " + param.spd);
-        LogExtensions.Black("next_exp   = " + param.next_exp);
+        LogExtensions.OutputInfo("level      = " + param.level);
+        LogExtensions.OutputInfo("hp         = " + param.hp);
+        LogExtensions.OutputInfo("atk        = " + param.atk);
+        LogExtensions.OutputInfo("def        = " + param.def);
+        LogExtensions.OutputInfo("mgc        = " + param.mgc);
+        LogExtensions.OutputInfo("spd        = " + param.spd);
+        LogExtensions.OutputInfo("next_exp   = " + param.next_exp);
     }
 }

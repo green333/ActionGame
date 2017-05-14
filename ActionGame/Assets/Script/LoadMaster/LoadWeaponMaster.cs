@@ -7,7 +7,7 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     /// <summary>
     /// 武器マスタを格納する変数
     /// </summary>
-    WeaponMaster master;
+    WeaponMaster master = null;
 
     /// <summary>
     /// 初期化時に武器マスタを読み込む
@@ -16,7 +16,7 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     {
         if (null == (master = Resources.Load<WeaponMaster>("MasterData/WeaponMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<WeaponMaster>");
+            LogExtensions.OutputError("failed to resources load weapon master");
         }
     }
 
@@ -28,15 +28,24 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     public WeaponMaster.Param getWeaponInfo(string name)
     {
         int index = 0;
+        bool bChecked = false;
+
         foreach (WeaponMaster.Param param in master.list)
         {
             if (param.name == name)
             {
+                bChecked = true;
                 break;
             }
             ++index;
         }
 
+        if(bChecked == false)
+        {
+            // 指定した名前に一致するデータがない
+            LogExtensions.OutputWarn("there is no weapon master matching the There is no data matching the specified name, name = " + name);
+            return null;
+        }
         WeaponMaster.Param temp = new WeaponMaster.Param();
         temp.name   = master.list[index].name;
         temp.id     = master.list[index].id;
@@ -52,9 +61,9 @@ public class LoadWeaponMaster : BaseSingleton<LoadWeaponMaster>
     /// <param name="parma"></param>
     public void DebugLog(WeaponMaster.Param parma)
     {
-        LogExtensions.Black("id   =" + parma.id);
-        LogExtensions.Black("name =" + parma.name);
-        LogExtensions.Black("type =" + parma.type);
-        LogExtensions.Black("atk  =" + parma.atk);
+        LogExtensions.OutputInfo("id   =" + parma.id);
+        LogExtensions.OutputInfo("name =" + parma.name);
+        LogExtensions.OutputInfo("type =" + parma.type);
+        LogExtensions.OutputInfo("atk  =" + parma.atk);
     }
 }

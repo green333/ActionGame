@@ -6,7 +6,7 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     /// <summary>
     /// 敵出現マスタを格納する変数
     /// </summary>
-    EnemySpawnMaster master;
+    EnemySpawnMaster master = null;
 
     /// <summary>
     /// 初期化時に敵出現マスタを読み込む
@@ -15,9 +15,9 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     {
         if (null == (master = Resources.Load<EnemySpawnMaster>("MasterData/EnemySpawnMaster")))
         {
-            LogExtensions.Red("failed to Resources.Load<EnemySpawnMaster>");
+            LogExtensions.OutputError("failed to resources load enemy spawn master");
         }
-        
+
     }
 
     /// <summary>
@@ -29,14 +29,23 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     public EnemySpawnMaster.Param GetEnemySpawanInfo(int stage_id,int chapter_id)
     {
         int index = 0;
+        bool bChecked = false;
 
         foreach (EnemySpawnMaster.Param param in master.list)
         {
             if(param.stage_id == stage_id && param.chapter_id == chapter_id)
             {
+                bChecked = true;
                 break;
             }
             ++index;
+        }
+
+        if(bChecked == false)
+        {
+            // 指定したステージIDとチャプターIDに一致するデータがない
+            LogExtensions.OutputWarn("there is no enemy spawn master matching the There is no data matching the specified stage_id and chapter_id, stage_id = " + stage_id + ", chapter_id = " + chapter_id);
+            return null;
         }
 
         EnemySpawnMaster.Param temp = new EnemySpawnMaster.Param();
@@ -59,14 +68,14 @@ public class LoadEnemySpawnMaster : BaseSingleton<LoadEnemySpawnMaster>
     /// <param name="param"></param>
     public void DebugLog(EnemySpawnMaster.Param param)
     {
-        LogExtensions.Black("chapter_id          = " + param.chapter_id);
-        LogExtensions.Black("enemy1_lvpm         = " + param.enemy1_lvpm);
-        LogExtensions.Black("enemy1_name         = " + param.enemy1_name);
-        LogExtensions.Black("enemy1_respawn_time = " + param.enemy1_respawn_time);
-        LogExtensions.Black("enemy2_lvpm         = " + param.enemy2_lvpm);
-        LogExtensions.Black("enemy2_name         = " + param.enemy2_name);
-        LogExtensions.Black("enemy2_respawn_time = " + param.enemy2_respawn_time);
-        LogExtensions.Black("enemy3_lvpm         = " + param.enemy3_lvpm);
-        LogExtensions.Black("enemy3_name         = " + param.enemy3_name);
+        LogExtensions.OutputInfo("chapter_id          = " + param.chapter_id);
+        LogExtensions.OutputInfo("enemy1_lvpm         = " + param.enemy1_lvpm);
+        LogExtensions.OutputInfo("enemy1_name         = " + param.enemy1_name);
+        LogExtensions.OutputInfo("enemy1_respawn_time = " + param.enemy1_respawn_time);
+        LogExtensions.OutputInfo("enemy2_lvpm         = " + param.enemy2_lvpm);
+        LogExtensions.OutputInfo("enemy2_name         = " + param.enemy2_name);
+        LogExtensions.OutputInfo("enemy2_respawn_time = " + param.enemy2_respawn_time);
+        LogExtensions.OutputInfo("enemy3_lvpm         = " + param.enemy3_lvpm);
+        LogExtensions.OutputInfo("enemy3_name         = " + param.enemy3_name);
     }
 }

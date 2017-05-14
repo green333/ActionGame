@@ -4,52 +4,32 @@ using Debug = UnityEngine.Debug;
 public class LogExtensions
 {
     /// <summary>
-    /// 赤色のログを出力
+    /// エラーとしてログ出力する
     /// </summary>
     /// <param name="message"></param>
     [Conditional("UNITY_EDITOR")]
-    public static void Red(string message)
+    public static void OutputError(string message)
     {
-        Debug.Log("<color=red>" + message + "</color>");
+        Debug.Log("<color=red>[Error] : " + message + "</color>");
     }
 
     /// <summary>
-    /// 青色のログを出力
+    /// 確認用としてログ出力する
     /// </summary>
     /// <param name="message"></param>
     [Conditional("UNITY_EDITOR")]
-    public static void Blue(string message)
+    public static void OutputInfo(string message)
     {
-        Debug.Log("<color=blue>" + message + "</color>");
+        Debug.Log("[Info] : " + message);
     }
 
     /// <summary>
-    /// 黄色のログを出力
+    /// ワーニングとして出力する
     /// </summary>
     /// <param name="message"></param>
     [Conditional("UNITY_EDITOR")]
-    public static void Yellow(string message)
+    public static void OutputWarn(string message)
     {
-        Debug.Log("<color=yellow>" + message + "</color>");
-    }
-
-    /// <summary>
-    /// 緑色のログを出力
-    /// </summary>
-    /// <param name="message"></param>
-    [Conditional("UNITY_EDITOR")]
-    public static void Green(string message)
-    {
-        Debug.Log("<color=green>" + message + "</color>");
-    }
-
-    /// <summary>
-    /// 黒色のログを出力
-    /// </summary>
-    /// <param name="message"></param>
-    [Conditional("UNITY_EDITOR")]
-    public static void Black(string message)
-    {
-        Debug.Log("<color=black>" + message + "</color>");
+        Debug.Log("<color=yellow>[Warn] : " + message + "</color>");
     }
 }

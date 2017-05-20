@@ -2,25 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LoadEnemyGrowthMaster : BaseSingleton<LoadEnemyGrowthMaster>
+public class LoadEnemyGrowthMaster
 {
-    /// <summary>
-    /// 敵成長マスタを格納する変数
-    /// </summary>
-    EnemyGrowthMaster master = null;
-
-    /// <summary>
-    /// 初期化時に敵成長マスタを読み込む
-    /// </summary>
-    public void Initialize()
-    {
-        if(null == (master = Resources.Load<EnemyGrowthMaster>("MasterData/EnemyGrowthMaster")))
-        {
-            LogExtensions.OutputError("failed to resources load enemy growth master");
-        }
-    }
-
-    
+     
     /// <summary>
     /// 敵基本マスタパラメーターと敵出現パラメーターとプレイヤーのレベルから、出現する敵の情報を取得する
     /// </summary>

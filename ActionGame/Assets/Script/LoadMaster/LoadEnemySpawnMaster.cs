@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadEnemySpawnMaster
+public class LoadEnemySpawnMaster : TextMasterManager
 {
-  
+    static LoadEnemySpawnMaster _instance = new LoadEnemySpawnMaster();
+
+    static public LoadEnemySpawnMaster instance { get { return _instance; } }
+
+    const string filename = "Assets/Resources/MasterData/敵出現マスタ.txt";
+
+    const string COL_STAGE_ID   = "stage_id";
+    const string COL_CHAPTER_ID = "chapter_id";
+
     /// <summary>
     /// 指定したステージと章に出現する敵の情報を取得
     /// </summary>
@@ -12,7 +20,24 @@ public class LoadEnemySpawnMaster
     /// <returns></returns>
     public EnemySpawnMaster.Param GetEnemySpawanInfo(int stage_id,int chapter_id)
     {
-        return null;
+        EnemySpawnMaster.Param param = null;
+
+        base.Open(filename);
+
+        string[] searchJson = new string[]
+        {
+            base.VariableToJson(COL_STAGE_ID, stage_id),
+            base.VariableToJson(COL_CHAPTER_ID, chapter_id)
+        };
+        
+        string getJsonStr = base.MultipleSearch(searchJson);
+        if(getJsonStr != null)
+        {
+            param = JsonUtility.FromJson<EnemySpawnMaster.Param>(getJsonStr);
+        }
+        base.Close();
+
+        return param;
     }
 
     /// <summary>

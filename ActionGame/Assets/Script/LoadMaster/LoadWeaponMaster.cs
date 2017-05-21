@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadWeaponMaster
+public class LoadWeaponMaster : TextMasterManager
 {
+    const string filename = "Resources/MasterData/武器マスタ.txt";
 
     /// <summary>
     /// 指定した名前に一致する武器情報を取得する
@@ -11,7 +12,18 @@ public class LoadWeaponMaster
     /// <returns></returns>
     public WeaponMaster.Param getWeaponInfo(string name)
     {
-        return null;
+        WeaponMaster.Param ret = null;
+
+        base.Open(filename);
+
+        string getJsonStr = base.Search(name);
+        if(getJsonStr != null)
+        {
+            ret = JsonUtility.FromJson<WeaponMaster.Param>(getJsonStr);
+        }
+        base.Close();
+
+        return ret;
     }
 
     /// <summary>

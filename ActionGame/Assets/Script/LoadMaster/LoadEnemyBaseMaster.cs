@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 public class LoadEnemyBaseMaster : TextMasterManager
 {
-    const string filename = "Resources/MasterData/敵成長マスタ.txt";
+    static LoadEnemyBaseMaster _instance = new LoadEnemyBaseMaster();
+
+    static public LoadEnemyBaseMaster instance { get { return _instance; } }
+
+    const string filename = "Assets/Resources/MasterData/敵基本マスタ.txt";
 
     /// <summary>
     /// 指定した名前に一致する敵の情報を取得する
@@ -35,10 +39,28 @@ public class LoadEnemyBaseMaster : TextMasterManager
     public void GetEnemyInfo(out List<EnemyBaseMaster.Param> eneymInfoList,EnemySpawnMaster.Param esMasterParam)
     {
         eneymInfoList = new List<EnemyBaseMaster.Param>();
+
+        string[] searchNameList = { esMasterParam.enemy1_name, esMasterParam.enemy2_name, esMasterParam.enemy3_name };
+
         base.Open(filename);
 
+        string[] getJsonStr = base.SearchList(searchNameList);
+
         base.Close();
-      
+
+        foreach (string str in getJsonStr)
+        {
+            if(str != null)
+            {
+                eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
+            }
+        }
+
+        // 取得しなければならない数と一致していない
+        if(eneymInfoList.Count != searchNameList.Length)
+        {
+            LogExtensions.OutputWarn("敵基本マスタから取得した敵情報の数が少ないです。");
+        }
     }
 
 

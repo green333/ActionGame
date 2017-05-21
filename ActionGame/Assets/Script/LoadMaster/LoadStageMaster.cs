@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadStageMaster
+public class LoadStageMaster : TextMasterManager
 {
 
     /// <summary>

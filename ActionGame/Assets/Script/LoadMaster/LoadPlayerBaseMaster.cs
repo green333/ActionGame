@@ -10,13 +10,21 @@ public class CharacterStatus
     public int exp;
 }
 
-public class LoadPlayerBaseMaster
+public class LoadPlayerBaseMaster : TextMasterManager
 {
+    static LoadPlayerBaseMaster _instance = new LoadPlayerBaseMaster();
+
+    static public LoadPlayerBaseMaster instance { get { return _instance; } }
+
+    const string filename = "Assets/Resources/MasterData/プレイヤー基本マスタ.txt";
+
     /// <summary>
     /// プレイヤーのレベル上限値
     /// </summary>
     static public readonly int PLAYER_LEVEL_MAX = 100;
-    
+
+    const string COL_LEVEL = "level";
+
     /// <summary>
     /// 指定したレベルに一致するプレイヤー情報を取得する
     /// </summary>
@@ -24,7 +32,19 @@ public class LoadPlayerBaseMaster
     /// <returns></returns>
     public PlayerBaseMaster.Param GetPlayerInfo(int lv)
     {
-        return null;
+        PlayerBaseMaster.Param param = null;
+        base.Open(filename);
+
+        
+        string getJsonStr = base.Search(base.VariableToJson(COL_LEVEL, lv));
+
+        base.Close();
+        if(getJsonStr != null)
+        {
+            param = JsonUtility.FromJson<PlayerBaseMaster.Param>(getJsonStr);
+        }
+
+        return param;
     }
 
     /// <summary>

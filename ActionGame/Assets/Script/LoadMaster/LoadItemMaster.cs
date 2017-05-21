@@ -10,9 +10,10 @@ public class ItemInfo
     public int num;
 }
 
-public class LoadItemMaster
+public class LoadItemMaster : TextMasterManager
 {
-  
+    const string filename = "Resources/MasterData/アイテママスタ.txt";
+
     /// <summary>
     /// 指定した名前に一致するアイテム情報を取得する
     /// </summary>

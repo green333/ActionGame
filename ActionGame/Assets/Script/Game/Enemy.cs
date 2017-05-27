@@ -22,8 +22,8 @@ public class Enemy : MonoBehaviour {
      * (現在プレイヤークラスにレベル変数を持たせていないので、敵のステータスを取得するときは引数に１を与えること。)
      */
 
-    // Use this for initialization
-	void Start () {
+    public void Init()
+    {
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;
         EnemySpawnMaster.Param enemySpawnParam = LoadEnemySpawnMaster.instance.GetEnemySpawanInfo(SaveData.Instance.stageId, SaveData.Instance.chapter);
@@ -33,10 +33,7 @@ public class Enemy : MonoBehaviour {
         {
             LoadEnemyGrowthMaster.instance.DebugLog(p);
         }
-    }
 
-    // Update is called once per frame
-    void Update () {
-	
-	}
+        LogExtensions.OutputInfo("Enemy.Init is call.");
+    }
 }

@@ -33,8 +33,115 @@ public class Player : MonoBehaviour {
     /// <summary> プレイヤー武器パラメータ </summary>
     private WeaponMaster.Param weaponParam = null;
 
+    /// <summary> リジッドボディ </summary>
+    private Rigidbody rig;
+
     /// <summary> レベルアップフラグ </summary>
     private bool isLevelUp = false;
+
+    /// <summary> プレイヤーの状態 </summary>
+    private enum STATE : int {
+        WAIT = 0,
+        MOVE,
+    }
+    private STATE state;
+
+    /// <summary> 回転方向 </summary>
+    private enum ROTDIR : int {
+        NONE = 0,
+        LEFT,
+        RIGHT,
+    }
+    private ROTDIR rotDir;
+
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public void Init()
+    {
+        this.rotDir = ROTDIR.NONE;
+        this.state = STATE.WAIT;
+        this.rig = this.gameObject.GetComponent<Rigidbody>();
+        LoadPlayerData();
+    }
+
+    /// <summary>
+    /// 更新
+    /// </summary>
+    public void PlayerUpdate()
+    {
+        LevelUp();
+
+        //  Aキーで経験値加算
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            AddExp(1000);
+        }
+
+        //  入力受け付け
+        InputReception();
+    }
+
+    /// <summary>
+    /// 入力受け付け
+    /// </summary>
+    private void InputReception()
+    {
+        this.state = STATE.WAIT;
+        this.rotDir = ROTDIR.NONE;
+
+        //  前移動
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            this.rotDir = ROTDIR.NONE;
+            this.state = STATE.MOVE;
+        }
+
+        //  左右移動
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            this.rotDir = ROTDIR.LEFT;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            this.rotDir = ROTDIR.RIGHT;
+        }
+    }
+
+    /// <summary>
+    /// 移動
+    /// </summary>
+    public void Move()
+    {
+        switch(this.state)
+        {
+            case STATE.WAIT:
+                this.rig.velocity = Vector3.zero;
+                break;
+            case STATE.MOVE:
+                this.rig.AddForce(this.transform.forward);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 回転
+    /// </summary>
+    public void Rotate()
+    {
+        switch (this.rotDir)
+        {
+            case ROTDIR.NONE:
+                this.rig.angularVelocity = Vector3.zero;
+                break;
+            case ROTDIR.LEFT:
+                this.rig.AddTorque(Vector3.down);
+                break;
+            case ROTDIR.RIGHT:
+                this.rig.AddTorque(Vector3.up);
+                break;
+        }
+    }
 
     /// <summary>
     /// セーブデータが存在する場合は、セーブデータから取得し、なければプレイヤーの初期情報を取得する
@@ -58,26 +165,6 @@ public class Player : MonoBehaviour {
             weaponParam     = saveData.weaponParam;
         }
     }
-
-    // Use this for initialization
-    void Start () {
-
-        // プレイヤーのデータを読み込む
-        LoadPlayerData();
-    }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        LevelUp();
-
-        //  Aキーで経験値加算
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            AddExp(1000);
-        }
-
-	}
 
     /// <summary>
     /// 経験値加算(レベルアップが可能ならフラグを立てる)

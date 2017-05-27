@@ -3,34 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 
 /// <summary>
-/// テキストを読み込むクラス
-/// </summary>
-public class TexLoader{
-
-    private StreamReader _stream = null;
-    protected StreamReader stream { get { return _stream; } }
-
-    protected void Open(string filename,string open_encode = "UTF-8")
-    {
-        _stream = new StreamReader(filename, System.Text.Encoding.GetEncoding(open_encode));
-    }
-
-    protected void Close()
-    {
-        stream.Close();
-    }
-
-    protected string GetLine()
-    {
-        if(stream.EndOfStream)
-        {
-            return null;
-        }
-        return stream.ReadLine();
-    }
-}
-
-/// <summary>
 /// テキストに書き出したマスタから必要なデータを探したりするクラス
 /// </summary>
 public class TextMasterManager : TexLoader
@@ -51,15 +23,15 @@ public class TextMasterManager : TexLoader
     {
         string ret = null;
 
-        string getLine  = base.GetLine();
+        string getLine = base.GetLine();
 
-        while(getLine != null)
+        while (getLine != null)
         {
             // -1以外の場合、指定した文字列に一致するデータが見つかったので
             // 見つかった行の文字列を戻り値に格納しwhileを抜ける
-            if(getLine.IndexOf(val) != -1)
+            if (getLine.IndexOf(val) != -1)
             {
-                ret =  getLine;
+                ret = getLine;
                 break;
             }
 
@@ -79,25 +51,25 @@ public class TextMasterManager : TexLoader
     {
         string[] ret = new string[valList.Length];
 
-        for(int i = 0; i < valList.Length;++i)
+        for (int i = 0; i < valList.Length; ++i)
         {
             ret[i] = null;
         }
 
         string getLine = base.GetLine();
 
-        while(getLine != null)
+        while (getLine != null)
         {
             // 引数の数だけ検索を行う
-            for(int i = 0; i < valList.Length; ++i)
+            for (int i = 0; i < valList.Length; ++i)
             {
-                if(ret[i] != null) { continue; }
-                if(getLine.IndexOf(valList[i]) != -1)
+                if (ret[i] != null) { continue; }
+                if (getLine.IndexOf(valList[i]) != -1)
                 {
                     ret[i] = getLine;
                 }
             }
-            
+
             getLine = base.GetLine();
         }
 
@@ -123,22 +95,22 @@ public class TextMasterManager : TexLoader
         while (getLine != null)
         {
             // チェックリストを初期化
-            for(int i = 0; i < checkedList.Length; ++i)
+            for (int i = 0; i < checkedList.Length; ++i)
             {
                 checkedList[i] = false;
             }
 
             // 
-            foreach(string search in searchList)
+            foreach (string search in searchList)
             {
-                if(getLine.IndexOf(search) != -1)
+                if (getLine.IndexOf(search) != -1)
                 {
                     checkedList[checkIndex] = true;
                     ++checkIndex;
                 }
             }
 
-            foreach(bool check in checkedList)
+            foreach (bool check in checkedList)
             {
                 if (check == false)
                 {
@@ -148,7 +120,7 @@ public class TextMasterManager : TexLoader
                 cheked = true;
                 break;
             }
-            if(cheked)
+            if (cheked)
             {
                 ret = getLine;
                 break;
@@ -169,7 +141,7 @@ public class TextMasterManager : TexLoader
     /// <param name="var"></param>
     /// <param name="val"></param>
     /// <returns></returns>
-    protected string VariableToJson(string var,int val)
+    protected string VariableToJson(string var, int val)
     {
         return ("\"" + var + "\":" + val.ToString());
     }

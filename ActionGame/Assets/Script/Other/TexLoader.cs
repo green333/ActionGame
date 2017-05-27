@@ -54,29 +54,18 @@ public class TexLoader{
     /// <returns></returns>
     protected string[] GetLine(int line)
     {
-        string[] ret = null;
+        // 長さlineの配列をnullで初期化
+        string[] ret = Enumerable.Repeat<string>(string.Empty, line).ToArray();
 
-        do
+        for (int i = 0; i < line; ++i)
         {
-            // 一行も読めなかったときはbreak
-            if (stream.EndOfStream)
-            {
-                break;
-            }
-
-            // 長さlineの配列をnullで初期化
-            ret = Enumerable.Repeat<string>(string.Empty, line).ToArray();
-
-            for (int i = 0; i < line;++i)
-            {
-                ret[i] = stream.ReadLine();
-                if(stream.EndOfStream)
-                {
-                    break;
-                }
-            }
-        } while (false);
-
+           ret[i] = stream.ReadLine();
+           if (stream.EndOfStream)
+           {
+               break;
+           }
+        }
+    
         return ret;
     }
 }

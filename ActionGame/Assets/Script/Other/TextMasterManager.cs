@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 /// <summary>
 /// テキストに書き出したマスタから必要なデータを探したりするクラス
@@ -15,7 +16,7 @@ public class TextMasterManager : TexLoader
 
     /// <summary>
     /// 指定した文字列に一致する文字列が見つかった場合、見つけた行の文字列を返す(なければnull)
-    /// (一致するデータがなければnullを返す)
+    /// (一致するデータがなければstring.Emptyを返す)
     /// </summary>
     /// <param name="val"></param>
     /// <returns></returns>
@@ -25,7 +26,7 @@ public class TextMasterManager : TexLoader
 
         string getLine = base.GetLine();
 
-        while (getLine != null)
+        while (getLine != string.Empty)
         {
             // -1以外の場合、指定した文字列に一致するデータが見つかったので
             // 見つかった行の文字列を戻り値に格納しwhileを抜ける
@@ -43,31 +44,33 @@ public class TextMasterManager : TexLoader
 
     /// <summary>
     /// 複数のデータを取得
-    /// (指定したデータに一致するものがなければnullを返す)
+    /// 指定した行数で配列生成するが指定した行数分読み込めなかった場合、配列の中にはstring.Emptyが格納されている。
     /// </summary>
     /// <param name="valList"></param>
     /// <returns></returns>
     protected string[] SearchList(string[] valList)
     {
-        string[] ret = new string[valList.Length];
-
-        for (int i = 0; i < valList.Length; ++i)
-        {
-            ret[i] = null;
-        }
+        // 長さ valList.Lengthの配列をstring.Emptyで初期化
+        string[] ret =  Enumerable.Repeat<string>(string.Empty, valList.Length).ToArray();
 
         string getLine = base.GetLine();
 
+        int cheked = 0;
         while (getLine != null)
         {
-            // 引数の数だけ検索を行う
-            for (int i = 0; i < valList.Length; ++i)
+            foreach(string str in valList)
             {
-                if (ret[i] != null) { continue; }
-                if (getLine.IndexOf(valList[i]) != -1)
+                if (getLine.IndexOf(str) != -1)
                 {
-                    ret[i] = getLine;
+                    ret[cheked++] = str;
+                    break;
                 }
+            }
+
+            // 検索したい数と同じ数だけ取得できたらbreakする
+            if(cheked == valList.Length)
+            {
+                break;
             }
 
             getLine = base.GetLine();

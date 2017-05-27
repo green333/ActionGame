@@ -4,14 +4,29 @@ using System.Collections.Generic;
 
 public class LoadEnemyBaseMaster : TextMasterManager
 {
+    /// <summary>
+    /// 自身のインスタンス
+    /// </summary>
     static LoadEnemyBaseMaster _instance = new LoadEnemyBaseMaster();
 
+    /// <summary>
+    /// インスタンス取得プロパティ
+    /// </summary>
     static public LoadEnemyBaseMaster instance { get { return _instance; } }
 
+    /// <summary>
+    /// マスターデータのファイルパス
+    /// </summary>
     const string filename = "Assets/Resources/MasterData/敵基本マスタ.txt";
 
     /// <summary>
-    /// 指定した名前に一致する敵の情報を取得する
+    /// 名前カラム
+    /// </summary>
+    const string COL_NAME = "name";
+
+    /// <summary>
+    /// 指定した名前に一致する敵の情報を取得する。
+    /// 指定した名前に一致するデータがなければnullを返す。
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -19,13 +34,12 @@ public class LoadEnemyBaseMaster : TextMasterManager
     {
         EnemyBaseMaster.Param param = null;
         base.Open(filename);
-        
-        string getJsonStr = base.Search(name);
-        if(getJsonStr != null)
+
+        string getJsonStr = base.Search(base.VariableToJson(COL_NAME, name));
+        if(getJsonStr != string.Empty)
         {
             param = JsonUtility.FromJson<EnemyBaseMaster.Param>(getJsonStr);
         }
-
         base.Close();
 
         return param;
@@ -40,12 +54,16 @@ public class LoadEnemyBaseMaster : TextMasterManager
     {
         eneymInfoList = new List<EnemyBaseMaster.Param>();
 
-        string[] searchNameList = { esMasterParam.enemy1_name, esMasterParam.enemy2_name, esMasterParam.enemy3_name };
+        // 検索する名前一覧
+        string[] searchNameList = 
+        {
+            base.VariableToJson(COL_NAME,esMasterParam.enemy1_name),
+            base.VariableToJson(COL_NAME,esMasterParam.enemy2_name),
+            base.VariableToJson(COL_NAME,esMasterParam.enemy3_name),
+        };
 
         base.Open(filename);
-
         string[] getJsonStr = base.SearchList(searchNameList);
-
         base.Close();
 
         foreach (string str in getJsonStr)

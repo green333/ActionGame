@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
-
+[RequireComponent(typeof(Rigidbody))]
+public class Player : BaseBehaviour
+{
     /*
      * セーブデータがない場合はマスタﾃﾞｰﾀから取得するようにする。
      * PlayerBaseMaster.ParamとWeaponMaster.Paramを変数でPlayerクラスにもたせる。
@@ -57,7 +58,7 @@ public class Player : MonoBehaviour {
     /// <summary>
     /// 初期化
     /// </summary>
-    public void Init()
+    public override void BaseStart()
     {
         this.rotDir = ROTDIR.NONE;
         this.state = STATE.WAIT;
@@ -66,9 +67,18 @@ public class Player : MonoBehaviour {
     }
 
     /// <summary>
+    /// 固定フレームレートの更新
+    /// </summary>
+    public override void BaseFixedUpdate()
+    {
+        Move();
+        Rotate();
+    }
+
+    /// <summary>
     /// 更新
     /// </summary>
-    public void PlayerUpdate()
+    public override void BaseUpdate()
     {
         LevelUp();
 
@@ -90,14 +100,14 @@ public class Player : MonoBehaviour {
         this.state = STATE.WAIT;
         this.rotDir = ROTDIR.NONE;
 
-        //  前移動
+        //  移動
         if (Input.GetKey(KeyCode.UpArrow))
         {
             this.rotDir = ROTDIR.NONE;
             this.state = STATE.MOVE;
         }
 
-        //  左右移動
+        //  回転
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             this.rotDir = ROTDIR.LEFT;

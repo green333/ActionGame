@@ -4,21 +4,27 @@ using System.Collections;
 public class GameMain : MonoBehaviour
 {
     /// <summary> プレイヤー </summary>
-    [SerializeField] private Player player;
+    [SerializeField] private BaseBehaviour player;
     /// <summary> エネミー </summary>
-    [SerializeField] private Enemy enemy;
+    [SerializeField] private BaseBehaviour enemy;
+
+    //void Awake()
+    //{
+    //    player = new Player();
+    //    enemy = new Enemy();
+    //}
 
 	// Use this for initialization
 	void Start ()
     {
-        player.Init();
-        enemy.Init();
+        player.BaseStart();
+        enemy.BaseStart();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        player.PlayerUpdate();
+        player.BaseUpdate();
 	}
 
     /// <summary>
@@ -27,7 +33,6 @@ public class GameMain : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        player.Move();
-        player.Rotate();
+        player.BaseFixedUpdate();
     }
 }

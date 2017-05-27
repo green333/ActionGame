@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : BaseBehaviour
+{
 
     List<EnemyBaseMaster.Param> baseParamList;
     List<EnemyGrowthMaster.Param> growthParamList;
@@ -22,7 +23,10 @@ public class Enemy : MonoBehaviour {
      * (現在プレイヤークラスにレベル変数を持たせていないので、敵のステータスを取得するときは引数に１を与えること。)
      */
 
-    public void Init()
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    public override void BaseStart()
     {
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;

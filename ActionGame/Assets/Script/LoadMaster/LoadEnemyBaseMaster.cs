@@ -65,10 +65,9 @@ public class LoadEnemyBaseMaster : TextMasterManager
         base.Open(filename);
         string[] getJsonStr = base.SearchList(searchNameList);
         base.Close();
-
         foreach (string str in getJsonStr)
         {
-            if(str != null)
+            if (str != string.Empty)
             {
                 eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
             }

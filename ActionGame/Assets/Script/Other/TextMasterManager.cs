@@ -62,7 +62,7 @@ public class TextMasterManager : TexLoader
             {
                 if (getLine.IndexOf(str) != -1)
                 {
-                    ret[cheked++] = str;
+                    ret[cheked++] = getLine;
                     break;
                 }
             }

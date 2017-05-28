@@ -8,11 +8,11 @@ public class GameMain : MonoBehaviour
     /// <summary> エネミー </summary>
     [SerializeField] private BaseBehaviour enemy;
 
-    //void Awake()
-    //{
-    //    player = new Player();
-    //    enemy = new Enemy();
-    //}
+    void Awake()
+    {
+        player = gameObject.AddComponent<Player>();
+        enemy = gameObject.AddComponent<Enemy>();
+    }
 
 	// Use this for initialization
 	void Start ()

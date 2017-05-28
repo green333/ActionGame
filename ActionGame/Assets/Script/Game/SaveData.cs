@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// セーブデータクラス
@@ -44,6 +45,9 @@ public class SaveData
 
     /// <summary> 武器情報  </summary>
     public WeaponMaster.Param weaponParam { get; set; }
+
+    /// <summary> アイテム情報 </summary>
+    public List<ItemInfo> itemList { get; set; }
 
     /// <summary>
     /// セーブ

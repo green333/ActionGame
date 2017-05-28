@@ -25,6 +25,8 @@ public class Player : BaseBehaviour
     /// </summary>
     private const int PLAYER_INIT_LEVEL = 1;
     private const string PLAYER_INIT_WEAPON = "マシュ";
+    private const string PLAYER_INIT_HAVE_ITEM_NAME = "薬草";
+    private const int PLAYER_INIT_HAVE_ITEM_NUM = 3;
 
     /// <summary> アイテムリスト </summary>
     private List<ItemInfo> itemList = null;
@@ -152,6 +154,7 @@ public class Player : BaseBehaviour
     /// </summary>
     private void LoadPlayerData()
     {
+
         //  ロード出来たらロードしてnullならマスターから取得
         if (SaveData.Instance.Load(SaveData.KEY_SLOT_1) == null)
         {
@@ -161,6 +164,11 @@ public class Player : BaseBehaviour
             status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
             status.exp   = 0;
             weaponParam = LoadWeaponMaster.instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
+            itemList = new List<ItemInfo>();
+            ItemInfo itemInfo = new ItemInfo();
+            itemInfo.param = LoadItemMaster.instance.GetItemInfo(PLAYER_INIT_HAVE_ITEM_NAME);
+            itemInfo.num = PLAYER_INIT_HAVE_ITEM_NUM;
+            itemList.Add(itemInfo);
         }
         else
         {
@@ -168,12 +176,18 @@ public class Player : BaseBehaviour
             SaveData saveData = SaveData.Instance.Load(SaveData.KEY_SLOT_1);
             status          = saveData.playerParam;
             weaponParam     = saveData.weaponParam;
+            itemList        = saveData.itemList;
         }
 
         //　ステータスをログに表示
         LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
         // 武器情報をログに表示
         LoadWeaponMaster.instance.DebugLog(this.weaponParam);
+        // アイテム情報をログに表示
+        for(int i = 0; i < itemList.Count; ++i)
+        {
+            LoadItemMaster.instance.DebugLog(itemList[i]);
+        }
     }
 
     /// <summary>

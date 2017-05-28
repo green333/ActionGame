@@ -4,9 +4,9 @@ using System.Collections;
 public class GameMain : MonoBehaviour
 {
     /// <summary> プレイヤー </summary>
-    [SerializeField] private BaseBehaviour player;
+    private BaseBehaviour player;
     /// <summary> エネミー </summary>
-    [SerializeField] private BaseBehaviour enemy;
+    private BaseBehaviour enemy;
 
     void Awake()
     {

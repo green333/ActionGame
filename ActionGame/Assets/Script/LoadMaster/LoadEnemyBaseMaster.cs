@@ -87,8 +87,10 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(EnemyBaseMaster.Param param)
     {
-        LogExtensions.OutputInfo("id    = " + param.id);
-        LogExtensions.OutputInfo("name  = " + param.name);
-        LogExtensions.OutputInfo("index = " + param.index);
+        LogExtensions.OutputInfo(
+            "[id:"      + param.id      + "] " +
+            "[name:"    + param.name    + "] " +
+            "[index:"   + param.index   + "] "
+            );
     }
 }

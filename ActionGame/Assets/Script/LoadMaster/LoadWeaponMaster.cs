@@ -3,14 +3,27 @@ using System.Collections;
 
 public class LoadWeaponMaster : TextMasterManager
 {
-    const string filename = "Resources/MasterData/武器マスタ.txt";
+    /// <summary>
+    /// 自身のインスタンス
+    /// </summary>
+    static LoadWeaponMaster _instance = new LoadWeaponMaster();
+
+    /// <summary>
+    /// インスタンス取得プロパティ
+    /// </summary>
+    static public LoadWeaponMaster instance { get { return _instance; } }
+
+    /// <summary>
+    /// 武器マスタのファイルパス
+    /// </summary>
+    const string filename = "Assets/Resources/MasterData/武器マスタ.txt";
 
     /// <summary>
     /// 指定した名前に一致する武器情報を取得する
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public WeaponMaster.Param getWeaponInfo(string name)
+    public WeaponMaster.Param GetWeaponInfo(string name)
     {
         WeaponMaster.Param ret = null;
 
@@ -30,11 +43,13 @@ public class LoadWeaponMaster : TextMasterManager
     /// 武器パラメーターをログに出力する
     /// </summary>
     /// <param name="parma"></param>
-    public void DebugLog(WeaponMaster.Param parma)
+    public void DebugLog(WeaponMaster.Param param)
     {
-        LogExtensions.OutputInfo("id   =" + parma.id);
-        LogExtensions.OutputInfo("name =" + parma.name);
-        LogExtensions.OutputInfo("type =" + parma.type);
-        LogExtensions.OutputInfo("atk  =" + parma.atk);
+        LogExtensions.OutputInfo(
+            "[id:"      + param.id   + "] " +
+            "[name:"    + param.name + "] " +
+            "[type:"    + param.type + "] " +
+            "[atk:"     + param.atk  + "] "
+        );
     }
 }

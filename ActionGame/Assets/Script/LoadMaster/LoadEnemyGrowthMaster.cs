@@ -98,15 +98,17 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(EnemyGrowthMaster.Param param)
     {
-        LogExtensions.OutputInfo("id    = " + param.id);
-        LogExtensions.OutputInfo("name  = " + param.name);
-        LogExtensions.OutputInfo("level = " + param.level);
-        LogExtensions.OutputInfo("hp    = " + param.hp);
-        LogExtensions.OutputInfo("atk   = " + param.atk);
-        LogExtensions.OutputInfo("def   = " + param.def);
-        LogExtensions.OutputInfo("mgc   = " + param.mgc);
-        LogExtensions.OutputInfo("spd   = " + param.spd);
-        LogExtensions.OutputInfo("exp   = " + param.exp);
+        LogExtensions.OutputInfo(
+             "[id:"     + param.id      + "] " +
+             "[name:"   + param.name    + "] " +
+             "[level:"  + param.level   + "] " +
+             "[hp:"     + param.hp      + "] " +
+             "[atk:"    + param.atk     + "] " +
+             "[def:"    + param.def     + "] " +
+             "[mgc:"    + param.mgc     + "] " +
+             "[spd:"    + param.spd     + "] " +
+             "[exp:"    + param.exp     + "] " 
+        );
     }
 }
 

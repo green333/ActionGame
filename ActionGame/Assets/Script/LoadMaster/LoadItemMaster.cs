@@ -12,7 +12,7 @@ public class ItemInfo
 
 public class LoadItemMaster : TextMasterManager
 {
-    const string filename = "Resources/MasterData/アイテママスタ.txt";
+    const string filename = "Assets/Resources/MasterData/アイテママスタ.txt";
 
     /// <summary>
     /// 指定した名前に一致するアイテム情報を取得する

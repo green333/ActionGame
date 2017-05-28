@@ -53,12 +53,13 @@ public class LoadPlayerBaseMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(PlayerBaseMaster.Param param)
     {
-        LogExtensions.OutputInfo("level      = " + param.level);
-        LogExtensions.OutputInfo("hp         = " + param.hp);
-        LogExtensions.OutputInfo("atk        = " + param.atk);
-        LogExtensions.OutputInfo("def        = " + param.def);
-        LogExtensions.OutputInfo("mgc        = " + param.mgc);
-        LogExtensions.OutputInfo("spd        = " + param.spd);
-        LogExtensions.OutputInfo("next_exp   = " + param.next_exp);
+        LogExtensions.OutputInfo(
+            "[level:"       + param.level       + "] "+
+            "[hp:"          + param.hp          + "] "+
+            "[def:"         + param.def         + "] "+
+            "[mgc:"         + param.mgc         + "] "+
+            "[spd:"         + param.spd         + "] "+
+            "[next_exp:"    + param.next_exp    + "]"
+            );
     }
 }

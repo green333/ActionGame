@@ -27,18 +27,19 @@ public class Player : BaseBehaviour
     private const string PLAYER_INIT_WEAPON = "マシュ";
 
     /// <summary> アイテムリスト </summary>
-    private List<ItemInfo> itemList;
+    private List<ItemInfo> itemList = null;
 
     /// <summary> プレイヤー基本パラメータ </summary>
     private CharacterStatus status = null;
+
     /// <summary> プレイヤー武器パラメータ </summary>
     private WeaponMaster.Param weaponParam = null;
 
     /// <summary> リジッドボディ </summary>
-    private Rigidbody rig;
+    private Rigidbody rig = null;
 
-    /// <summary> レベルアップフラグ </summary>
-    private bool isLevelUp = false;
+    /// <summary> レベルアップのエフェクト処理の実行制御フラグ(trueなら実行可能) </summary>
+    public bool enableLvUpEffectExecute { get; set; }
 
     /// <summary> プレイヤーの状態 </summary>
     private enum STATE : int {
@@ -54,15 +55,16 @@ public class Player : BaseBehaviour
         RIGHT,
     }
     private ROTDIR rotDir;
-
+    
     /// <summary>
-    /// 初期化
+    /// Start時にGameMainで呼ばれる初期化関数
     /// </summary>
     public override void BaseStart()
     {
         this.rotDir = ROTDIR.NONE;
         this.state = STATE.WAIT;
         this.rig = this.gameObject.GetComponent<Rigidbody>();
+        this.enableLvUpEffectExecute = false;
         LoadPlayerData();
     }
 
@@ -80,14 +82,6 @@ public class Player : BaseBehaviour
     /// </summary>
     public override void BaseUpdate()
     {
-        LevelUp();
-
-        //  Aキーで経験値加算
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            AddExp(1000);
-        }
-
         //  入力受け付け
         InputReception();
     }
@@ -154,9 +148,9 @@ public class Player : BaseBehaviour
     }
 
     /// <summary>
-    /// セーブデータが存在する場合は、セーブデータから取得し、なければプレイヤーの初期情報を取得する
+    /// セーブデータが存在する場合はセーブデータから取得し、なければプレイヤーの初期情報を取得する
     /// </summary>
-    void LoadPlayerData()
+    private void LoadPlayerData()
     {
         //  ロード出来たらロードしてnullならマスターから取得
         if (SaveData.Instance.Load(SaveData.KEY_SLOT_1) == null)
@@ -166,6 +160,7 @@ public class Player : BaseBehaviour
             //  初期レベル
             status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
             status.exp   = 0;
+            weaponParam = LoadWeaponMaster.instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
         }
         else
         {
@@ -174,46 +169,57 @@ public class Player : BaseBehaviour
             status          = saveData.playerParam;
             weaponParam     = saveData.weaponParam;
         }
+
+        //　ステータスをログに表示
+        LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
+        // 武器情報をログに表示
+        LoadWeaponMaster.instance.DebugLog(this.weaponParam);
     }
 
     /// <summary>
-    /// 経験値加算(レベルアップが可能ならフラグを立てる)
+    /// 経験値の加算を行う。
+    /// レベルアップが可能ならレベルアップを行い、レベルアップのエフェクト処理を実行可能にする。
     /// </summary>
     /// <param name="value"></param>
-    void AddExp(int value)
+    public void AddExp(int addExp)
     {
-        // すでにレベルがMAXなら加算処理はする必要ないのでreturn
-        if(this.status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+        do
         {
-            return;
-        }
+            // すでにレベルがMAXなら加算処理はする必要ないのでreturn
+            if (this.status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            {
+                break;
+            }
 
-        // 加算
-        this.status.exp += value;
+            // 加算
+            this.status.exp += addExp;
 
-        // レベルアップが可能ならフラグを立てる
-        if(this.status.exp >= this.status.param.next_exp)
-        {
-            isLevelUp = true;
-        }
+            // レベルアップに必要な経験値に達していない場合はbreak
+            if (this.status.exp < this.status.param.next_exp)
+            {
+                break;
+            }
+
+            // レベルが上がったのでレベルアップのエフェクト処理を実行可能にする。
+            enableLvUpEffectExecute = true;
+
+            // レベルアップ処理。
+            LevelUp();
+
+        } while (false);
     }
 
     /// <summary>
-    /// レベルアップが可能ならレベルアップを行う
+    /// レベルアップを行う
     /// </summary>
-    void LevelUp()
+    private void LevelUp()
     {
-        // レベルアップが可能でなければreturn
-        if(isLevelUp == false)
-        {
-            return;
-        }
-
         int subExp = 0;
 
-        Debug.Log("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
+        LogExtensions.OutputInfo("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
         LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
-        Debug.Log("-----------------------------------------------------------------------------------------");
+        LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
+
         while (true)
         {
             
@@ -236,9 +242,9 @@ public class Player : BaseBehaviour
             }
 
         }
-        Debug.Log("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
+
+        LogExtensions.OutputInfo("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
         LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
-        Debug.Log("-----------------------------------------------------------------------------------------");
-        isLevelUp = false;
+        LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
     }
 }

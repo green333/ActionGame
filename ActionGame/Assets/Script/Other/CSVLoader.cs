@@ -1,13 +1,11 @@
-﻿//using UnityEngine;
-//using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
 /// <summary>
 /// CSV読み込みクラス
 /// </summary>
-public sealed class CSVLoader {// : MonoBehaviour {
+public sealed class CSVLoader {
 
     /// <summary>
     /// コンストラクタ
@@ -55,8 +53,8 @@ public sealed class CSVLoader {// : MonoBehaviour {
             }
         }catch(System.Exception e)
         {
-            // TODO: e.Messageでエラーメッセージを取得できるが、今はなにもしない。
-            // 既存のDebug.Logを使用するか、ロガークラスを作成するかの検討を行ってから。
+            //  eを何かしら使わないとエラーが出て鬱陶しいのでログを出してます
+            LogExtensions.OutputError(e.Message);
         }
         return res;
     }
@@ -96,8 +94,8 @@ public sealed class CSVLoader {// : MonoBehaviour {
             }
         }catch(System.Exception e)
         {
-            // TODO: e.Messageでエラーメッセージを取得できるが、今はなにもしない。
-            // 既存のDebug.Logを使用するか、ロガークラスを作成するかの検討を行ってから。
+            //  eを何かしら使わないとエラーが出て鬱陶しいのでログを出してます
+            LogExtensions.OutputError(e.Message);
         }
         return res;
     }

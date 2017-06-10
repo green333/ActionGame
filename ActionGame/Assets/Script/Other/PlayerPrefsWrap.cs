@@ -9,6 +9,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 /// </summary>
 public class PlayerPrefsWrap  {
 
+    /// <summary> int型のデフォルト値 </summary>
+    public const int DEFAULT_INT_VALUE = -1;
+    /// <summary> float型のデフォルト値 </summary>
+    public const float DEFAULT_FLOAT_VALUE = -1.0f;
+    /// <summary> string型のデフォルト値 </summary>
+    public const string DEFAULT_STRING_VALUE = "null";
+
     /// <summary>
     /// コンストラクタ
     /// </summary>
@@ -58,7 +65,7 @@ public class PlayerPrefsWrap  {
     /// <returns></returns>
     public int LoadInt(string key)
     {
-        return PlayerPrefs.GetInt(key);
+        return PlayerPrefs.GetInt(key, DEFAULT_INT_VALUE);
     }
 
     /// <summary>
@@ -79,7 +86,7 @@ public class PlayerPrefsWrap  {
     /// <returns></returns>
     public float LoadFloat(string key)
     {
-        return PlayerPrefs.GetFloat(key);
+        return PlayerPrefs.GetFloat(key, DEFAULT_FLOAT_VALUE);
     }
 
     /// <summary>
@@ -100,7 +107,7 @@ public class PlayerPrefsWrap  {
     /// <returns></returns>
     public string LoadString(string key)
     {
-        return PlayerPrefs.GetString(key);
+        return PlayerPrefs.GetString(key, DEFAULT_STRING_VALUE);
     }
 
     /// <summary>
@@ -116,30 +123,29 @@ public class PlayerPrefsWrap  {
         bif.Serialize(memory, obj);
         string str = Convert.ToBase64String(memory.GetBuffer());
         PlayerPrefs.SetString(key, str);
-        //string json = JsonUtility.ToJson(obj);
-        //PlayerPrefs.SetString(key, json);
-        //PlayerPrefs.Save();
     }
 
     /// <summary>
     /// 任意の型のロード
+    /// 
+    /// TODO:
+    /// 使うときにいちいちnullチェックしないといけないのが
+    /// 嫌なので使うときにnullチェックしなくていいように作り直す
+    /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="key"></param>
     /// <returns></returns>
     public T LoadGeneric<T>(string key)
     {
-        //if (PlayerPrefs.HasKey(key)) {
-            
-        //}
-
-        string str = PlayerPrefs.GetString(key);
+        string str = PlayerPrefs.GetString(key, DEFAULT_STRING_VALUE);
+        if (str == DEFAULT_STRING_VALUE)
+        {
+            object obj = null;
+            return (T)obj;
+        }
         BinaryFormatter bif = new BinaryFormatter();
         MemoryStream memory = new MemoryStream(Convert.FromBase64String(str));
-
         return (T)bif.Deserialize(memory);
-        //string json = PlayerPrefs.GetString(key);
-        //T ret = JsonUtility.FromJson<T>(json);
-        //return ret;
     }
 }

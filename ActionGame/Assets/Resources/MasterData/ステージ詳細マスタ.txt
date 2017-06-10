@@ -1,0 +1,4 @@
+{"stage_id":1,"id":1,"name":"入口","adjacent":"2"}
+{"stage_id":1,"id":2,"name":"広間","adjacent":"1_3_4"}
+{"stage_id":1,"id":3,"name":"間","adjacent":"2"}
+{"stage_id":1,"id":4,"name":"広間2","adjacent":"2"}

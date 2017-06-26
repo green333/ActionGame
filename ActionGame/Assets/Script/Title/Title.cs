@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 
 
-public class TitleMain : MonoBehaviour
+public class Title : MonoBehaviour
 {
     /// <summary> タイトル画面のボタン </summary>
     [SerializeField] private Button btnNewGame;

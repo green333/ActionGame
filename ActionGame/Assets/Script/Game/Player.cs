@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Player : BaseBehaviour
+public class Player : MonoBehaviour
 {
     /*
      * セーブデータがない場合はマスタﾃﾞｰﾀから取得するようにする。
@@ -59,9 +59,9 @@ public class Player : BaseBehaviour
     private ROTDIR rotDir;
     
     /// <summary>
-    /// Start時にGameMainで呼ばれる初期化関数
+    /// 初期化
     /// </summary>
-    public override void BaseStart()
+    private void Start()
     {
         this.rotDir = ROTDIR.NONE;
         this.state = STATE.WAIT;
@@ -73,7 +73,7 @@ public class Player : BaseBehaviour
     /// <summary>
     /// 固定フレームレートの更新
     /// </summary>
-    public override void BaseFixedUpdate()
+    private void FixedUpdate()
     {
         Move();
         Rotate();
@@ -82,7 +82,7 @@ public class Player : BaseBehaviour
     /// <summary>
     /// 更新
     /// </summary>
-    public override void BaseUpdate()
+    private void Update()
     {
         //  入力受け付け
         InputReception();

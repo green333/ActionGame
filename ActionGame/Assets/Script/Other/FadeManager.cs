@@ -1,6 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// フェード処理
+/// 
+/// TODO:
+/// FadeUpdateを各々のUpdateで呼んでおいて、
+/// SetFadeModeでフェードモードをセットするような設計に
+/// なってるけどほんまはFadeInとかFadeOut呼ぶだけでフェード処理するようにしたい。
+/// なんかええ方法あったら教えてつかぁさい
+/// 
+/// TODO:
+/// フェードのスピード調整可能に
+/// </summary>
 public sealed class FadeManager
 {
     private const float DEFAULT_FADE_SPEED = 0.01f;

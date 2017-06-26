@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Enemy : BaseBehaviour
+public class Enemy : MonoBehaviour
 {
-
     List<EnemyBaseMaster.Param> baseParamList;
     List<EnemyGrowthMaster.Param> growthParamList;
 
@@ -26,7 +25,7 @@ public class Enemy : BaseBehaviour
     /// <summary>
     /// 初期化
     /// </summary>
-    public override void BaseStart()
+    private void Start()
     {
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;

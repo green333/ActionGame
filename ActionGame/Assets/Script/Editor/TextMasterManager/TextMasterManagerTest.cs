@@ -15,39 +15,24 @@ public class TextMasterManagerTest : TextMasterManager
     /// <summary> Search()のテスト結果 </summary>
     public static TestCaseData[] serachProvider = new[]
     {
-        // 値がstringのパラメータの検索を行い、一致するデータがあった時のテスト
-        new TestCaseData("name","薬草",null,"{\"name\":\"薬草\",\"id\":4,\"kind\":\"消費アイテム\",\"effect\":100,\"desc\":\"体力を１００回復する\"}").SetName("値がstringのパラメータの検索を行い、一致するデータがあった時のテスト"),
+        // 検索対象が一つで、一致するデータがあった時のテスト
+        new TestCaseData("\"name\":\"薬草\"","{\"name\":\"薬草\",\"id\":4,\"kind\":\"消費アイテム\",\"effect\":100,\"desc\":\"体力を１００回復する\"}").SetName("値がstringのパラメータの検索を行い、一致するデータがあった時のテスト"),
        
-        // 値がintのパラメーターの検索を行い、一致するデータがあった時のテスト
-        new TestCaseData("id",string.Empty,4,"{\"name\":\"薬草\",\"id\":4,\"kind\":\"消費アイテム\",\"effect\":100,\"desc\":\"体力を１００回復する\"}").SetName("値がintのパラメーターの検索を行い、一致するデータがあった時のテスト"),
+        // 検索対象が複数で、一致するデータがあった時のテスト
+        new TestCaseData("\"name\":\"薬草\",\"effect\":100","{\"name\":\"薬草\",\"id\":4,\"kind\":\"消費アイテム\",\"effect\":100,\"desc\":\"体力を１００回復する\"}").SetName("値がstringのパラメータの検索を行い、一致するデータがあった時のテスト"),
        
-        // 値がstringのパラメータの検索を行い、一致するデータが無かったときのテスト
-        new TestCaseData("name","そんなもんねーよ",null,string.Empty).SetName("値がstringのパラメータの検索を行い、一致するデータが無かったときのテスト"),
-
-        // 値がintのパラメータの検索を行い、一致するデータが無かったときのテスト
-        new TestCaseData("id",string.Empty,99999999,string.Empty).SetName("値がintのパラメータの検索を行い、一致するデータが無かったときのテスト"),
-    
+        // 一致するデータが無かったときのテスト
+        new TestCaseData("",string.Empty).SetName("値がstringのパラメータの検索を行い、一致するデータがなかった時のテスト"),
     };
 
     /// <summary>
     /// Search()のテストを行う
     /// </summary>
     [TestCaseSource("serachProvider")]
-    public void TestSearch(string param,string strVar,int iVar, string funcRetResult)
+    public void TestSearch(string selectStr, string funcRetResult)
     {
         base.Open(filename);
-        string val = string.Empty;
-
-        if (strVar == string.Empty)
-        {
-            val = base.VariableToJson(param, iVar);
-        }
-        else
-        {
-            val = base.VariableToJson(param, strVar);
-        }
-      
-        Assert.AreEqual(base.Search(val), funcRetResult);
+        Assert.AreEqual(base.Search(selectStr), funcRetResult);
         base.Close();
 
     }

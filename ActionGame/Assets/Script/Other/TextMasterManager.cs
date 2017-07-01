@@ -17,27 +17,44 @@ public class TextMasterManager : TexLoader
     /// <summary>
     /// 指定した文字列に一致する行データを返す。
     /// </summary>
-    /// <param name="val"></param>
+    /// <param name="selectStr">検索を行う文字列(複数ある場合はカンマ区切り)</param>
     /// <returns>
     /// 一致するデータがあった時:   一致した文字列データ 
     /// 一致するデータが無かった時: string.Empty
     /// </returns>
-    protected string Search(string val)
+    protected string Search(string selectStr)
     {
         string ret = string.Empty;
 
         string getLine = base.GetLine();
 
+        // カンマ区切りで検索文字列を分割する
+        string[] selectStrList = selectStr.Split(',');
+
+        // 検索を行う文字列の対象数
+        int selectStrCount = selectStrList.Length;
+        
+        // 一致したデータ数と検索を行う文字列の対象数の比較チェックを行うための変数
+        int matchCount = 0;
+
         while (getLine != string.Empty)
         {
-            // -1以外の場合、指定した文字列に一致するデータが見つかったので
-            // 見つかった行の文字列を戻り値に格納しwhileを抜ける
-            if (getLine.IndexOf(val) != -1)
+            // カンマ区切りで検索を行い、見つからなかった場合isFoundフラグをにfalseを設定する。
+            // カンマ区切りでの検索を行った後、isFoundがtrueのままなら
+            foreach (string str in selectStrList)
+            {
+                if (getLine.IndexOf(str) != -1)
+                {
+                    ++matchCount;
+                }
+            }
+
+            if (selectStrCount == matchCount)
             {
                 ret = getLine;
                 break;
             }
-
+            matchCount = 0;
             getLine = base.GetLine();
         }
 
@@ -81,64 +98,6 @@ public class TextMasterManager : TexLoader
         return ret;
     }
 
-    /// <summary>
-    /// 複数の検索候補に一致したデータを取得する
-    /// (一致するデータがなければnullを返す)
-    /// </summary>
-    /// <param name="searchList"></param>
-    /// <returns></returns>
-    protected string MultipleSearch(string[] searchList)
-    {
-        string ret = null;
-
-        string getLine = base.GetLine();
-
-        bool[] checkedList = new bool[searchList.Length];
-
-        int checkIndex = 0;
-        bool cheked = false;
-        while (getLine != null)
-        {
-            // チェックリストを初期化
-            for (int i = 0; i < checkedList.Length; ++i)
-            {
-                checkedList[i] = false;
-            }
-
-            // 
-            foreach (string search in searchList)
-            {
-                if (getLine.IndexOf(search) != -1)
-                {
-                    checkedList[checkIndex] = true;
-                    ++checkIndex;
-                }
-            }
-
-            foreach (bool check in checkedList)
-            {
-                if (check == false)
-                {
-                    checkIndex = 0;
-                    break;
-                }
-                cheked = true;
-                break;
-            }
-            if (cheked)
-            {
-                ret = getLine;
-                break;
-            }
-            getLine = base.GetLine();
-        }
-        return ret;
-    }
-
-    protected string[] MultipleSearchList()
-    {
-        return null;
-    }
 
     /// <summary>
     /// 変数名と値をjson文字列に変換する

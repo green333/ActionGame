@@ -51,6 +51,7 @@ public sealed class CSVLoader {
             {
                 res.Add(str);
             }
+            sr.Close();
         }catch(System.Exception e)
         {
             //  eを何かしら使わないとエラーが出て鬱陶しいのでログを出してます
@@ -92,6 +93,7 @@ public sealed class CSVLoader {
                     res.Add(row);
                 }
             }
+            sr.Close();
         }catch(System.Exception e)
         {
             //  eを何かしら使わないとエラーが出て鬱陶しいのでログを出してます

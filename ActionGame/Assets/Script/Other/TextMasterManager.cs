@@ -15,14 +15,16 @@ public class TextMasterManager : TexLoader
     // といったコードを書く場合などがあるため。
 
     /// <summary>
-    /// 指定した文字列に一致する文字列が見つかった場合、見つけた行の文字列を返す(なければnull)
-    /// (一致するデータがなければstring.Emptyを返す)
+    /// 指定した文字列に一致する行データを返す。
     /// </summary>
     /// <param name="val"></param>
-    /// <returns></returns>
+    /// <returns>
+    /// 一致するデータがあった時:   一致した文字列データ 
+    /// 一致するデータが無かった時: string.Empty
+    /// </returns>
     protected string Search(string val)
     {
-        string ret = null;
+        string ret = string.Empty;
 
         string getLine = base.GetLine();
 

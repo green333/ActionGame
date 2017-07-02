@@ -88,9 +88,18 @@ public class LoadEnemyBaseMaster : TextMasterManager
     public void DebugLog(EnemyBaseMaster.Param param)
     {
         LogExtensions.OutputInfo(
-            "[id:"      + param.id      + "] " +
-            "[name:"    + param.name    + "] " +
-            "[index:"   + param.index   + "] "
+            "[name:"                    + param.name                      + "] " +
+            "[id:"                      + param.id                        + "] " +
+            "[index:"                   + param.index                     + "] " +
+            "[drop_item_name1:"         + param.drop_item_name1           + "] " +
+            "[drop_item_num1:"          + param.drop_item_num1            + "] " +
+            "[drop_item_add_rnd1:"      + param.drop_item_add_rnd1        + "] " +
+            "[drop_item_name2:"         + param.drop_item_name2           + "] " +
+            "[drop_item_num2:"          + param.drop_item_num2            + "] " +
+            "[drop_item_add_rnd2:"      + param.drop_item_add_rnd2        + "] " +
+            "[rare_drop_item1:"         + param.rare_drop_item1           + "] " +
+            "[rare_drop_item_num1:"     + param.rare_drop_item_num1       + "] " +
+            "[rare_drop_item_add_rnd1:" + param.rare_drop_item_add_rnd1   + "] " 
             );
     }
 }

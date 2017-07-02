@@ -6,7 +6,7 @@ using System.Linq;
 /// <summary>
 /// テキストに書き出したマスタから必要なデータを探したりするクラス
 /// </summary>
-public class TextMasterManager : TexLoader
+public class TextMasterManager : TextLoader
 {
     // このクラスの存在理由
     // マスタデータ参照の速度を上げるために、同じﾃﾞｰﾀの検索を行ったりした際、

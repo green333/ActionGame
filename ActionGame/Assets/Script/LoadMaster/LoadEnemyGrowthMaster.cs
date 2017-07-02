@@ -41,55 +41,34 @@ public class LoadEnemyGrowthMaster : TextMasterManager
         if (enemy2_lv > ENEMY_LEVEL_MAX) { enemy2_lv = ENEMY_LEVEL_MAX; }
         if (enemy3_lv > ENEMY_LEVEL_MAX) { enemy3_lv = ENEMY_LEVEL_MAX; }
         
-        // インデックスとレベルから作成する
-        int index = 0;
-      
         // EnemyBaseMaster.Paramのindexはレベル1が始まりなので、
         // レベル１の敵情報を取得する場合、index + 0となる必要があるのでここで-１する必要がある。
         // (あとは計算通り。レベル１０の敵情報を取得する場合はindex + 9となる)
         int[] indexList = { enemy1_lv - 1, enemy2_lv - 1, enemy3_lv - 1 };
 
-        string[] searchList = null;
-        string getJsnoStr = null;
-        base.Open(filename);
-        searchList = new string[2] 
+        string[] getJsnoStrList = null;
+        string[] searchList = new string[] 
         {
             base.VariableToJson(COL_NAME, spawnMasterParam.enemy1_name),
-            base.VariableToJson(COL_LEVEL, enemy1_lv)
-        };
-        getJsnoStr = base.MultipleSearch(searchList);
-        if (getJsnoStr != null)
-        {
-            growthListParam.Add(JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsnoStr));
-        }
-
-        base.Close();
-
-        base.Open(filename);
-        searchList = new string[2]
-        {
+            base.VariableToJson(COL_LEVEL, enemy1_lv),
             base.VariableToJson(COL_NAME, spawnMasterParam.enemy2_name),
-            base.VariableToJson(COL_LEVEL, enemy2_lv)
+            base.VariableToJson(COL_LEVEL, enemy2_lv),
+            base.VariableToJson(COL_NAME, spawnMasterParam.enemy3_name),
+            base.VariableToJson(COL_LEVEL, enemy3_lv),
         };
-        getJsnoStr = base.MultipleSearch(searchList);
-        if (getJsnoStr != null)
-        {
-            growthListParam.Add(JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsnoStr));
-        }
-        base.Close();
 
         base.Open(filename);
-        searchList = new string[2]
-        {
-            base.VariableToJson(COL_NAME, spawnMasterParam.enemy3_name),
-            base.VariableToJson(COL_LEVEL, enemy3_lv)
-        };
-        getJsnoStr = base.MultipleSearch(searchList);
-        if (getJsnoStr != null)
-        {
-            growthListParam.Add(JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsnoStr));
-        }
+        getJsnoStrList = base.SearchList(searchList, 100);
         base.Close();
+
+        foreach (string getJsonStr in getJsnoStrList)
+        {
+            if(getJsonStr == string.Empty)
+            {
+                break;
+            }
+            growthListParam.Add(JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr));
+        }
     }
 
     /// <summary>

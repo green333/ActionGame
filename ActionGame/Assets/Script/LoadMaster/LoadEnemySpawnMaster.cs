@@ -22,20 +22,16 @@ public class LoadEnemySpawnMaster : TextMasterManager
     {
         EnemySpawnMaster.Param param = null;
 
-        base.Open(filename);
+        string searchJson =  base.VariableToJson(COL_STAGE_ID, stage_id) + "," + base.VariableToJson(COL_CHAPTER_ID, chapter_id);
 
-        string[] searchJson = new string[]
-        {
-            base.VariableToJson(COL_STAGE_ID, stage_id),
-            base.VariableToJson(COL_CHAPTER_ID, chapter_id)
-        };
-        
-        string getJsonStr = base.MultipleSearch(searchJson);
+        base.Open(filename);
+        string getJsonStr = base.Search(searchJson);
+        base.Close();
+
         if(getJsonStr != null)
         {
             param = JsonUtility.FromJson<EnemySpawnMaster.Param>(getJsonStr);
         }
-        base.Close();
 
         return param;
     }

@@ -7,7 +7,7 @@ using System.Linq;
 /// テキストを読み込むクラス
 /// 文字列の読み込みができなかった場合、string.Emptyを返すようにする。
 /// </summary>
-public class TexLoader{
+public class TextLoader{
 
     private StreamReader _stream = null;
     protected StreamReader stream { get { return _stream; } }
@@ -37,12 +37,13 @@ public class TexLoader{
     /// <returns></returns>
     protected string GetLine()
     {
-        if(stream.EndOfStream)
-        {
-            return string.Empty;
-        }
+        string ret = stream.ReadLine();
 
-        return stream.ReadLine();
+        if (ret == null || stream.EndOfStream)
+        {
+            ret = string.Empty;
+        }
+        return ret;
     }
 
     /// <summary>
@@ -59,8 +60,7 @@ public class TexLoader{
 
         for (int i = 0; i < line; ++i)
         {
-           ret[i] = stream.ReadLine();
-           if (stream.EndOfStream)
+           if (string.Empty == (ret[i] = ret[i] = GetLine()))
            {
                break;
            }

@@ -6,7 +6,7 @@ using System.Linq;
 /// <summary>
 /// テキストに書き出したマスタから必要なデータを探したりするクラス
 /// </summary>
-public class TextMasterManager : TexLoader
+public class TextMasterManager : TextLoader
 {
     // このクラスの存在理由
     // マスタデータ参照の速度を上げるために、同じﾃﾞｰﾀの検索を行ったりした際、
@@ -15,27 +15,31 @@ public class TextMasterManager : TexLoader
     // といったコードを書く場合などがあるため。
 
     /// <summary>
-    /// 指定した文字列に一致する文字列が見つかった場合、見つけた行の文字列を返す(なければnull)
-    /// (一致するデータがなければstring.Emptyを返す)
+    /// 指定した文字列に一致する行データを取得する
     /// </summary>
-    /// <param name="val"></param>
-    /// <returns></returns>
-    protected string Search(string val)
+    /// <param name="selectStr">検索を行う文字列(複数ある場合はカンマ区切り)</param>
+    /// <returns>
+    /// 一致するデータがあるば行データ
+    /// 一致するデータがなければstring.Empty
+    /// </returns>
+    protected string Search(string selectStr)
     {
-        string ret = null;
+        string ret = string.Empty;
 
         string getLine = base.GetLine();
+
+        // カンマ区切りで検索文字列を分割する
+        string[] selectStrList = selectStr.Split(',');
+
+        // 検索を行う文字列の対象数
+        int selectStrCount = selectStrList.Length;
 
         while (getLine != string.Empty)
         {
-            // -1以外の場合、指定した文字列に一致するデータが見つかったので
-            // 見つかった行の文字列を戻り値に格納しwhileを抜ける
-            if (getLine.IndexOf(val) != -1)
+            if(string.Empty != (ret = commaStrSearch(getLine, selectStrList, selectStrCount)))
             {
-                ret = getLine;
                 break;
             }
-
             getLine = base.GetLine();
         }
 
@@ -43,99 +47,106 @@ public class TextMasterManager : TexLoader
     }
 
     /// <summary>
-    /// 複数のデータを取得
-    /// 指定した行数で配列生成するが指定した行数分読み込めなかった場合、配列の中にはstring.Emptyが格納されている。
+    /// 指定した文字列リストに一致する行データを複数取得する
     /// </summary>
-    /// <param name="valList"></param>
-    /// <returns></returns>
-    protected string[] SearchList(string[] valList)
+    /// <param name="selectStrList">検索を行う文字列リスト(複数ある場合は要素をカンマ区切りで格納する)</param>
+    /// <param name="selectStrCount">検索対象の行データ取得数</param>
+    /// <returns>
+    /// 一致するデータがある時は行データ
+    /// 一致するデータはstring.Emptyが格納される
+    /// </returns>
+    protected string[] SearchList(string[] selectStrList,int selectStrCount = 10)
     {
-        // 長さ valList.Lengthの配列をstring.Emptyで初期化
-        string[] ret =  Enumerable.Repeat<string>(string.Empty, valList.Length).ToArray();
+        string[] ret = Enumerable.Repeat<string>(string.Empty, selectStrList.Length).ToArray();
 
-        string getLine = base.GetLine();
+        // 検索対象の文字列を配列で取得する
+        string[] getLineList = base.GetLine(selectStrCount);
 
-        int cheked = 0;
-        while (getLine != null)
+        // 検索する文字列をListにする
+        List<string> selectStr = new List<string>(selectStrList);
+        
+        // カンマ区切りした文字列配列を格納する
+        string[] splistStr = null;
+
+        bool isEnd = false;
+        int index = 0;
+        while(true)
         {
-            foreach(string str in valList)
+            foreach(string getLine in getLineList)
             {
-                if (getLine.IndexOf(str) != -1)
+                // 行データが途中で取得できてなかったときは、ファイル読み込みが終端まで行った時だけなので
+                // isEndフラグをたてる
+                if (getLine == string.Empty)
                 {
-                    ret[cheked++] = getLine;
+                    isEnd = true;
+                    break;
+                }
+
+                for(int i = 0; i < selectStr.Count; ++i)
+                {
+                    splistStr = selectStr[i].Split(',');
+
+                    // カンマ区切りした文字列配列に一致する行データを取得する
+                    if(string.Empty != (ret[index] = commaStrSearch(getLine, splistStr, splistStr.Length)))
+                    {
+                        // 一致する行データを取得できたので、検索対象から外してbreakする
+                        selectStr.Remove(selectStr[i]);
+                        ++index;
+                        break;
+                    }
+                }
+
+                if(index == selectStrList.Length)
+                {
+                    isEnd = true;
                     break;
                 }
             }
 
-            // 検索したい数と同じ数だけ取得できたらbreakする
-            if(cheked == valList.Length)
+            if (isEnd)
             {
                 break;
             }
 
-            getLine = base.GetLine();
+            // 次の検索対象を取得する
+            getLineList = base.GetLine(selectStrCount);
         }
 
         return ret;
     }
+
 
     /// <summary>
-    /// 複数の検索候補に一致したデータを取得する
-    /// (一致するデータがなければnullを返す)
+    /// カンマ区切りされた文字列リストに一致する行データを取得する
     /// </summary>
-    /// <param name="searchList"></param>
-    /// <returns></returns>
-    protected string MultipleSearch(string[] searchList)
+    /// <param name="getLine">検索対象の行データ</param>
+    /// <param name="commaStr">カンマ区切りされた文字列リスト</param>
+    /// <param name="commaStrLength">カンマ区切りされた文字列リストの長さ</param>
+    /// <returns>
+    /// 一致するデータがあれば行データ
+    /// 一致するデータがなければstring.Empty
+    /// </returns>
+    private string commaStrSearch(string getLine,string[] commaStr,int commaStrLength)
     {
-        string ret = null;
+        string ret = string.Empty;
 
-        string getLine = base.GetLine();
+        // 一致したデータ数と検索を行う文字列の対象数の比較チェックを行うための変数
+        int matchCount = 0;
 
-        bool[] checkedList = new bool[searchList.Length];
-
-        int checkIndex = 0;
-        bool cheked = false;
-        while (getLine != null)
+        foreach (string str in commaStr)
         {
-            // チェックリストを初期化
-            for (int i = 0; i < checkedList.Length; ++i)
+            if (getLine.IndexOf(str) != -1)
             {
-                checkedList[i] = false;
+                ++matchCount;
             }
-
-            // 
-            foreach (string search in searchList)
-            {
-                if (getLine.IndexOf(search) != -1)
-                {
-                    checkedList[checkIndex] = true;
-                    ++checkIndex;
-                }
-            }
-
-            foreach (bool check in checkedList)
-            {
-                if (check == false)
-                {
-                    checkIndex = 0;
-                    break;
-                }
-                cheked = true;
-                break;
-            }
-            if (cheked)
-            {
-                ret = getLine;
-                break;
-            }
-            getLine = base.GetLine();
         }
-        return ret;
-    }
 
-    protected string[] MultipleSearchList()
-    {
-        return null;
+        if (commaStrLength == matchCount)
+        {
+            ret = getLine;
+        }
+
+        return ret;
     }
 
     /// <summary>

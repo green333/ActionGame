@@ -29,14 +29,15 @@ public class Enemy : MonoBehaviour
     {
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;
-        EnemySpawnMaster.Param enemySpawnParam = LoadEnemySpawnMaster.instance.GetEnemySpawanInfo(SaveData.Instance.stageId, SaveData.Instance.chapter);
-        LoadEnemyBaseMaster.instance.GetEnemyInfo(out baseParamList, enemySpawnParam);
-        LoadEnemyGrowthMaster.instance.GetEnemyInfo(out growthParamList, baseParamList, enemySpawnParam, 1);
+
+        EnemyGenerator.Generate(out baseParamList, out growthParamList);
+        foreach(EnemyBaseMaster.Param p in this.baseParamList)
+        {
+            LoadEnemyBaseMaster.instance.DebugLog(p);
+        }
         foreach (EnemyGrowthMaster.Param p in this.growthParamList)
         {
             LoadEnemyGrowthMaster.instance.DebugLog(p);
         }
-
-        LogExtensions.OutputInfo("Enemy.Init is call.");
     }
 }

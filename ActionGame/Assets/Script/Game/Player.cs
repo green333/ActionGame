@@ -43,30 +43,25 @@ public class Player : MonoBehaviour
     /// <summary> レベルアップのエフェクト処理の実行制御フラグ(trueなら実行可能) </summary>
     public bool enableLvUpEffectExecute { get; set; }
 
-    /// <summary> プレイヤーの状態 </summary>
-    private enum STATE : int {
-        WAIT = 0,
-        MOVE,
-    }
-    private STATE state;
+    /// <summary>
+    /// 移動と回転スピード
+    /// エディタで弄りたいからpublicにしてる
+    /// </summary>
+    public float moveSpeed = 3.0f;
+    public float rotSpeed = 2.0f;
 
-    /// <summary> 回転方向 </summary>
-    private enum ROTDIR : int {
-        NONE = 0,
-        LEFT,
-        RIGHT,
-    }
-    private ROTDIR rotDir;
+    /// <summary> 傾き </summary>
+    private float slopeHorizontal;
+    private float slopeVertical;
     
     /// <summary>
     /// 初期化
     /// </summary>
     private void Start()
     {
-        this.rotDir = ROTDIR.NONE;
-        this.state = STATE.WAIT;
         this.rig = this.gameObject.GetComponent<Rigidbody>();
         this.enableLvUpEffectExecute = false;
+        this.slopeHorizontal = this.slopeVertical = 0.0f;
         LoadPlayerData();
     }
 
@@ -76,7 +71,6 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        Rotate();
     }
 
     /// <summary>
@@ -84,69 +78,39 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //  入力受け付け
-        InputReception();
+        Rotate();
     }
 
     /// <summary>
-    /// 入力受け付け
+    /// 回転
+    /// アナログスティックを傾けた角度に徐々に回転させる
+    /// 
+    /// このサイトぱくった
+    /// http://dev3104.hateblo.jp/entry/2016/04/07/185529
     /// </summary>
-    private void InputReception()
+    private void Rotate()
     {
-        this.state = STATE.WAIT;
-        this.rotDir = ROTDIR.NONE;
+        this.slopeHorizontal = Input.GetAxis("Horizontal") * Time.deltaTime * this.moveSpeed;
+        this.slopeVertical = Input.GetAxis("Vertical") * Time.deltaTime * this.moveSpeed;
+        Vector3 dir = new Vector3(this.slopeHorizontal, 0, this.slopeVertical);
 
-        //  移動
-        if (Input.GetKey(KeyCode.UpArrow))
+        //  一定以上動かしているか
+        if (dir.magnitude > 0.01f)
         {
-            this.rotDir = ROTDIR.NONE;
-            this.state = STATE.MOVE;
-        }
+            float step = this.rotSpeed * Time.deltaTime;
+            Quaternion q = Quaternion.LookRotation(dir);
 
-        //  回転
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            this.rotDir = ROTDIR.LEFT;
-        }
-        else if (Input.GetKey(KeyCode.RightArrow))
-        {
-            this.rotDir = ROTDIR.RIGHT;
+            //  線形補間
+            this.transform.rotation = Quaternion.Lerp(this.gameObject.transform.rotation, q, step);
         }
     }
 
     /// <summary>
     /// 移動
     /// </summary>
-    public void Move()
+    private void Move()
     {
-        switch(this.state)
-        {
-            case STATE.WAIT:
-                this.rig.velocity = Vector3.zero;
-                break;
-            case STATE.MOVE:
-                this.rig.AddForce(this.transform.forward);
-                break;
-        }
-    }
-
-    /// <summary>
-    /// 回転
-    /// </summary>
-    public void Rotate()
-    {
-        switch (this.rotDir)
-        {
-            case ROTDIR.NONE:
-                this.rig.angularVelocity = Vector3.zero;
-                break;
-            case ROTDIR.LEFT:
-                this.rig.AddTorque(Vector3.down);
-                break;
-            case ROTDIR.RIGHT:
-                this.rig.AddTorque(Vector3.up);
-                break;
-        }
+        this.rig.velocity = new Vector3(this.slopeHorizontal, 0.0f, this.slopeVertical);
     }
 
     /// <summary>

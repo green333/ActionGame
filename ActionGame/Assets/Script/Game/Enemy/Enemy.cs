@@ -31,13 +31,5 @@ public class Enemy : MonoBehaviour
         SaveData.Instance.chapter = 1;
 
         EnemyGenerator.Generate(out baseParamList, out growthParamList);
-        foreach(EnemyBaseMaster.Param p in this.baseParamList)
-        {
-            LoadEnemyBaseMaster.instance.DebugLog(p);
-        }
-        foreach (EnemyGrowthMaster.Param p in this.growthParamList)
-        {
-            LoadEnemyGrowthMaster.instance.DebugLog(p);
-        }
     }
 }

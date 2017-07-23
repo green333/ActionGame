@@ -122,20 +122,28 @@ public class Player : MonoBehaviour
         //  ロード出来たらロードしてnullならマスターから取得
         if (SaveData.Instance.Load(SaveData.KEY_SLOT_1) == null)
         {
+            LogExtensions.OutputInfo("プレイヤー初期データの読み込みを開始します");
             status = new CharacterStatus();
 
-            //  初期レベル
+            // プレイヤーステータスを読み込む
+            // (所持経験値パラムは0にしておくしておく)
             status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
             status.exp   = 0;
+
+            // 武器情報を読み込む
             weaponParam = LoadWeaponMaster.instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
+
+            // アイテム情報を読み込む
             itemList = new List<ItemInfo>();
             ItemInfo itemInfo = new ItemInfo();
             itemInfo.param = LoadItemMaster.instance.GetItemInfo(PLAYER_INIT_HAVE_ITEM_NAME);
             itemInfo.num = PLAYER_INIT_HAVE_ITEM_NUM;
             itemList.Add(itemInfo);
+
         }
         else
         {
+            LogExtensions.OutputInfo("セーブデータからプレイヤーデータの読み込みを開始します");
             //  現在レベル
             SaveData saveData = SaveData.Instance.Load(SaveData.KEY_SLOT_1);
             status          = saveData.playerParam;
@@ -152,6 +160,8 @@ public class Player : MonoBehaviour
         {
             LoadItemMaster.instance.DebugLog(itemList[i]);
         }
+
+        LogExtensions.OutputInfo("プレイヤーデータの読み込みが終了しました");
     }
 
     /// <summary>

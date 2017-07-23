@@ -87,7 +87,7 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(EnemyBaseMaster.Param param)
     {
-        LogExtensions.OutputInfo(
+        LogExtensions.OutputInfo("[敵基本マスタ] => " +
             "[name:"                    + param.name                      + "] " +
             "[id:"                      + param.id                        + "] " +
             "[index:"                   + param.index                     + "] " +

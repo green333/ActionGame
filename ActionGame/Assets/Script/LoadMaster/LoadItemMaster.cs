@@ -58,7 +58,7 @@ public class LoadItemMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(ItemInfo itemInfo)
     {
-        LogExtensions.OutputInfo(
+        LogExtensions.OutputInfo("[アイテムマスタ] => " +
             "[id:"      + itemInfo.param.id     + "] " +
             "[name:"    + itemInfo.param.name   + "] " +
             "[kind:"    + itemInfo.param.kind   + "] " +

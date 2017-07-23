@@ -40,7 +40,6 @@ public class EnemyGrowthMaster : ScriptableObject{
         public int hp;        //    体力
         public int atk;        //    攻撃力
         public int def;        //    防御力
-        public int mgc;        //    魔法力
         public int spd;        //    素早さ
         public int exp;        //    取得経験値
     }
@@ -80,7 +79,6 @@ public class PlayerBaseMaster : ScriptableObject{
         public int hp;        //    体力
         public int atk;        //    攻撃力
         public int def;        //    防御力
-        public int mgc;        //    魔法力
         public int spd;        //    素早さ
         public int next_exp;        //    経験値
     }
@@ -160,6 +158,8 @@ public class WeaponMaster : ScriptableObject{
         public int id;        //    ID
         public string type;        //    種類
         public int atk;        //    攻撃力
+        public int def;        //    防御力
+        public int spd;        //    素早さ
     }
 }
 

@@ -66,14 +66,13 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(EnemyGrowthMaster.Param param)
     {
-        LogExtensions.OutputInfo(
+        LogExtensions.OutputInfo("[敵成長マスタ] => "+
              "[id:"     + param.id      + "] " +
              "[name:"   + param.name    + "] " +
              "[level:"  + param.level   + "] " +
              "[hp:"     + param.hp      + "] " +
              "[atk:"    + param.atk     + "] " +
              "[def:"    + param.def     + "] " +
-             "[mgc:"    + param.mgc     + "] " +
              "[spd:"    + param.spd     + "] " +
              "[exp:"    + param.exp     + "] " 
         );

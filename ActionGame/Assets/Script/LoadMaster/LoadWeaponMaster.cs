@@ -45,11 +45,12 @@ public class LoadWeaponMaster : TextMasterManager
     /// <param name="parma"></param>
     public void DebugLog(WeaponMaster.Param param)
     {
-        LogExtensions.OutputInfo(
+        LogExtensions.OutputInfo("[武器マスタ] => " +
             "[id:"      + param.id   + "] " +
             "[name:"    + param.name + "] " +
             "[type:"    + param.type + "] " +
-            "[atk:"     + param.atk  + "] "
+            "[atk:"     + param.atk  + "] " +
+            "[spd:"     + param.spd  + "] "
         );
     }
 }

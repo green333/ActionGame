@@ -7,12 +7,16 @@ using System.Collections.Generic;
 /// </summary>
 public class EnemyGenerator
 {
+    static List<EnemyBaseMaster.Param>      baseParamList = null;
+    static List<EnemyGrowthMaster.Param>    growthParamList = null;
+
     /// <summary>
+    /// 現在のステージIDと章IDから敵情報をマスタから読み込む
     /// SaveDataに保存されたステージIDと章IDから敵情報を取得する
     /// </summary>
     /// <param name="baseParamList"></param>
     /// <param name="growthParamList"></param>
-    public static void Generate(out List<EnemyBaseMaster.Param> baseParamList, out List<EnemyGrowthMaster.Param> growthParamList)
+    public static void LoadEnemyInfo()
     {
         LogExtensions.OutputInfo("敵データの読み込みを開始します");
         EnemySpawnMaster.Param enemySpawnParam = LoadEnemySpawnMaster.instance.GetEnemySpawanInfo(SaveData.Instance.stageId, SaveData.Instance.chapter);

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 
 public class Enemy : MonoBehaviour
 {
-    List<EnemyBaseMaster.Param> baseParamList;
-    List<EnemyGrowthMaster.Param> growthParamList;
-
+   
     /*
      * EnemyBaseMaster.Paramを変数として持たせること。
      * 
@@ -30,6 +28,6 @@ public class Enemy : MonoBehaviour
         SaveData.Instance.stageId = 1;
         SaveData.Instance.chapter = 1;
 
-        EnemyGenerator.Generate(out baseParamList, out growthParamList);
+        EnemyGenerator.LoadEnemyInfo();
     }
 }

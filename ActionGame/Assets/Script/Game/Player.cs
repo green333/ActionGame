@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -53,7 +54,25 @@ public class Player : MonoBehaviour
     /// <summary> 傾き </summary>
     private float slopeHorizontal;
     private float slopeVertical;
-    
+
+    /// <summary> ゲームパッドのキーコード </summary>
+    private Dictionary<string, KeyCode> PAD_KEYCODE = new Dictionary<string, KeyCode>()
+    {
+                           {"CIRCLE",   KeyCode.Joystick1Button2},
+                           {"CROSS",    KeyCode.Joystick1Button1},
+                           {"SQUARE",   KeyCode.Joystick1Button0},
+                           {"TRIANGLE", KeyCode.Joystick1Button3},
+                           {"L1",       KeyCode.Joystick1Button4},
+                           {"L2",       KeyCode.Joystick1Button6},
+                           {"L3",       KeyCode.Joystick1Button10},
+                           {"R1",       KeyCode.Joystick1Button5},
+                           {"R2",       KeyCode.Joystick1Button7},
+                           {"R3",       KeyCode.Joystick1Button11},
+                           {"SELECT",   KeyCode.Joystick1Button8},
+                           {"START",    KeyCode.Joystick1Button9},
+                           {"PS",        KeyCode.Joystick1Button12},
+    };
+
     /// <summary>
     /// 初期化
     /// </summary>

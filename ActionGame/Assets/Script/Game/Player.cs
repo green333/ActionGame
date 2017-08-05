@@ -98,8 +98,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Rotate();
-
-        PadTest();
     }
 
     /// <summary>
@@ -255,58 +253,5 @@ public class Player : MonoBehaviour
         LogExtensions.OutputInfo("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
         LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
-    }
-
-    /// <summary>
-    /// ゲームパッド関係のテストコード
-    /// 後で捨てる
-    /// </summary>
-    private void PadTest()
-    {
-        //  ボタンのテスト
-        if (Input.GetKeyDown(PAD_KEYCODE["CIRCLE"]))
-        {
-            Debug.Log("〇ボタン");
-        }
-        //foreach (KeyValuePair<string, KeyCode> dic in PAD_KEYCODE)
-        //{
-        //    if (Input.GetButtonDown(dic.Key))
-        //    {
-        //        Debug.Log(dic.Key + "ボタン押下");
-        //    }
-        //}
-
-        //  右スティックのテスト
-        if (Input.GetAxis("Horizontal2") != 0)
-        {
-            Debug.Log("右スティック操作(横)");
-        }
-        if (Input.GetAxis("Vertical2") != 0)
-        {
-            Debug.Log("右スティック操作(縦)");
-        }
-
-        ////  十字キーのテスト
-        //string[] jyuuji = {"LEFT", "RIGHT", "TOP", "BOTTOM" };
-        //foreach (string str in jyuuji)
-        //{
-        //    if (Input.GetAxis(str) == 1)
-        //    {
-        //        Debug.Log(str+"ボタン押下");
-        //        break;
-        //    }
-        //}
-
-        //if (Input.anyKeyDown)
-        //{
-        //    foreach (KeyCode code in Enum.GetValues(typeof(KeyCode)))
-        //    {
-        //        if (Input.GetKeyDown(code))
-        //        {
-        //            Debug.Log(code);
-        //            break;
-        //        }
-        //    }
-        //}
     }
 }

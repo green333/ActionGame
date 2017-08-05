@@ -12,12 +12,17 @@ public class Title : MonoBehaviour
     [SerializeField] private Button btnOption;
     [SerializeField] private Button btnExit;
 
+    /// <summary> フェード </summary>
+    private FadeManager fade;
+
     /// <summary>
     /// 初期化
     /// </summary>
 	void Start ()
     {
         ButtonEvent();
+
+        fade = new FadeManager();
 	}
 
     /// <summary>
@@ -25,7 +30,7 @@ public class Title : MonoBehaviour
     /// </summary>
     void Update()
     {
-        FadeManager.Instance.FadeUpdate();
+        fade.FadeUpdate();
     }
 
     /// <summary>
@@ -36,10 +41,7 @@ public class Title : MonoBehaviour
         this.btnNewGame.onClick.AddListener(() => {
             //  NewGameを選んだときの処理
             LogExtensions.OutputInfo("onClickNewGame.");
-            FadeManager.Instance.SetFadeMode(FadeManager.FADE_STATUS.FADE_IN);
-            FadeManager.Instance.onFadeFinish += () => {
-                FadeManager.Instance.SetFadeMode(FadeManager.FADE_STATUS.FADE_OUT);
-            };
+            fade.SetFadeMode(FadeManager.FADE_STATUS.FADE_IN);
         });
 
         this.btnLoading.onClick.AddListener(() => {

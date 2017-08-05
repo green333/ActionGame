@@ -3,17 +3,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// フェード処理
-/// 
-/// TODO:
-/// FadeUpdateを各々のUpdateで呼んでおいて、
-/// SetFadeModeでフェードモードをセットするような設計に
-/// なってるけどほんまはFadeInとかFadeOut呼ぶだけでフェード処理するようにしたい。
-/// なんかええ方法あったら教えてつかぁさい
-/// 
-/// TODO:
-/// フェードのスピード調整可能に
 /// </summary>
-public sealed class FadeManager
+public class FadeManager
 {
     private const float DEFAULT_FADE_SPEED = 0.01f;
     private const string FADE_CANVAS_PATH = "Prefab/CanvasFade";
@@ -29,41 +20,21 @@ public sealed class FadeManager
         FADE_FINISH,
     }
     private FADE_STATUS status = FADE_STATUS.NONE;
-
-    /// <summary>
-    /// フェード終了イベント
-    /// </summary>
-    public delegate void OnFadeFinish();
-    public OnFadeFinish onFadeFinish;
+    public FADE_STATUS Status { get { return status; } }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    FadeManager() { }
-
-    /// <summary>
-    /// シングルトン
-    /// </summary>
-    private static FadeManager instance;
-    public static FadeManager Instance {
-        get
-        {
-            if (instance == null)
-            {
-                GameObject obj = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>(FADE_CANVAS_PATH));
-                obj.GetComponent<Canvas>().worldCamera = Camera.main;
-
-                instance = new FadeManager();
-                if (instance.fadeImg == null)
-                {
-                    instance.fadeImg = obj.GetComponentInChildren<Image>();
-                }
-            }
-
-            return instance;
-        }
+    public FadeManager()
+    {
+        GameObject obj = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>(FADE_CANVAS_PATH));
+        obj.GetComponent<Canvas>().worldCamera = Camera.main;
+        fadeImg = obj.GetComponentInChildren<Image>();
     }
 
+    /// <summary>
+    /// Update
+    /// </summary>
     public void FadeUpdate()
     {
         switch(this.status)
@@ -75,11 +46,14 @@ public sealed class FadeManager
                 FadeOut();
                 break;
             case FADE_STATUS.FADE_FINISH:
-                FadeFinish();
                 break;
         }
     }
 
+    /// <summary>
+    /// フェードモード設定
+    /// </summary>
+    /// <param name="status"></param>
     public void SetFadeMode(FADE_STATUS status)
     {
         this.status = status;
@@ -94,10 +68,8 @@ public sealed class FadeManager
         {
             this.alpha += DEFAULT_FADE_SPEED;
             this.fadeImg.color = new Color(1.0f, 1.0f, 1.0f, alpha);
-        }
-        else
-        {
-            this.status = FADE_STATUS.FADE_FINISH;
+        } else {
+            SetFadeMode(FADE_STATUS.FADE_FINISH);
         }
     }
 
@@ -110,25 +82,8 @@ public sealed class FadeManager
         {
             this.alpha -= DEFAULT_FADE_SPEED;
             this.fadeImg.color = new Color(1.0f, 1.0f, 1.0f, alpha);
-        }
-        else
-        {
-            this.status = FADE_STATUS.FADE_FINISH;
+        } else {
+            SetFadeMode(FADE_STATUS.FADE_FINISH);
         }
     }
-
-    /// <summary>
-    /// フェード終了時の処理
-    /// </summary>
-    private void FadeFinish()
-    {
-        if (onFadeFinish == null)
-        {
-            return;
-        }
-
-        onFadeFinish();
-        onFadeFinish = null;
-    }
-
 }

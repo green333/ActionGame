@@ -44,43 +44,49 @@ public class Player : MonoBehaviour
     /// <summary> レベルアップのエフェクト処理の実行制御フラグ(trueなら実行可能) </summary>
     public bool enableLvUpEffectExecute { get; set; }
 
-    /// <summary>
-    /// 移動と回転スピード
-    /// エディタで弄りたいからpublicにしてる
-    /// </summary>
-    public float moveSpeed = 3.0f;
-    public float rotSpeed = 2.0f;
+    /// <summary> 移動と回転スピード </summary>
+    private float moveSpeed;
+    private float rotSpeed;
 
     /// <summary> 傾き </summary>
     private float slopeHorizontal;
     private float slopeVertical;
 
     /// <summary> ゲームパッドのキーコード </summary>
-    private Dictionary<string, KeyCode> PAD_KEYCODE = new Dictionary<string, KeyCode>()
-    {
-        {"CIRCLE",   KeyCode.Joystick1Button2},
-        {"CROSS",    KeyCode.Joystick1Button1},
-        {"SQUARE",   KeyCode.Joystick1Button0},
-        {"TRIANGLE", KeyCode.Joystick1Button3},
-        {"L1",       KeyCode.Joystick1Button4},
-        {"L2",       KeyCode.Joystick1Button6},
-        {"L3",       KeyCode.Joystick1Button10},
-        {"R1",       KeyCode.Joystick1Button5},
-        {"R2",       KeyCode.Joystick1Button7},
-        {"R3",       KeyCode.Joystick1Button11},
-        {"SELECT",   KeyCode.Joystick1Button8},
-        {"START",    KeyCode.Joystick1Button9},
-        {"PS",        KeyCode.Joystick1Button12},
-    };
+    private enum PadKeyCode {
+        CIRCLE = KeyCode.Joystick1Button2,
+        CROSS = KeyCode.Joystick1Button1,
+        SQUARE = KeyCode.Joystick1Button0,
+        TRIANGLE = KeyCode.Joystick1Button3,
+        L1 = KeyCode.Joystick1Button4,
+        L2 = KeyCode.Joystick1Button6,
+        L3 = KeyCode.Joystick1Button10,
+        R1 = KeyCode.Joystick1Button5,
+        R2 = KeyCode.Joystick1Button7,
+        R3 = KeyCode.Joystick1Button11,
+        SELECT = KeyCode.Joystick1Button8,
+        START = KeyCode.Joystick1Button9,
+        PS = KeyCode.Joystick1Button12,
+    }
+
+    /// <summary> アニメーション関連 </summary>
+    private Animator animator;
+    private enum ANIMATION : int { WAIT = 0, WALK, RUN, JUMP }
+    private float normalizedTime;
+
+    /// <summary> 状態遷移管理用 </summary>
+    private enum STEP : int { MOVE = 0, JUMP }
+    private STEP step = STEP.MOVE;
 
     /// <summary>
     /// 初期化
     /// </summary>
     private void Start()
     {
-        this.rig = this.gameObject.GetComponent<Rigidbody>();
-        this.enableLvUpEffectExecute = false;
-        this.slopeHorizontal = this.slopeVertical = 0.0f;
+        rig = GetComponent<Rigidbody>();
+        enableLvUpEffectExecute = false;
+        slopeHorizontal = slopeVertical = 0.0f;
+        animator = GetComponent<Animator>();
         LoadPlayerData();
     }
 
@@ -97,6 +103,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        AnimationCtrl();
         Rotate();
     }
 
@@ -109,18 +116,15 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Rotate()
     {
-        this.slopeHorizontal = Input.GetAxis("Horizontal") * Time.deltaTime * this.moveSpeed;
-        this.slopeVertical = Input.GetAxis("Vertical") * Time.deltaTime * this.moveSpeed;
-        Vector3 dir = new Vector3(this.slopeHorizontal, 0, this.slopeVertical);
+        slopeHorizontal = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+        slopeVertical = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
+        Vector3 dir = new Vector3(slopeHorizontal, 0.0f, slopeVertical);
 
-        //  一定以上動かしているか
         if (dir.magnitude > 0.01f)
         {
-            float step = this.rotSpeed * Time.deltaTime;
+            float step = rotSpeed * Time.deltaTime;
             Quaternion q = Quaternion.LookRotation(dir);
-
-            //  線形補間
-            this.transform.rotation = Quaternion.Lerp(this.gameObject.transform.rotation, q, step);
+            transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, q, step);
         }
     }
 
@@ -129,7 +133,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        this.rig.velocity = new Vector3(this.slopeHorizontal, 0.0f, this.slopeVertical);
+        rig.velocity = new Vector3(slopeHorizontal, 0.0f, slopeVertical);
     }
 
     /// <summary>
@@ -137,7 +141,6 @@ public class Player : MonoBehaviour
     /// </summary>
     private void LoadPlayerData()
     {
-
         //  ロード出来たらロードしてnullならマスターから取得
         if (SaveData.Instance.Load(SaveData.KEY_SLOT_1) == null)
         {
@@ -171,9 +174,9 @@ public class Player : MonoBehaviour
         }
 
         //　ステータスをログに表示
-        LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
+        LoadPlayerBaseMaster.instance.DebugLog(status.param);
         // 武器情報をログに表示
-        LoadWeaponMaster.instance.DebugLog(this.weaponParam);
+        LoadWeaponMaster.instance.DebugLog(weaponParam);
         // アイテム情報をログに表示
         for(int i = 0; i < itemList.Count; ++i)
         {
@@ -193,16 +196,16 @@ public class Player : MonoBehaviour
         do
         {
             // すでにレベルがMAXなら加算処理はする必要ないのでreturn
-            if (this.status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            if (status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
                 break;
             }
 
             // 加算
-            this.status.exp += addExp;
+            status.exp += addExp;
 
             // レベルアップに必要な経験値に達していない場合はbreak
-            if (this.status.exp < this.status.param.next_exp)
+            if (status.exp < status.param.next_exp)
             {
                 break;
             }
@@ -224,34 +227,112 @@ public class Player : MonoBehaviour
         int subExp = 0;
 
         LogExtensions.OutputInfo("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
+        LoadPlayerBaseMaster.instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
 
         while (true)
         {
             
             // 必要経験値に満たしているかを算出する
-            subExp = this.status.exp - this.status.param.next_exp;
+            subExp = status.exp - status.param.next_exp;
 
             // 0を下回す場合、レベルアップに必要な経験値に到達していないのでbreak;
             if (subExp < 0) { break; }
 
             // 差分を現在の経験値に格納
-            this.status.exp = subExp;
+            status.exp = subExp;
            
             // 次のレベルのステータスを取得
-            this.status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(this.status.param.level + 1);
+            status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(status.param.level + 1);
 
-            if(this.status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            if(status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
-                this.status.exp = 0;
+                status.exp = 0;
                 break;
             }
 
         }
 
         LogExtensions.OutputInfo("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.instance.DebugLog(this.status.param);
+        LoadPlayerBaseMaster.instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
+    }
+
+    /// <summary>
+    /// アニメーション遷移
+    /// </summary>
+    private void AnimationCtrl()
+    {
+        float h = Mathf.Abs(Input.GetAxis("Horizontal"));
+        float v = Mathf.Abs(Input.GetAxis("Vertical"));
+
+        //  走りに移行する値
+        float runTrigger = 1.0f;
+
+        switch (step)
+        {
+            case STEP.MOVE:
+                if (Input.GetKeyDown((KeyCode)PadKeyCode.TRIANGLE))
+                {
+                    step = STEP.JUMP;
+                }
+
+                if (h >= runTrigger || v >= runTrigger)
+                {
+                    moveSpeed = 200.0f;
+                    rotSpeed = 30.0f;
+                    SetAnimation((int)ANIMATION.RUN);
+                }
+                else if (h >= runTrigger * 0.5f || v >= runTrigger * 0.5f)
+                {
+                    moveSpeed = 100.0f;
+                    rotSpeed = 15.0f;
+                    SetAnimation((int)ANIMATION.WALK);
+                }
+                else// if (h != 0 && v != 0)
+                {
+                    moveSpeed = 0.0f;
+                    rotSpeed = 0.0f;
+                    SetAnimation((int)ANIMATION.WAIT);
+                }
+                break;
+
+            case STEP.JUMP:
+                SetAnimation((int)ANIMATION.JUMP);
+                
+                //  他のモーションの状態が残っていれば処理しない
+                bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
+                bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
+                if (rb || wb) break;
+
+                normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                if (normalizedTime <= 0.2f)         //  踏ん張り
+                {
+                    moveSpeed = 0.0f;
+                    rotSpeed = 0.0f;
+                }
+                else if (normalizedTime <= 0.7f)    //  空中
+                {
+                    moveSpeed = 200.0f;
+                    rotSpeed = 15.0f;
+                }                
+                else if (normalizedTime <= 0.8f)    //  着地開始
+                {
+                    moveSpeed = 0.0f;
+                    rotSpeed = 0.0f;
+                }
+                else                                //  着地完了
+                {
+                    moveSpeed = 0.0f;
+                    rotSpeed = 0.0f;
+                    step = STEP.MOVE;
+                }
+                break;
+        }
+    }
+
+    private void SetAnimation(int value)
+    {
+        if (animator.GetInteger("state") != value) animator.SetInteger("state", value);
     }
 }

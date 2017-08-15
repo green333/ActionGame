@@ -71,11 +71,11 @@ public class Player : MonoBehaviour
 
     /// <summary> アニメーション関連 </summary>
     private Animator animator;
-    private enum ANIMATION : int { WAIT = 0, WALK, RUN, JUMP }
+    private enum ANIMATION : int { WAIT = 0, WALK, RUN, JUMP, ATTACK }
     private float normalizedTime;
 
     /// <summary> 状態遷移管理用 </summary>
-    private enum STEP : int { MOVE = 0, JUMP }
+    private enum STEP : int { MOVE = 0, JUMP, ATTACK }
     private STEP step = STEP.MOVE;
 
     /// <summary>
@@ -272,10 +272,8 @@ public class Player : MonoBehaviour
         switch (step)
         {
             case STEP.MOVE:
-                if (Input.GetKeyDown((KeyCode)PadKeyCode.TRIANGLE))
-                {
-                    step = STEP.JUMP;
-                }
+                if (Input.GetKeyDown((KeyCode)PadKeyCode.CROSS)) step = STEP.JUMP;
+                if (Input.GetKeyDown((KeyCode)PadKeyCode.CIRCLE)) step = STEP.ATTACK;
 
                 if (h >= runTrigger || v >= runTrigger)
                 {
@@ -297,40 +295,68 @@ public class Player : MonoBehaviour
                 }
                 break;
 
-            case STEP.JUMP:
-                SetAnimation((int)ANIMATION.JUMP);
-                
-                //  他のモーションの状態が残っていれば処理しない
-                bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
-                bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
-                if (rb || wb) break;
+            case STEP.JUMP: {
+                    SetAnimation((int)ANIMATION.JUMP);
 
-                normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                if (normalizedTime <= 0.2f)         //  踏ん張り
-                {
+                    //  他のモーションの状態が残っていれば処理しない
+                    bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
+                    bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
+                    if (rb || wb) break;
+
+                    normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                    if (normalizedTime <= 0.2f)         //  踏ん張り
+                    {
+                        moveSpeed = 0.0f;
+                        rotSpeed = 0.0f;
+                    }
+                    else if (normalizedTime <= 0.7f)    //  空中
+                    {
+                        moveSpeed = 200.0f;
+                        rotSpeed = 15.0f;
+                    }
+                    else if (normalizedTime <= 0.8f)    //  着地開始
+                    {
+                        moveSpeed = 0.0f;
+                        rotSpeed = 0.0f;
+                    }
+                    else                                //  着地完了
+                    {
+                        moveSpeed = 0.0f;
+                        rotSpeed = 0.0f;
+                        step = STEP.MOVE;
+                    }
+                    break;
+                }
+
+            case STEP.ATTACK: {
+                    SetAnimation((int)ANIMATION.ATTACK);
+
+                    //  他のモーションの状態が残っていれば処理しない
+                    bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
+                    bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
+                    bool jb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Jump");
+                    if (rb || wb || jb) break;
+
                     moveSpeed = 0.0f;
                     rotSpeed = 0.0f;
+
+                    normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                    if (normalizedTime >= 1.0f)
+                    {
+                        moveSpeed = 100.0f;
+                        rotSpeed = 15.0f;
+                        step = STEP.MOVE;
+                    }
+
+                    break;
                 }
-                else if (normalizedTime <= 0.7f)    //  空中
-                {
-                    moveSpeed = 200.0f;
-                    rotSpeed = 15.0f;
-                }                
-                else if (normalizedTime <= 0.8f)    //  着地開始
-                {
-                    moveSpeed = 0.0f;
-                    rotSpeed = 0.0f;
-                }
-                else                                //  着地完了
-                {
-                    moveSpeed = 0.0f;
-                    rotSpeed = 0.0f;
-                    step = STEP.MOVE;
-                }
-                break;
         }
     }
 
+    /// <summary>
+    /// アニメーションをセットする
+    /// </summary>
+    /// <param name="value">アニメーション番号</param>
     private void SetAnimation(int value)
     {
         if (animator.GetInteger("state") != value) animator.SetInteger("state", value);

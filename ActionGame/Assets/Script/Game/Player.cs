@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -48,9 +46,9 @@ public class Player : MonoBehaviour
     private float moveSpeed;
     private float rotSpeed;
 
-    /// <summary> 傾き </summary>
-    private float slopeHorizontal;
-    private float slopeVertical;
+    /// <summary> 移動量 </summary>
+    private float moveH;
+    private float moveV;
 
     /// <summary> ゲームパッドのキーコード </summary>
     private enum PadKeyCode {
@@ -85,7 +83,7 @@ public class Player : MonoBehaviour
     {
         rig = GetComponent<Rigidbody>();
         enableLvUpEffectExecute = false;
-        slopeHorizontal = slopeVertical = 0.0f;
+        moveH = moveV = 0.0f;
         animator = GetComponent<Animator>();
         LoadPlayerData();
     }
@@ -95,7 +93,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        Move();
+        // 移動
+        rig.velocity = new Vector3(moveH, 0.0f, moveV);
     }
 
     /// <summary>
@@ -103,22 +102,19 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        AnimationCtrl();
-        Rotate();
+        moveH = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
+        moveV = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
+
+        StateCtrl();
     }
 
     /// <summary>
     /// 回転
     /// アナログスティックを傾けた角度に徐々に回転させる
-    /// 
-    /// このサイトぱくった
-    /// http://dev3104.hateblo.jp/entry/2016/04/07/185529
     /// </summary>
     private void Rotate()
     {
-        slopeHorizontal = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
-        slopeVertical = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
-        Vector3 dir = new Vector3(slopeHorizontal, 0.0f, slopeVertical);
+        Vector3 dir = new Vector3(moveH, 0.0f, moveV);
 
         if (dir.magnitude > 0.01f)
         {
@@ -133,7 +129,94 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        rig.velocity = new Vector3(slopeHorizontal, 0.0f, slopeVertical);
+        if (Input.GetKeyDown((KeyCode)PadKeyCode.CROSS)) step = STEP.JUMP;
+        if (Input.GetKeyDown((KeyCode)PadKeyCode.CIRCLE)) step = STEP.ATTACK;
+
+        float h = Mathf.Abs(Input.GetAxis("Horizontal"));
+        float v = Mathf.Abs(Input.GetAxis("Vertical"));
+
+        //  走りに移行する値
+        float runTrigger = 1.0f;
+
+        if (h >= runTrigger || v >= runTrigger)
+        {
+            moveSpeed = 200.0f;
+            rotSpeed = 30.0f;
+            SetAnimation((int)ANIMATION.RUN);
+        }
+        else if (h >= runTrigger * 0.5f || v >= runTrigger * 0.5f)
+        {
+            moveSpeed = 100.0f;
+            rotSpeed = 15.0f;
+            SetAnimation((int)ANIMATION.WALK);
+        }
+        else// if (h != 0 && v != 0)
+        {
+            moveSpeed = 0.0f;
+            rotSpeed = 0.0f;
+            SetAnimation((int)ANIMATION.WAIT);
+        }
+    }
+
+    /// <summary>
+    /// ジャンプ
+    /// </summary>
+    private void Jump()
+    {
+        SetAnimation((int)ANIMATION.JUMP);
+
+        //  他のモーションの状態が残っていれば処理しない
+        bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
+        bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
+        if (rb || wb) return;
+
+        normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        if (normalizedTime <= 0.2f)         //  踏ん張り
+        {
+            moveSpeed = 0.0f;
+            rotSpeed = 0.0f;
+        }
+        else if (normalizedTime <= 0.7f)    //  空中
+        {
+            moveSpeed = 200.0f;
+            rotSpeed = 15.0f;
+        }
+        else if (normalizedTime <= 0.8f)    //  着地開始
+        {
+            moveSpeed = 0.0f;
+            rotSpeed = 0.0f;
+        }
+        else                                //  着地完了
+        {
+            moveSpeed = 0.0f;
+            rotSpeed = 0.0f;
+            step = STEP.MOVE;
+        }
+    }
+
+    /// <summary>
+    /// 攻撃
+    /// </summary>
+    private void Attack()
+    {
+        SetAnimation((int)ANIMATION.ATTACK);
+
+        //  他のモーションの状態が残っていれば処理しない
+        bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
+        bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
+        bool jb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Jump");
+        if (rb || wb || jb) return;
+
+        moveSpeed = 0.0f;
+        rotSpeed = 0.0f;
+
+        normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        if (normalizedTime >= 1.0f)
+        {
+            moveSpeed = 100.0f;
+            rotSpeed = 15.0f;
+            step = STEP.MOVE;
+        }
     }
 
     /// <summary>
@@ -258,98 +341,28 @@ public class Player : MonoBehaviour
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
     }
 
+
+
     /// <summary>
-    /// アニメーション遷移
+    /// 状態遷移
     /// </summary>
-    private void AnimationCtrl()
+    private void StateCtrl()
     {
-        float h = Mathf.Abs(Input.GetAxis("Horizontal"));
-        float v = Mathf.Abs(Input.GetAxis("Vertical"));
-
-        //  走りに移行する値
-        float runTrigger = 1.0f;
-
         switch (step)
         {
             case STEP.MOVE:
-                if (Input.GetKeyDown((KeyCode)PadKeyCode.CROSS)) step = STEP.JUMP;
-                if (Input.GetKeyDown((KeyCode)PadKeyCode.CIRCLE)) step = STEP.ATTACK;
-
-                if (h >= runTrigger || v >= runTrigger)
-                {
-                    moveSpeed = 200.0f;
-                    rotSpeed = 30.0f;
-                    SetAnimation((int)ANIMATION.RUN);
-                }
-                else if (h >= runTrigger * 0.5f || v >= runTrigger * 0.5f)
-                {
-                    moveSpeed = 100.0f;
-                    rotSpeed = 15.0f;
-                    SetAnimation((int)ANIMATION.WALK);
-                }
-                else// if (h != 0 && v != 0)
-                {
-                    moveSpeed = 0.0f;
-                    rotSpeed = 0.0f;
-                    SetAnimation((int)ANIMATION.WAIT);
-                }
+                Move();
+                Rotate();
                 break;
 
-            case STEP.JUMP: {
-                    SetAnimation((int)ANIMATION.JUMP);
+            case STEP.JUMP:
+                Jump();
+                Rotate();
+                break;
 
-                    //  他のモーションの状態が残っていれば処理しない
-                    bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
-                    bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
-                    if (rb || wb) break;
-
-                    normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                    if (normalizedTime <= 0.2f)         //  踏ん張り
-                    {
-                        moveSpeed = 0.0f;
-                        rotSpeed = 0.0f;
-                    }
-                    else if (normalizedTime <= 0.7f)    //  空中
-                    {
-                        moveSpeed = 200.0f;
-                        rotSpeed = 15.0f;
-                    }
-                    else if (normalizedTime <= 0.8f)    //  着地開始
-                    {
-                        moveSpeed = 0.0f;
-                        rotSpeed = 0.0f;
-                    }
-                    else                                //  着地完了
-                    {
-                        moveSpeed = 0.0f;
-                        rotSpeed = 0.0f;
-                        step = STEP.MOVE;
-                    }
-                    break;
-                }
-
-            case STEP.ATTACK: {
-                    SetAnimation((int)ANIMATION.ATTACK);
-
-                    //  他のモーションの状態が残っていれば処理しない
-                    bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
-                    bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
-                    bool jb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Jump");
-                    if (rb || wb || jb) break;
-
-                    moveSpeed = 0.0f;
-                    rotSpeed = 0.0f;
-
-                    normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                    if (normalizedTime >= 1.0f)
-                    {
-                        moveSpeed = 100.0f;
-                        rotSpeed = 15.0f;
-                        step = STEP.MOVE;
-                    }
-
-                    break;
-                }
+            case STEP.ATTACK:
+                Attack();
+                break;
         }
     }
 

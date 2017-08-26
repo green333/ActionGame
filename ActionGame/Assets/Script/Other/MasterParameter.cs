@@ -13,7 +13,8 @@ public class EnemyBaseMaster : ScriptableObject{
     {
         public string name;        //    名前
         public int id;        //    ID
-        public int index;        //    検索ID
+        public string tribe_name;        //    種族
+        public string class_name;        //    階級
         public string drop_item_name1;        //    ドロップアイテム1
         public int drop_item_num1;        //    個数
         public int drop_item_add_rnd1;        //    個数増加乱数
@@ -55,15 +56,17 @@ public class EnemySpawnMaster : ScriptableObject{
     {
         public int stage_id;        //    ステージID
         public int chapter_id;        //    章
+        public int stage_detail_id;        //    ステージ詳細マスタID
         public int respawn_max;        //    出現する敵の最大数
-        public string enemy1_name;        //    雑魚敵１
+        public string enemy1_name;        //    敵１
         public int enemy1_lvpm;        //    レベル幅
         public int enemy1_respawn_time;        //    沸き時間(秒)
-        public string enemy2_name;        //    中敵１
+        public string enemy2_name;        //    敵２
         public int enemy2_lvpm;        //    レベル幅
         public int enemy2_respawn_time;        //    沸き時間(秒)
-        public string enemy3_name;        //    ボス敵１
+        public string enemy3_name;        //    敵３
         public int enemy3_lvpm;        //    レベル幅
+        public int enemy3_respawn_time;        //    沸き時間(秒)
     }
 }
 

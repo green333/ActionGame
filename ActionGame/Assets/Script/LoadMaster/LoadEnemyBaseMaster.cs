@@ -55,12 +55,10 @@ public class LoadEnemyBaseMaster : TextMasterManager
         eneymInfoList = new List<EnemyBaseMaster.Param>();
 
         // 検索する名前一覧
-        string[] searchNameList = 
-        {
-            base.VariableToJson(COL_NAME,esMasterParam.enemy1_name),
-            base.VariableToJson(COL_NAME,esMasterParam.enemy2_name),
-            base.VariableToJson(COL_NAME,esMasterParam.enemy3_name),
-        };
+        string[] searchNameList = new string[3] {"","",""};
+        if (esMasterParam.enemy1_name != "") { searchNameList[0] = base.VariableToJson(COL_NAME, esMasterParam.enemy1_name); }
+        if (esMasterParam.enemy2_name != "") { searchNameList[1] = base.VariableToJson(COL_NAME, esMasterParam.enemy2_name); }
+        if (esMasterParam.enemy3_name != "") { searchNameList[2] = base.VariableToJson(COL_NAME, esMasterParam.enemy3_name); }
 
         base.Open(filename);
         string[] getJsonStr = base.SearchList(searchNameList);
@@ -71,12 +69,6 @@ public class LoadEnemyBaseMaster : TextMasterManager
             {
                 eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
             }
-        }
-
-        // 取得しなければならない数と一致していない
-        if(eneymInfoList.Count != searchNameList.Length)
-        {
-            LogExtensions.OutputWarn("敵基本マスタから取得した敵情報の数が少ないです。");
         }
     }
 
@@ -90,7 +82,8 @@ public class LoadEnemyBaseMaster : TextMasterManager
         LogExtensions.OutputInfo("[敵基本マスタ] => " +
             "[name:"                    + param.name                      + "] " +
             "[id:"                      + param.id                        + "] " +
-            "[index:"                   + param.index                     + "] " +
+            "[class_name:"              + param.class_name                + "] " +
+            "[tribe_name:"              + param.tribe_name                + "] " +
             "[drop_item_name1:"         + param.drop_item_name1           + "] " +
             "[drop_item_num1:"          + param.drop_item_num1            + "] " +
             "[drop_item_add_rnd1:"      + param.drop_item_add_rnd1        + "] " +

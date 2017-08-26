@@ -43,6 +43,35 @@ public class TextMasterManager : TextLoader
     }
 
     /// <summary>
+    /// 指定した文字列に一致するデータを複数取得する
+    /// </summary>
+    /// <param name="selectStr">検索を行う文字列</param>
+    /// <returns></returns>
+    protected List<string> SearchMultiple(string selectStr)
+    {
+        List<string> retList = new List<string>();
+
+        string getLine = base.GetLine();
+
+        // カンマ区切りで検索文字列を分割する
+        string[] selectStrList = selectStr.Split(',');
+
+        // 検索を行う文字列の対象数
+        int selectStrCount = selectStrList.Length;
+
+        string temp = string.Empty;
+        while (getLine != string.Empty)
+        {
+            if (string.Empty != (temp = commaStrSearch(getLine, selectStrList, selectStrCount)))
+            {
+                retList.Add(temp);
+            }
+            getLine = base.GetLine();
+        }
+
+        return retList;
+    }
+    /// <summary>
     /// 指定した文字列リストに一致する行データを複数取得する
     /// </summary>
     /// <param name="selectStrList">検索を行う文字列リスト(複数ある場合は要素をカンマ区切りで格納する)</param>
@@ -80,6 +109,8 @@ public class TextMasterManager : TextLoader
 
                 for(int i = 0; i < selectStr.Count; ++i)
                 {
+                    // 空文字列が入っている場合は検索せずにcontinue
+                    if(selectStr[i] == "") { continue; }
                     splistStr = selectStr[i].Split(',');
 
                     // カンマ区切りした文字列配列に一致する行データを取得する

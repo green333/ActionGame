@@ -1,4 +1,4 @@
-{"name":"ステージ1","id":1,"chapter":1,"normal_bgm_name":"トルコ進行曲
+{"name":"赤ずきんステージ","id":1,"chapter":1,"normal_bgm_name":"トルコ進行曲
 ","battle_bgm_name":"トルコ進行曲
 ","boss_bgm_name":"トルコ進行曲
 ","event_bgm_name":"トルコ進行曲

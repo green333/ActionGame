@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LoadEnemySpawnMaster : TextMasterManager
 {
@@ -12,28 +13,30 @@ public class LoadEnemySpawnMaster : TextMasterManager
     const string COL_STAGE_ID   = "stage_id";
     const string COL_CHAPTER_ID = "chapter_id";
 
+    // 敵出現マスタの一レコードに設定できる敵の数
+    public const int ONE_RECORD_ENEMY_MAX_COUNT= 3;
+
     /// <summary>
     /// 指定したステージと章に出現する敵の情報を取得
     /// </summary>
     /// <param name="stage_id"></param>
     /// <param name="chapter_id"></param>
     /// <returns></returns>
-    public EnemySpawnMaster.Param GetEnemySpawanInfo(int stage_id,int chapter_id)
+    public void GetEnemySpawanInfo(out List<EnemySpawnMaster.Param> paramList,int stage_id,int chapter_id)
     {
-        EnemySpawnMaster.Param param = null;
+        paramList = new List<EnemySpawnMaster.Param>();
 
         string searchJson =  base.VariableToJson(COL_STAGE_ID, stage_id) + "," + base.VariableToJson(COL_CHAPTER_ID, chapter_id);
 
         base.Open(filename);
-        string getJsonStr = base.Search(searchJson);
+        List<string> getJsonStrList = base.SearchMultiple(searchJson);
         base.Close();
 
-        if(getJsonStr != null)
+        IEnumerator getJsonStrListE = getJsonStrList.GetEnumerator();
+        while(getJsonStrListE.MoveNext())
         {
-            param = JsonUtility.FromJson<EnemySpawnMaster.Param>(getJsonStr);
+            paramList.Add(JsonUtility.FromJson<EnemySpawnMaster.Param>((string)getJsonStrListE.Current));
         }
-
-        return param;
     }
 
     /// <summary>
@@ -42,14 +45,21 @@ public class LoadEnemySpawnMaster : TextMasterManager
     /// <param name="param"></param>
     public void DebugLog(EnemySpawnMaster.Param param)
     {
-        LogExtensions.OutputInfo("chapter_id          = " + param.chapter_id);
-        LogExtensions.OutputInfo("enemy1_lvpm         = " + param.enemy1_lvpm);
-        LogExtensions.OutputInfo("enemy1_name         = " + param.enemy1_name);
-        LogExtensions.OutputInfo("enemy1_respawn_time = " + param.enemy1_respawn_time);
-        LogExtensions.OutputInfo("enemy2_lvpm         = " + param.enemy2_lvpm);
-        LogExtensions.OutputInfo("enemy2_name         = " + param.enemy2_name);
-        LogExtensions.OutputInfo("enemy2_respawn_time = " + param.enemy2_respawn_time);
-        LogExtensions.OutputInfo("enemy3_lvpm         = " + param.enemy3_lvpm);
-        LogExtensions.OutputInfo("enemy3_name         = " + param.enemy3_name);
+
+        LogExtensions.OutputInfo("[敵出現マスタ] => " +
+             "[stage_id:"               + param.stage_id            + "] " +
+             "[chapter_id:"             + param.chapter_id          + "] " +
+             "[stage_detail_id:"        + param.stage_detail_id     + "] " +
+             "[enemy1_lvpm:"            + param.enemy1_lvpm         + "] " +
+             "[enemy1_id:"              + param.enemy1_id             + "] " +
+             "[enemy1_respawn_time:"    + param.enemy1_respawn_time + "] " +
+             "[enemy2_lvpm:"            + param.enemy2_lvpm         + "] " +
+             "[enemy2_id:"              + param.enemy2_id             + "] " +
+             "[enemy2_respawn_time:"    + param.enemy2_respawn_time + "] " +
+             "[enemy3_lvpm:"            + param.enemy3_lvpm         + "] " +
+             "[enemy3_id:"              + param.enemy3_id           + "] " +
+             "[enemy3_respawn_time:"    + param.enemy3_respawn_time + "] "
+        );
+          
     }
 }

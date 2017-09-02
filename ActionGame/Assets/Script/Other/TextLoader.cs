@@ -39,7 +39,7 @@ public class TextLoader{
     {
         string ret = stream.ReadLine();
 
-        if (ret == null || stream.EndOfStream)
+        if (ret == null)
         {
             ret = string.Empty;
         }

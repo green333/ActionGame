@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class LoadEnemyBaseMaster : TextMasterManager
 {
@@ -30,19 +31,20 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public EnemyBaseMaster.Param GetEnemyInfo(string name)
+    public void GetEnemyInfo(out List<EnemyBaseMaster.Param> eneymInfoList,int[] selectIdList)
     {
-        EnemyBaseMaster.Param param = null;
+        eneymInfoList = new List<EnemyBaseMaster.Param>();
+
         base.Open(filename);
-
-        string getJsonStr = base.Search(base.VariableToJson(COL_NAME, name));
-        if(getJsonStr != string.Empty)
-        {
-            param = JsonUtility.FromJson<EnemyBaseMaster.Param>(getJsonStr);
-        }
+        string[] getJsonStr = base.SearchList(Array.ConvertAll(selectIdList, delegate (int value) { return value.ToString(); }));
         base.Close();
-
-        return param;
+        foreach (string str in getJsonStr)
+        {
+            if (str != string.Empty)
+            {
+                eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
+            }
+        }
     }
 
     /// <summary>
@@ -50,17 +52,14 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// </summary>
     /// <param name="eneymInfoList"></param>
     /// <param name="esMasterParam"></param>
-    public void GetEnemyInfo(out List<EnemyBaseMaster.Param> eneymInfoList,EnemySpawnMaster.Param esMasterParam)
+    public void GetEnemyInfo(ref List<EnemyBaseMaster.Param> eneymInfoList,EnemySpawnMaster.Param esMasterParam)
     {
-        eneymInfoList = new List<EnemyBaseMaster.Param>();
 
         // 検索する名前一覧
-        string[] searchNameList = 
-        {
-            base.VariableToJson(COL_NAME,esMasterParam.enemy1_name),
-            base.VariableToJson(COL_NAME,esMasterParam.enemy2_name),
-            base.VariableToJson(COL_NAME,esMasterParam.enemy3_name),
-        };
+        string[] searchNameList = new string[3] {"","",""};
+        if (esMasterParam.enemy1_id != 0) { searchNameList[0] = base.VariableToJson(COL_NAME, esMasterParam.enemy1_id); }
+        if (esMasterParam.enemy2_id != 0) { searchNameList[1] = base.VariableToJson(COL_NAME, esMasterParam.enemy2_id); }
+        if (esMasterParam.enemy3_id != 0) { searchNameList[2] = base.VariableToJson(COL_NAME, esMasterParam.enemy3_id); }
 
         base.Open(filename);
         string[] getJsonStr = base.SearchList(searchNameList);
@@ -71,12 +70,6 @@ public class LoadEnemyBaseMaster : TextMasterManager
             {
                 eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
             }
-        }
-
-        // 取得しなければならない数と一致していない
-        if(eneymInfoList.Count != searchNameList.Length)
-        {
-            LogExtensions.OutputWarn("敵基本マスタから取得した敵情報の数が少ないです。");
         }
     }
 
@@ -90,14 +83,15 @@ public class LoadEnemyBaseMaster : TextMasterManager
         LogExtensions.OutputInfo("[敵基本マスタ] => " +
             "[name:"                    + param.name                      + "] " +
             "[id:"                      + param.id                        + "] " +
-            "[index:"                   + param.index                     + "] " +
-            "[drop_item_name1:"         + param.drop_item_name1           + "] " +
+            "[class_name:"              + param.class_name                + "] " +
+            "[tribe_name:"              + param.tribe_name                + "] " +
+            "[drop_item_id1:"           + param.drop_item_id1             + "] " +
             "[drop_item_num1:"          + param.drop_item_num1            + "] " +
             "[drop_item_add_rnd1:"      + param.drop_item_add_rnd1        + "] " +
-            "[drop_item_name2:"         + param.drop_item_name2           + "] " +
+            "[drop_item_name2:"         + param.drop_item_id2             + "] " +
             "[drop_item_num2:"          + param.drop_item_num2            + "] " +
             "[drop_item_add_rnd2:"      + param.drop_item_add_rnd2        + "] " +
-            "[rare_drop_item1:"         + param.rare_drop_item1           + "] " +
+            "[rare_drop_item_id1:"      + param.rare_drop_item_id1        + "] " +
             "[rare_drop_item_num1:"     + param.rare_drop_item_num1       + "] " +
             "[rare_drop_item_add_rnd1:" + param.rare_drop_item_add_rnd1   + "] " 
             );

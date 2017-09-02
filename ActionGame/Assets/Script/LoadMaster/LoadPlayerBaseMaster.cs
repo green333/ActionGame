@@ -54,10 +54,11 @@ public class LoadPlayerBaseMaster : TextMasterManager
     public void DebugLog(PlayerBaseMaster.Param param)
     {
         LogExtensions.OutputInfo("[プレイヤー基本マスタ] => " +
-            "[level:"       + param.level       + "] "+
-            "[hp:"          + param.hp          + "] "+
-            "[def:"         + param.def         + "] "+
-            "[spd:"         + param.spd         + "] "+
+            "[level:"       + param.level       + "] "  +
+            "[hp:"          + param.hp          + "] "  +
+            "[atk:"         + param.atk         + "] "  +
+            "[def:"         + param.def         + "] "  +
+            "[spd:"         + param.spd         + "] "  +
             "[next_exp:"    + param.next_exp    + "]"
             );
     }

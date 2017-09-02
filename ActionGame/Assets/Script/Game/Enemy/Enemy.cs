@@ -2,32 +2,34 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// 全エネミーの親クラスとなる
+/// 
+/// 敵成長マスタパラメーターは保持するが、敵基本マスタパラメーターは保持しない。
+/// 生成される敵は各々レベルが違うためパラメーターが変わるから保持する必要性があるが、
+/// 敵基本は敵の名前の敵が落とすアイテム情報を管理しており、これはレベルによって変わることはないため、
+/// ここでは管理しない
+/// </summary>
 public class Enemy : MonoBehaviour
 {
-   
-    /*
-     * EnemyBaseMaster.Paramを変数として持たせること。
-     * 
-     * セーブデータクラスが保持している章とステージIDを使用してLoadEnemySpawnMasterのGetEnemySpawanInfo（）から出現する敵の情報を取得。
-     * 
-     * 取得した敵出現情報をLoadEnemyBaseMasterのGetEnemyInfo()に投げて、出現する敵の基本情報を取得する。
-     * 
-     * LoadEnemySpawnMaster()とGetEnemyInfo()から取得したデータと、
-     * プレイヤーのレベルを使用してLoadEnemyGrowthMasterクラスのGetEnemyInfo()から敵のステータス情報を取得する。
-     * 
-     * なお出現する敵の数はGetEnemySpawanInfo()で取得した情報の中に入っているので、その数だけ敵を生成すること。
-     * 
-     * (現在プレイヤークラスにレベル変数を持たせていないので、敵のステータスを取得するときは引数に１を与えること。)
-     */
+
+    /// <summary>　敵のレベル毎の成長データ </summary>
+    protected EnemyGrowthMaster.Param m_growthStatus;
 
     /// <summary>
     /// 初期化
     /// </summary>
     private void Start()
     {
-        SaveData.Instance.stageId = 1;
-        SaveData.Instance.chapter = 1;
-
-        EnemyGenerator.LoadEnemyInfo();
+  
+    }
+       
+    /// <summary>
+    /// 敵を生成させる
+    /// </summary>
+    /// <param name="growthParam"></param>
+    public void Spawn(EnemyGrowthMaster.Param growthParam)
+    {
+        m_growthStatus = growthParam;
     }
 }

@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private const int PLAYER_INIT_LEVEL = 1;
     private const string PLAYER_INIT_WEAPON = "マシュ";
-    private const string PLAYER_INIT_HAVE_ITEM_NAME = "薬草";
+    private const string PLAYER_INIT_HAVE_ITEM_NAME = "薬草_小";
     private const int PLAYER_INIT_HAVE_ITEM_NUM = 3;
 
     /// <summary> アイテムリスト </summary>

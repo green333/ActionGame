@@ -97,4 +97,4 @@
 {"level":97,"hp":970,"atk":829,"def":104,"spd":274,"next_exp":4201}
 {"level":98,"hp":980,"atk":838,"def":105,"spd":277,"next_exp":4248}
 {"level":99,"hp":990,"atk":847,"def":106,"spd":280,"next_exp":4295}
-{"level":100,"hp":1000,"atk":856,"def":107,"spd":283,"next_exp":0}
+{"level":100,"hp":1000,"atk":856,"def":107,"spd":283,"next_exp":null}

@@ -110,7 +110,7 @@ public class TextMasterManager : TextLoader
                 for(int i = 0; i < selectStr.Count; ++i)
                 {
                     // 空文字列が入っている場合は検索せずにcontinue
-                    if(selectStr[i] == "") { continue; }
+                    if(selectStr[i] == "" || selectStr[i] == "0") { continue; }
                     splistStr = selectStr[i].Split(',');
 
                     // カンマ区切りした文字列配列に一致する行データを取得する
@@ -124,6 +124,77 @@ public class TextMasterManager : TextLoader
                 }
 
                 if(index == selectStrList.Length)
+                {
+                    isEnd = true;
+                    break;
+                }
+            }
+
+            if (isEnd)
+            {
+                break;
+            }
+
+            // 次の検索対象を取得する
+            getLineList = base.GetLine(selectStrCount);
+        }
+
+        return ret;
+    }
+
+    /// <summary>
+    /// 指定した文字列リストに一致する行データを複数取得する
+    /// </summary>
+    /// <param name="selectStrList">検索を行う文字列リスト(複数ある場合は要素をカンマ区切りで格納する)</param>
+    /// <param name="selectStrCount">検索対象の行データ取得数</param>
+    /// <returns>
+    /// 一致するデータがある時は行データ
+    /// 一致するデータはstring.Emptyが格納される
+    /// </returns>
+    protected string[] SearchList(List<string> selectStrList, int selectStrCount = 10)
+    {
+        string[] ret = Enumerable.Repeat<string>(string.Empty, selectStrList.Count).ToArray();
+
+        // 検索対象の文字列を配列で取得する
+        string[] getLineList = base.GetLine(selectStrCount);
+
+        // カンマ区切りした文字列配列を格納する
+        string[] splistStr = null;
+
+        bool isEnd = false;
+        int index = 0;
+        while (true)
+        {
+            foreach (string getLine in getLineList)
+            {
+                // 行データが途中で取得できてなかったときは、ファイル読み込みが終端まで行った時だけなので
+                // isEndフラグをたてる
+                if (getLine == string.Empty)
+                {
+                    isEnd = true;
+                    break;
+                }
+
+                for (int i = 0; i < selectStrList.Count; ++i)
+                {
+                    // 空文字列が入っている場合は検索せずにcontinue
+                    if (selectStrList[i] == "" || selectStrList[i] == "0") { continue; }
+                    splistStr = selectStrList[i].Split(',');
+
+                    // カンマ区切りした文字列配列に一致する行データを取得する
+                    if (string.Empty != (ret[index] = commaStrSearch(getLine, splistStr, splistStr.Length)))
+                    {
+                        // 一致する行データを取得できたので、検索対象から外してbreakする
+                        //selectStrList.Remove(selectStrList[i]);
+                        // TODO:検索対象から除外した場合、検索ヒット数===データ数ならbreakのif文が意図したとおりにならない。
+                        // Remove処理を消すことで処理は成り立つが、検索回数が多くなるため、検索速度があまりにも遅くなった場青、
+                        // ここの処理を作り直す必要がある
+                        ++index;
+                        break;
+                    }
+                }
+
+                if (index == selectStrList.Count)
                 {
                     isEnd = true;
                     break;

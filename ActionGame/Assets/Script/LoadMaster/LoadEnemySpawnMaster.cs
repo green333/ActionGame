@@ -8,6 +8,9 @@ public class LoadEnemySpawnMaster : TextMasterManager
 
     static public LoadEnemySpawnMaster instance { get { return _instance; } }
 
+    private List<EnemySpawnMaster.Param> m_spawnList = null;
+
+    public List<EnemySpawnMaster.Param> spawnList { get { return m_spawnList; } }
     const string filename = "Assets/Resources/MasterData/敵出現マスタ.txt";
 
     const string COL_STAGE_ID   = "stage_id";
@@ -22,9 +25,9 @@ public class LoadEnemySpawnMaster : TextMasterManager
     /// <param name="stage_id"></param>
     /// <param name="chapter_id"></param>
     /// <returns></returns>
-    public void GetEnemySpawanInfo(out List<EnemySpawnMaster.Param> paramList,int stage_id,int chapter_id)
+    public bool LoadEnemySpawanInfo(int stage_id,int chapter_id)
     {
-        paramList = new List<EnemySpawnMaster.Param>();
+        m_spawnList = new List<EnemySpawnMaster.Param>();
 
         string searchJson =  base.VariableToJson(COL_STAGE_ID, stage_id) + "," + base.VariableToJson(COL_CHAPTER_ID, chapter_id);
 
@@ -32,11 +35,12 @@ public class LoadEnemySpawnMaster : TextMasterManager
         List<string> getJsonStrList = base.SearchMultiple(searchJson);
         base.Close();
 
-        IEnumerator getJsonStrListE = getJsonStrList.GetEnumerator();
-        while(getJsonStrListE.MoveNext())
+        for(int i = 0; i < getJsonStrList.Count;++i)
         {
-            paramList.Add(JsonUtility.FromJson<EnemySpawnMaster.Param>((string)getJsonStrListE.Current));
+            m_spawnList.Add(JsonUtility.FromJson<EnemySpawnMaster.Param>(getJsonStrList[i]));
         }
+
+        return (m_spawnList.Count != 0);
     }
 
     /// <summary>

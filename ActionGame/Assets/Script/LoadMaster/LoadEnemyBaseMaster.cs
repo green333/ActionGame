@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class LoadEnemyBaseMaster : TextMasterManager
 {
@@ -15,6 +16,8 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// </summary>
     static public LoadEnemyBaseMaster instance { get { return _instance; } }
 
+    private Dictionary<int, EnemyBaseMaster.Param> m_enemyBaseMasterList = null;
+
     /// <summary>
     /// マスターデータのファイルパス
     /// </summary>
@@ -25,54 +28,39 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// </summary>
     const string COL_NAME = "name";
 
-    /// <summary>
-    /// 指定した名前に一致する敵の情報を取得する。
-    /// 指定した名前に一致するデータがなければnullを返す。
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public void GetEnemyInfo(out List<EnemyBaseMaster.Param> eneymInfoList,int[] selectIdList)
+
+    public void LoadEnemyBaseInfo(List<EnemySpawnMaster.Param> param)
     {
-        eneymInfoList = new List<EnemyBaseMaster.Param>();
+        m_enemyBaseMasterList = new Dictionary<int, EnemyBaseMaster.Param>();
+
+        IEnumerator parmaList = param.GetEnumerator();
+
+        EnemySpawnMaster.Param temp = null;
+        int[] selectIdList = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
+        int index = 0;
+        while (parmaList.MoveNext())
+        {
+            temp = (EnemySpawnMaster.Param)parmaList.Current;
+            selectIdList[index++] = temp.enemy1_id;
+            selectIdList[index++] = temp.enemy2_id;
+            selectIdList[index++] = temp.enemy3_id;
+        }
+        string[] selectList = Array.ConvertAll(selectIdList, delegate (int value) { return value.ToString(); });
 
         base.Open(filename);
-        string[] getJsonStr = base.SearchList(Array.ConvertAll(selectIdList, delegate (int value) { return value.ToString(); }));
+        string[] getJsonStr = base.SearchList(selectList);
         base.Close();
+
+        EnemyBaseMaster.Param temp2 = null;
         foreach (string str in getJsonStr)
         {
             if (str != string.Empty)
             {
-                eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
+                temp2= JsonUtility.FromJson<EnemyBaseMaster.Param>(str);
+                m_enemyBaseMasterList.Add(temp2.id, temp2);
             }
         }
     }
-
-    /// <summary>
-    /// 敵出現マスタから取得したデータをもとに、敵の情報を取得する
-    /// </summary>
-    /// <param name="eneymInfoList"></param>
-    /// <param name="esMasterParam"></param>
-    public void GetEnemyInfo(ref List<EnemyBaseMaster.Param> eneymInfoList,EnemySpawnMaster.Param esMasterParam)
-    {
-
-        // 検索する名前一覧
-        string[] searchNameList = new string[3] {"","",""};
-        if (esMasterParam.enemy1_id != 0) { searchNameList[0] = base.VariableToJson(COL_NAME, esMasterParam.enemy1_id); }
-        if (esMasterParam.enemy2_id != 0) { searchNameList[1] = base.VariableToJson(COL_NAME, esMasterParam.enemy2_id); }
-        if (esMasterParam.enemy3_id != 0) { searchNameList[2] = base.VariableToJson(COL_NAME, esMasterParam.enemy3_id); }
-
-        base.Open(filename);
-        string[] getJsonStr = base.SearchList(searchNameList);
-        base.Close();
-        foreach (string str in getJsonStr)
-        {
-            if (str != string.Empty)
-            {
-                eneymInfoList.Add(JsonUtility.FromJson<EnemyBaseMaster.Param>(str));
-            }
-        }
-    }
-
 
     /// <summary>
     /// 敵基本パラメーターをログに出力する

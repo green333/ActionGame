@@ -163,6 +163,7 @@ public class TextMasterManager : TextLoader
 
         bool isEnd = false;
         int index = 0;
+        int checkEndCount = selectStrList.Count;
         while (true)
         {
             foreach (string getLine in getLineList)
@@ -185,7 +186,7 @@ public class TextMasterManager : TextLoader
                     if (string.Empty != (ret[index] = commaStrSearch(getLine, splistStr, splistStr.Length)))
                     {
                         // 一致する行データを取得できたので、検索対象から外してbreakする
-                        //selectStrList.Remove(selectStrList[i]);
+                        selectStrList.Remove(selectStrList[i]);
                         // TODO:検索対象から除外した場合、検索ヒット数===データ数ならbreakのif文が意図したとおりにならない。
                         // Remove処理を消すことで処理は成り立つが、検索回数が多くなるため、検索速度があまりにも遅くなった場青、
                         // ここの処理を作り直す必要がある
@@ -194,7 +195,7 @@ public class TextMasterManager : TextLoader
                     }
                 }
 
-                if (index == selectStrList.Count)
+                if (index == checkEndCount)
                 {
                     isEnd = true;
                     break;

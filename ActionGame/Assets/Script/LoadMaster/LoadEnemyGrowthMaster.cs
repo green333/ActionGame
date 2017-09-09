@@ -10,102 +10,123 @@ public class LoadEnemyGrowthMaster : TextMasterManager
 
     static public LoadEnemyGrowthMaster instance { get { return _instance; } }
 
-    const int ENEMY_LEVEL_MAX = 120;
+    private Dictionary<int, Dictionary<int,EnemyGrowthMaster.Param>> m_enemyList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
+    public Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>> enemyList { get { return m_enemyList; } } 
+
+    public const int ENEMY_LEVEL_MAX = 120;
 
     const string filename = "Assets/Resources/MasterData/敵成長マスタ.txt";
 
-    const string COL_NAME = "name";
+    const string COL_ID = "id";
     const string COL_LEVEL = "level";
 
-    /// <summary>
-    /// 敵基本マスタパラメーターと敵出現パラメーターとプレイヤーのレベルから、出現する敵の情報を取得する
-    /// </summary>
-    /// <param name="growthListParam"></param>
-    /// <param name="spawnMasterParam"></param>
-    /// <param name="playerLv"></param>
-    public void GetEnemyInfo(out List<EnemyGrowthMaster.Param> growthListParam, List<EnemySpawnMaster.Param> spawnMasterParamList,int playerLv,out int[] getEnemyNameList)
+    public void LoadEnemyGrowthInfo(int playerLv,List<EnemySpawnMaster.Param> param)
     {
-        growthListParam     = new List<EnemyGrowthMaster.Param>();
-        getEnemyNameList    = Enumerable.Repeat<int>(0, spawnMasterParamList.Count * 3).ToArray();
+        m_enemyList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
 
-        IEnumerator ieEnemySpawnList =  spawnMasterParamList.GetEnumerator();
-        EnemySpawnMaster.Param tempEnemySpawn = null;
+        IEnumerator paramList = param.GetEnumerator();
+        EnemySpawnMaster.Param temp = null;
 
-       //  int SPAWN_COUNT = spawnMasterParamList.Count * LoadEnemySpawnMaster.ENEMY_SPAWN_KIND_MAX;
-        // 敵成長マスタから取得する敵のレベル分のリストを作成する
-        int[] checkedList    = Enumerable.Repeat<int>(0, spawnMasterParamList.Count * 3).ToArray();
-        int[] chekedMinLvList   = new int[spawnMasterParamList.Count * 3];
-        int[] chekedMaxLvList   = new int[spawnMasterParamList.Count * 3];
-        int checkedIndex        = 0;
+        int[] enemyIdList       = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
+        int[] enemyMinLvList    = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
+        int[] enemyMaxLvList    = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
 
-        while (ieEnemySpawnList.MoveNext())
+        int index   = 0;
+        int ofIndex = 0;
+        int min     = 0;
+        int max     = 0;
+        while (paramList.MoveNext())
         {
-            tempEnemySpawn = (EnemySpawnMaster.Param)ieEnemySpawnList.Current;
+            temp = (EnemySpawnMaster.Param)paramList.Current;
 
-            AddCheckList(ref checkedList, ref chekedMinLvList, ref chekedMaxLvList, ref checkedIndex, tempEnemySpawn.enemy1_id, tempEnemySpawn.enemy1_lvpm, playerLv, ref getEnemyNameList);
-            AddCheckList(ref checkedList, ref chekedMinLvList, ref chekedMaxLvList, ref checkedIndex, tempEnemySpawn.enemy2_id, tempEnemySpawn.enemy2_lvpm, playerLv, ref getEnemyNameList);
-            AddCheckList(ref checkedList, ref chekedMinLvList, ref chekedMaxLvList, ref checkedIndex, tempEnemySpawn.enemy3_id, tempEnemySpawn.enemy3_lvpm, playerLv, ref getEnemyNameList);
+            ofIndex = Array.IndexOf(enemyIdList, temp.enemy1_id);
+            if (ofIndex == -1)
+            {
+                enemyIdList[index] = temp.enemy1_id;
+                enemyMinLvList[index] = playerLv - temp.enemy1_lvpm;
+                enemyMaxLvList[index] = playerLv + temp.enemy1_lvpm;
+                ++index;
+            }else
+            {
+                min = playerLv - temp.enemy1_lvpm;
+                max = playerLv + temp.enemy1_lvpm;
+                if(min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
+                if(max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
+            }
+
+            ofIndex = Array.IndexOf(enemyIdList, temp.enemy2_id);
+            if (ofIndex == -1)
+            {
+                enemyIdList[index] = temp.enemy2_id;
+                enemyMinLvList[index] = playerLv - temp.enemy2_lvpm;
+                enemyMaxLvList[index] = playerLv + temp.enemy2_lvpm;
+                ++index;
+            }
+            else
+            {
+                min = playerLv - temp.enemy2_lvpm;
+                max = playerLv + temp.enemy2_lvpm;
+                if (min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
+                if (max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
+            }
+
+
+
+
+            ofIndex = Array.IndexOf(enemyIdList, temp.enemy3_id);
+            if (ofIndex == -1)
+            {
+                enemyIdList[index] = temp.enemy3_id;
+                enemyMinLvList[index] = playerLv - temp.enemy3_lvpm;
+                enemyMaxLvList[index] = playerLv + temp.enemy3_lvpm;
+                ++index;
+            }
+            else
+            {
+                min = playerLv - temp.enemy3_lvpm;
+                max = playerLv + temp.enemy3_lvpm;
+                if (min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
+                if (max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
+            }
         }
 
-        // 出現する敵の種類 * (レベル幅 * 2 + 1)数だけ取得するが、レベル幅は同じ敵が複数の場所に出現するとしても
-        // 同じ値とは限らないため、あらかじめバッファを設定することができないためリストを使用する
         List<string> searchList = new List<string>();
-        for(int i = 0; i < spawnMasterParamList.Count * 3; ++i)
+        for(int i = 0; i < index; ++i)
         {
-            if(checkedList[i] != 0)
+            if(enemyMinLvList[i] < 1) { enemyMinLvList[i] = 1; }
+            if(enemyMaxLvList[i] > ENEMY_LEVEL_MAX) { enemyMaxLvList[i] = ENEMY_LEVEL_MAX; }
+
+            for (int searchLv = enemyMinLvList[i]; searchLv <= enemyMaxLvList[i]; ++searchLv )
             {
-                for(int searchLv = chekedMinLvList[i]; searchLv <= chekedMaxLvList[i]; ++searchLv)
-                {
-                    searchList.Add(base.VariableToJson(COL_NAME, checkedList[i]) + "," + base.VariableToJson(COL_LEVEL, searchLv));
-                }
+                searchList.Add(base.VariableToJson(COL_ID, enemyIdList[i]) + "," + base.VariableToJson(COL_LEVEL, searchLv));
             }
         }
 
         base.Open(filename);
-        string[] getJsnoStrList = base.SearchList(searchList.ToArray(), 100);
+        string[] getJsnoStrList = base.SearchList(searchList, searchList.Count);
         base.Close();
 
+        EnemyGrowthMaster.Param temp2;
         foreach (string getJsonStr in getJsnoStrList)
         {
-            if(getJsonStr == string.Empty)
+            if (getJsonStr == string.Empty)
             {
                 break;
             }
-            growthListParam.Add(JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr));
-        }
 
-    }
+            temp2 = JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr);
 
-    private void AddCheckList(ref int[] checkedList,ref int[] chekedMinLvList,ref int[] chekedMaxLvList, ref int checkedIndex,int enemyEnemy,int lvpm,int playerLv,ref int[] getEnemyList)
-    {
-        int getIndex = -1;
-        int minLv = 0;
-        int maxLv = 0;
-        if (-1 == (getIndex = Array.IndexOf(checkedList, enemyEnemy)))
-        {
-            // 新しい敵データを見つけた場合、
-            checkedList[checkedIndex] = enemyEnemy;
-            minLv = playerLv - lvpm;
-            maxLv = playerLv + lvpm;
-            if (minLv < 1) { minLv = 1; }
-            if (maxLv > ENEMY_LEVEL_MAX) { maxLv = ENEMY_LEVEL_MAX; }
-            chekedMinLvList[checkedIndex] = minLv;
-            chekedMaxLvList[checkedIndex] = maxLv;
-            getEnemyList[checkedIndex] = enemyEnemy;
-            ++checkedIndex;
-        }
-        else
-        {
-            // 一度見つけた敵データの場合、出現する最低レベルと最高レベルが更新されているかをチェックし,
-            // 更新されている場合は上書きする
-            minLv = playerLv - lvpm;
-            maxLv = playerLv + lvpm;
-            if (minLv < 1) { minLv = 1; }
-            if (maxLv > ENEMY_LEVEL_MAX) { maxLv = ENEMY_LEVEL_MAX; }
-            if (chekedMinLvList[getIndex] < minLv) { chekedMinLvList[getIndex] = minLv; }
-            if (chekedMaxLvList[getIndex] > maxLv) { chekedMaxLvList[getIndex] = maxLv; }
+            if (m_enemyList.ContainsKey(temp2.id) && !m_enemyList[temp2.id].ContainsKey(temp2.level))
+            {
+                m_enemyList[temp2.id].Add(temp2.level, temp2);
+            }
+            else
+            {
+                m_enemyList.Add(temp2.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp2.level, temp2 } });
+            }
         }
     }
+    
 
     /// <summary>
     /// 敵成長パラメーターをログに出力する

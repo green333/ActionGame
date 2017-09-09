@@ -16,6 +16,11 @@ public class Enemy : MonoBehaviour
     /// <summary>　敵のレベル毎の成長データ </summary>
     protected EnemyGrowthMaster.Param m_growthStatus;
 
+    public void Initialize(EnemyGrowthMaster.Param param)
+    {
+        m_growthStatus = param;
+    }
+
     /// <summary>
     /// 初期化
     /// </summary>

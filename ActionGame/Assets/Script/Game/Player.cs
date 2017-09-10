@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AnimationController))]
 public class Player : MonoBehaviour
 {
     /*
@@ -27,6 +28,12 @@ public class Player : MonoBehaviour
     private const string PLAYER_INIT_HAVE_ITEM_NAME = "薬草_小";
     private const int PLAYER_INIT_HAVE_ITEM_NUM = 3;
 
+    /// <summary> 走りに移行する値 </summary>
+    private const float RUN_TRIGGER = 1;
+
+    /// <summary> アニメーション操作 </summary>
+    private AnimationController animationController;
+
     /// <summary> アイテムリスト </summary>
     private List<ItemInfo> itemList = null;
 
@@ -47,8 +54,7 @@ public class Player : MonoBehaviour
     private float rotSpeed;
 
     /// <summary> 移動量 </summary>
-    private float moveH;
-    private float moveV;
+    private Vector3 move;
 
     /// <summary> ゲームパッドのキーコード </summary>
     private enum PadKeyCode {
@@ -67,11 +73,6 @@ public class Player : MonoBehaviour
         PS = KeyCode.Joystick1Button12,
     }
 
-    /// <summary> アニメーション関連 </summary>
-    private Animator animator;
-    private enum ANIMATION : int { WAIT = 0, WALK, RUN, JUMP, ATTACK }
-    private float normalizedTime;
-
     /// <summary> 状態遷移管理用 </summary>
     private enum STEP : int { MOVE = 0, JUMP, ATTACK }
     private STEP step = STEP.MOVE;
@@ -83,8 +84,9 @@ public class Player : MonoBehaviour
     {
         rig = GetComponent<Rigidbody>();
         enableLvUpEffectExecute = false;
-        moveH = moveV = 0.0f;
-        animator = GetComponent<Animator>();
+        move = Vector3.zero;
+        animationController = GetComponent<AnimationController>();
+        animationController.Init();
         LoadPlayerData();
     }
 
@@ -94,7 +96,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         // 移動
-        rig.velocity = new Vector3(moveH, 0.0f, moveV);
+        rig.velocity = move;
     }
 
     /// <summary>
@@ -102,10 +104,13 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        moveH = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
-        moveV = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
+        move.Set(
+            Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed,
+            move.y,
+            Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed
+        );
 
-        StateCtrl();
+       CtrlAnimationState();
     }
 
     /// <summary>
@@ -114,108 +119,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Rotate()
     {
-        Vector3 dir = new Vector3(moveH, 0.0f, moveV);
-
-        if (dir.magnitude > 0.01f)
+        if (move.magnitude > 0.01f)
         {
             float step = rotSpeed * Time.deltaTime;
-            Quaternion q = Quaternion.LookRotation(dir);
+            Quaternion q = Quaternion.LookRotation(move);
             transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, q, step);
-        }
-    }
-
-    /// <summary>
-    /// 移動
-    /// </summary>
-    private void Move()
-    {
-        if (Input.GetKeyDown((KeyCode)PadKeyCode.CROSS)) step = STEP.JUMP;
-        if (Input.GetKeyDown((KeyCode)PadKeyCode.CIRCLE)) step = STEP.ATTACK;
-
-        float h = Mathf.Abs(Input.GetAxis("Horizontal"));
-        float v = Mathf.Abs(Input.GetAxis("Vertical"));
-
-        //  走りに移行する値
-        float runTrigger = 1.0f;
-
-        if (h >= runTrigger || v >= runTrigger)
-        {
-            moveSpeed = 200.0f;
-            rotSpeed = 30.0f;
-            SetAnimation((int)ANIMATION.RUN);
-        }
-        else if (h >= runTrigger * 0.5f || v >= runTrigger * 0.5f)
-        {
-            moveSpeed = 100.0f;
-            rotSpeed = 15.0f;
-            SetAnimation((int)ANIMATION.WALK);
-        }
-        else// if (h != 0 && v != 0)
-        {
-            moveSpeed = 0.0f;
-            rotSpeed = 0.0f;
-            SetAnimation((int)ANIMATION.WAIT);
-        }
-    }
-
-    /// <summary>
-    /// ジャンプ
-    /// </summary>
-    private void Jump()
-    {
-        SetAnimation((int)ANIMATION.JUMP);
-
-        //  他のモーションの状態が残っていれば処理しない
-        bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
-        bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
-        if (rb || wb) return;
-
-        normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        if (normalizedTime <= 0.2f)         //  踏ん張り
-        {
-            moveSpeed = 0.0f;
-            rotSpeed = 0.0f;
-        }
-        else if (normalizedTime <= 0.7f)    //  空中
-        {
-            moveSpeed = 200.0f;
-            rotSpeed = 15.0f;
-        }
-        else if (normalizedTime <= 0.8f)    //  着地開始
-        {
-            moveSpeed = 0.0f;
-            rotSpeed = 0.0f;
-        }
-        else                                //  着地完了
-        {
-            moveSpeed = 0.0f;
-            rotSpeed = 0.0f;
-            step = STEP.MOVE;
-        }
-    }
-
-    /// <summary>
-    /// 攻撃
-    /// </summary>
-    private void Attack()
-    {
-        SetAnimation((int)ANIMATION.ATTACK);
-
-        //  他のモーションの状態が残っていれば処理しない
-        bool rb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Run");
-        bool wb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Walk");
-        bool jb = animator.GetCurrentAnimatorStateInfo(0).IsName("Base Layer.Jump");
-        if (rb || wb || jb) return;
-
-        moveSpeed = 0.0f;
-        rotSpeed = 0.0f;
-
-        normalizedTime = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        if (normalizedTime >= 1.0f)
-        {
-            moveSpeed = 100.0f;
-            rotSpeed = 15.0f;
-            step = STEP.MOVE;
         }
     }
 
@@ -233,7 +141,7 @@ public class Player : MonoBehaviour
             // プレイヤーステータスを読み込む
             // (所持経験値パラムは0にしておくしておく)
             status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
-            status.exp   = 0;
+            status.exp = 0;
 
             // 武器情報を読み込む
             weaponParam = LoadWeaponMaster.instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
@@ -251,9 +159,9 @@ public class Player : MonoBehaviour
             LogExtensions.OutputInfo("セーブデータからプレイヤーデータの読み込みを開始します");
             //  現在レベル
             SaveData saveData = SaveData.Instance.Load(SaveData.KEY_SLOT_1);
-            status          = saveData.playerParam;
-            weaponParam     = saveData.weaponParam;
-            itemList        = saveData.itemList;
+            status = saveData.playerParam;
+            weaponParam = saveData.weaponParam;
+            itemList = saveData.itemList;
         }
 
         //　ステータスをログに表示
@@ -261,7 +169,7 @@ public class Player : MonoBehaviour
         // 武器情報をログに表示
         LoadWeaponMaster.instance.DebugLog(weaponParam);
         // アイテム情報をログに表示
-        for(int i = 0; i < itemList.Count; ++i)
+        for (int i = 0; i < itemList.Count; ++i)
         {
             LoadItemMaster.instance.DebugLog(itemList[i]);
         }
@@ -315,7 +223,7 @@ public class Player : MonoBehaviour
 
         while (true)
         {
-            
+
             // 必要経験値に満たしているかを算出する
             subExp = status.exp - status.param.next_exp;
 
@@ -324,11 +232,11 @@ public class Player : MonoBehaviour
 
             // 差分を現在の経験値に格納
             status.exp = subExp;
-           
+
             // 次のレベルのステータスを取得
             status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(status.param.level + 1);
 
-            if(status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            if (status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
                 status.exp = 0;
                 break;
@@ -341,37 +249,77 @@ public class Player : MonoBehaviour
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
     }
 
-
-
     /// <summary>
-    /// 状態遷移
+    /// アニメーション状態管理
     /// </summary>
-    private void StateCtrl()
+    private void CtrlAnimationState()
     {
         switch (step)
         {
             case STEP.MOVE:
-                Move();
+                if (Input.GetKeyDown((KeyCode)PadKeyCode.CROSS))
+                {
+                    animationController.SetAnimation("Jump", 0.0f);
+                    step = STEP.JUMP;
+                }
+                if (Input.GetKeyDown((KeyCode)PadKeyCode.CIRCLE))
+                {
+                    animationController.SetAnimation("Attack", 0.0f);
+                    step = STEP.ATTACK;
+                }
+
+                float h = Mathf.Abs(Input.GetAxis("Horizontal"));
+                float v = Mathf.Abs(Input.GetAxis("Vertical"));
+                if (h >= RUN_TRIGGER || v >= RUN_TRIGGER)
+                {
+                    Move();
+                    animationController.SetAnimation("Run");
+                }
+                else if (h >= RUN_TRIGGER * 0.5f || v >= RUN_TRIGGER * 0.5f)
+                {
+                    Move();
+                    animationController.SetAnimation("Walk");
+                }
+                else
+                {
+                    Stop();
+                    animationController.SetAnimation("Wait");
+                }
                 Rotate();
                 break;
 
             case STEP.JUMP:
-                Jump();
+                //  踏ん張り
+                if (animationController.GetNormalizedTime() <= 0.2f) { Stop(); }
+                //  空中
+                else if (animationController.GetNormalizedTime() <= 0.7f) { Move(); }
+                //  着地開始
+                else if (animationController.GetNormalizedTime() <= 0.8f) { Stop(); }
+                else
+                {
+                    Stop();
+                    step = STEP.MOVE;
+                }
+
                 Rotate();
                 break;
 
             case STEP.ATTACK:
-                Attack();
+                Stop();
+                if (animationController.GetIsEndAnimation()) step = STEP.MOVE;
                 break;
         }
     }
 
-    /// <summary>
-    /// アニメーションをセットする
-    /// </summary>
-    /// <param name="value">アニメーション番号</param>
-    private void SetAnimation(int value)
+    private void Stop()
     {
-        if (animator.GetInteger("state") != value) animator.SetInteger("state", value);
+        moveSpeed = 0.0f;
+        rotSpeed = 0.0f;
+    }
+
+    private void Move()
+    {
+        moveSpeed = 200.0f;
+        rotSpeed = 30.0f;
     }
 }

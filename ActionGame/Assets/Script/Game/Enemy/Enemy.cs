@@ -12,8 +12,8 @@ using System.Collections.Generic;
 /// </summary>
 public class Enemy : MonoBehaviour
 {
-
     /// <summary>　敵のレベル毎の成長データ </summary>
+    [SerializeField]
     protected EnemyGrowthMaster.Param m_growthStatus;
 
     public void Initialize(EnemyGrowthMaster.Param param)

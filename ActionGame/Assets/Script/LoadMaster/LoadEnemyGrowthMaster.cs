@@ -6,107 +6,74 @@ using System;
 
 public class LoadEnemyGrowthMaster : TextMasterManager
 {
-    static LoadEnemyGrowthMaster _instance = new LoadEnemyGrowthMaster();
+    /// <summary> 自身のインスタンス </summary>
+    static LoadEnemyGrowthMaster m_instance = new LoadEnemyGrowthMaster();
 
-    static public LoadEnemyGrowthMaster instance { get { return _instance; } }
+    /// <summary>　自身のインスタンスを取得 </summary>
+    static public LoadEnemyGrowthMaster instance { get { return m_instance; } }
 
-    private Dictionary<int, Dictionary<int,EnemyGrowthMaster.Param>> m_enemyList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
-    public Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>> enemyList { get { return m_enemyList; } } 
+    /// <summary>敵管理ID,レベル毎の敵成長マスタリスト </summary>
+    private Dictionary<int, Dictionary<int,EnemyGrowthMaster.Param>> m_enemyGrowthMasterList = null;
 
+    /// <summary> 敵成長マスタを取得 </summary>
+    public Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>> enemyGrowthMasterList { get { return m_enemyGrowthMasterList; } } 
+
+    /// <summary> 敵の最大レベル </summary>
     public const int ENEMY_LEVEL_MAX = 120;
 
+    /// <summary>　マスタデータのファイルパス </summary>
     const string filename = "Assets/Resources/MasterData/敵成長マスタ.txt";
 
-    const string COL_ID = "id";
-    const string COL_LEVEL = "level";
+    /// <summary> 検索に使用するマスターのカラム</summary>
+    const string COL_ID         = "id";
+    const string COL_LEVEL      = "level";
 
-    public void LoadEnemyGrowthInfo(int playerLv,List<EnemySpawnMaster.Param> param)
+    /// <summary>
+    /// 敵出現マスタから敵成長マスタを読み込む
+    /// </summary>
+    /// <param name="param">敵出現マスタ</param>
+    /// <returns>読み込み成功:true 読み込み失敗:false</returns>
+    public bool LoadEnemyGrowthInfo(List<EnemySpawnMaster.Param> param)
     {
-        m_enemyList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
+        m_enemyGrowthMasterList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
+ 
+        int[] enemyIdList   = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
+        int[] enemyLvList   = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
+        int index = 0;
 
-        IEnumerator paramList = param.GetEnumerator();
-        EnemySpawnMaster.Param temp = null;
-
-        int[] enemyIdList       = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-        int[] enemyMinLvList    = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-        int[] enemyMaxLvList    = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-
-        int index   = 0;
-        int ofIndex = 0;
-        int min     = 0;
-        int max     = 0;
-        while (paramList.MoveNext())
+        for (int i = 0; i < param.Count; ++i)
         {
-            temp = (EnemySpawnMaster.Param)paramList.Current;
-
-            ofIndex = Array.IndexOf(enemyIdList, temp.enemy1_id);
-            if (ofIndex == -1)
+            if (Array.IndexOf(enemyIdList, param[i].enemy1_id) == -1)
             {
-                enemyIdList[index] = temp.enemy1_id;
-                enemyMinLvList[index] = playerLv - temp.enemy1_lvpm;
-                enemyMaxLvList[index] = playerLv + temp.enemy1_lvpm;
-                ++index;
-            }else
-            {
-                min = playerLv - temp.enemy1_lvpm;
-                max = playerLv + temp.enemy1_lvpm;
-                if(min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
-                if(max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
-            }
-
-            ofIndex = Array.IndexOf(enemyIdList, temp.enemy2_id);
-            if (ofIndex == -1)
-            {
-                enemyIdList[index] = temp.enemy2_id;
-                enemyMinLvList[index] = playerLv - temp.enemy2_lvpm;
-                enemyMaxLvList[index] = playerLv + temp.enemy2_lvpm;
+                enemyIdList[index] = param[i].enemy1_id;
+                enemyLvList[index] = param[i].enemy1_lv;
                 ++index;
             }
-            else
+            if (Array.IndexOf(enemyIdList, param[i].enemy2_id) == -1)
             {
-                min = playerLv - temp.enemy2_lvpm;
-                max = playerLv + temp.enemy2_lvpm;
-                if (min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
-                if (max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
-            }
-
-
-
-
-            ofIndex = Array.IndexOf(enemyIdList, temp.enemy3_id);
-            if (ofIndex == -1)
-            {
-                enemyIdList[index] = temp.enemy3_id;
-                enemyMinLvList[index] = playerLv - temp.enemy3_lvpm;
-                enemyMaxLvList[index] = playerLv + temp.enemy3_lvpm;
+                enemyIdList[index] = param[i].enemy2_id;
+                enemyLvList[index] = param[i].enemy2_lv;
                 ++index;
             }
-            else
+            if (Array.IndexOf(enemyIdList, param[i].enemy3_id) == -1)
             {
-                min = playerLv - temp.enemy3_lvpm;
-                max = playerLv + temp.enemy3_lvpm;
-                if (min < enemyMinLvList[ofIndex]) { enemyMinLvList[ofIndex] = min; }
-                if (max > enemyMaxLvList[ofIndex]) { enemyMaxLvList[ofIndex] = max; }
+                enemyIdList[index] = param[i].enemy3_id;
+                enemyLvList[index] = param[i].enemy3_lv;
+                ++index;
             }
         }
 
         List<string> searchList = new List<string>();
         for(int i = 0; i < index; ++i)
         {
-            if(enemyMinLvList[i] < 1) { enemyMinLvList[i] = 1; }
-            if(enemyMaxLvList[i] > ENEMY_LEVEL_MAX) { enemyMaxLvList[i] = ENEMY_LEVEL_MAX; }
-
-            for (int searchLv = enemyMinLvList[i]; searchLv <= enemyMaxLvList[i]; ++searchLv )
-            {
-                searchList.Add(base.VariableToJson(COL_ID, enemyIdList[i]) + "," + base.VariableToJson(COL_LEVEL, searchLv));
-            }
+            searchList.Add(base.VariableToJson(COL_ID, enemyIdList[i]) + "," + base.VariableToJson(COL_LEVEL, enemyLvList[i]));
         }
 
         base.Open(filename);
         string[] getJsnoStrList = base.SearchList(searchList, searchList.Count);
         base.Close();
 
-        EnemyGrowthMaster.Param temp2;
+        EnemyGrowthMaster.Param temp = null;
         foreach (string getJsonStr in getJsnoStrList)
         {
             if (getJsonStr == string.Empty)
@@ -114,17 +81,19 @@ public class LoadEnemyGrowthMaster : TextMasterManager
                 break;
             }
 
-            temp2 = JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr);
+            temp = JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr);
 
-            if (m_enemyList.ContainsKey(temp2.id) && !m_enemyList[temp2.id].ContainsKey(temp2.level))
+            if (m_enemyGrowthMasterList.ContainsKey(temp.id) && !m_enemyGrowthMasterList[temp.id].ContainsKey(temp.level))
             {
-                m_enemyList[temp2.id].Add(temp2.level, temp2);
+                m_enemyGrowthMasterList[temp.id].Add(temp.level, temp);
             }
             else
             {
-                m_enemyList.Add(temp2.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp2.level, temp2 } });
+                m_enemyGrowthMasterList.Add(temp.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp.level, temp } });
             }
         }
+
+        return (m_enemyGrowthMasterList.Count != 0);
     }
     
 
@@ -143,6 +112,22 @@ public class LoadEnemyGrowthMaster : TextMasterManager
              "[spd:"    + param.spd     + "] " +
              "[exp:"    + param.exp     + "] " 
         );
+    }
+
+
+
+    /// <summary>
+    /// 敵成長パラメーターをログに出力する
+    /// </summary>
+    public void DebugLog()
+    {
+        foreach (KeyValuePair<int, Dictionary<int, EnemyGrowthMaster.Param>> param in m_enemyGrowthMasterList)
+        {
+            foreach (KeyValuePair<int,EnemyGrowthMaster.Param> param2 in param.Value)
+            {
+                DebugLog(param2.Value);
+            }
+        }
     }
 }
 

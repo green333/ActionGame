@@ -46,33 +46,6 @@ public class EnemyGrowthMaster : ScriptableObject{
 }
 
 /// <summary>
-/// 敵出現マスタパラメーター
-/// </summary>
-public class EnemySpawnMaster : ScriptableObject{
-
-    [System.SerializableAttribute]
-    public class Param
-    {
-        public int stage_id;        //    ステージID
-        public int chapter_id;        //    章
-        public int stage_detail_id;        //    ステージ詳細マスタID
-        public int respawn_max;        //    出現する敵の最大数
-        public int enemy1_id;        //    敵１
-        public int enemy1_lvpm;        //    レベル幅
-        public int enemy1_respawn_time;        //    沸き時間(秒)
-        public int enemy1_frequency;        //    出現確率(％)
-        public int enemy2_id;        //    敵２
-        public int enemy2_lvpm;        //    レベル幅
-        public int enemy2_respawn_time;        //    沸き時間(秒)
-        public int enemy2_frequency;        //    出現確率(％)
-        public int enemy3_id;        //    敵３
-        public int enemy3_lvpm;        //    レベル幅
-        public int enemy3_respawn_time;        //    沸き時間(秒)
-        public int enemy3_frequency;        //    出現確率(％)
-    }
-}
-
-/// <summary>
 /// プレイヤー基本マスタパラメーター
 /// </summary>
 public class PlayerBaseMaster : ScriptableObject{
@@ -120,6 +93,33 @@ public class StageMaster : ScriptableObject{
         public string battle_bgm_name;        //    戦闘BGM
         public string boss_bgm_name;        //    BOSS戦BGM
         public string event_bgm_name;        //    イベントBGM
+    }
+}
+
+/// <summary>
+/// 敵出現マスタパラメーター
+/// </summary>
+public class EnemySpawnMaster : ScriptableObject{
+
+    [System.SerializableAttribute]
+    public class Param
+    {
+        public int stage_id;        //    ステージID
+        public int chapter_id;        //    章
+        public int stage_detail_id;        //    ステージ詳細マスタID
+        public int respawn_max;        //    出現する敵の最大数
+        public int enemy1_id;        //    敵１
+        public int enemy1_lv;        //    出現レベル
+        public int enemy1_respawn_time;        //    沸き時間(秒)
+        public int enemy1_frequency;        //    出現確率(％)
+        public int enemy2_id;        //    敵２
+        public int enemy2_lv;        //    出現レベル
+        public int enemy2_respawn_time;        //    沸き時間(秒)
+        public int enemy2_frequency;        //    出現確率(％)
+        public int enemy3_id;        //    敵３
+        public int enemy3_lv;        //    出現レベル
+        public int enemy3_respawn_time;        //    沸き時間(秒)
+        public int enemy3_frequency;        //    出現確率(％)
     }
 }
 

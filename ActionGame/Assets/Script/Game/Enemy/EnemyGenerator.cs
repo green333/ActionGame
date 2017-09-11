@@ -26,9 +26,6 @@ public class EnemyGenerator : MonoBehaviour
     {
         bool ret = false;
 
-        m_resourcesList = new Dictionary<int, GameObject>();
-        m_enemyList     = new List<GameObject>();
-
         LogExtensions.OutputInfo("敵データの読み込みを開始します");
 
         do
@@ -73,6 +70,9 @@ public class EnemyGenerator : MonoBehaviour
     /// <returns>生成成功:true 生成失敗:false</returns>
     public bool CreateEnemyOfThisPlace(int stageDetaileId)
     {
+        m_resourcesList = new Dictionary<int, GameObject>();
+        m_enemyList     = new List<GameObject>();
+
         // 指定したステージ詳細IDに一致すてうステージ出現マスタを取得する
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
         for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
@@ -93,36 +93,39 @@ public class EnemyGenerator : MonoBehaviour
         }
 
         int rand = 0;
-        int createdCount = 0;
 
         // 出現する敵の最大数、敵を生成する
-        while (createdCount != enemySpawnMasterParam.respawn_max)
+        while (true)
         {
             // 出現する確率は1~100まで( UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
             rand = UnityEngine.Random.Range(1, 101);
 
-            // 敵出現マスタに設定した三種類の敵のうち、一体は必ず生成させる
+            // 敵出現マスタに設定した三種類の敵のうち、一体は必ず生成させる(出現確率がすべて設定されている場合、生成する数は一体だけだが、
+            // 出現確率が設定されていない敵がいる場合、生成する数は二体以上になる)
+            // TODO:ただ、出現確率が設定されていないものがいたときの挙動ができていない。
 
             // 一種類目の敵の生成を試みる
-            if(RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand, ref createdCount))
+            if(RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand))
             {
-                continue;
+                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+                // 確率によって生成ができなかったので、生成される確率を変動させる
+                rand = UnityEngine.Random.Range(1, 101 - enemySpawnMasterParam.enemy1_frequency);
             }
-            // 確率によって生成ができなかったので、生成される確率を変動させる
-            rand = UnityEngine.Random.Range(1, 101 - enemySpawnMasterParam.enemy1_frequency);
-
+            
             // 二種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand,ref createdCount))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand))
             {
-                continue;
+                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+                // 確率によって生成ができなかったので、次の敵は必ず生成されるよう乱数を0に設定する
+                rand = 0;
             }
-            // 確率によって生成ができなかったので、次の敵は必ず生成されるよう乱数を0に設定する
-            rand = 0;
+
             // 三種類目の敵の生成を試みる
-            RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand, ref createdCount);
-           
+            RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand);
+            if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+
         }
-   
+
         return true;
     }
 
@@ -133,30 +136,32 @@ public class EnemyGenerator : MonoBehaviour
     /// <param name="enemyLv">敵のレベル</param>
     /// <param name="frequency">出現確率</param>
     /// <param name="rand">乱数</param>
-    /// <param name="createdCount">生成した敵の数</param>
-    /// <returns>生成した：:true 生成してない:false</returns>
-    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand,ref int createdCount)
+    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand)
     {
         bool ret = false;
 
-        if (enemyId != 0)
+        do
         {
-            if (frequency != 0)
+            // 敵出現マスタに敵管理IDが設定されていない場合、break
+            if(enemyId == 0) { break; }
+
+            // 出現確率が設定されている場合、出現確率が rand <= frequencyの条件を満たしているかをチェックし
+            // 満たしていない場合はcontinue
+            if (frequency != 0 && rand > frequency) { break; }
+
+            // コピーする元データとなるリソースが追加されていなければ追加する
+            if (!m_resourcesList.ContainsKey(enemyId))
             {
-                if (rand <= frequency)
-                {
-                    if (!m_resourcesList.ContainsKey(enemyId))
-                    {
-                        m_resourcesList.Add(enemyId, Resources.Load("EnemyData\\walker") as GameObject);
-                    }
-                    GameObject temp = Instantiate(m_resourcesList[enemyId]);
-                    temp.GetComponent<EnemyWolf>().Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
-                    m_enemyList.Add(temp);
-                    ++createdCount;
-                    ret = true;
-                }
+                m_resourcesList.Add(enemyId, Resources.Load("EnemyData\\" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path) as GameObject);
             }
-        }
+
+            // インスタンスデータを作成する
+            GameObject temp = Instantiate(m_resourcesList[enemyId]);
+            temp.GetComponent<EnemyWolf>().Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
+            m_enemyList.Add(temp);
+            ret = true;
+
+        } while (false);
 
         return ret;
     }
@@ -165,7 +170,7 @@ public class EnemyGenerator : MonoBehaviour
     {
         if (LoadEnemyMasterData(1, 1))
         {
-            CreateEnemyOfThisPlace(1);
+            CreateEnemyOfThisPlace(4);
         }
     }
 

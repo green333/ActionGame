@@ -71,6 +71,7 @@ public class LoadEnemyBaseMaster : TextMasterManager
         LogExtensions.OutputInfo("[敵基本マスタ] => " +
             "[name:"                    + param.name                      + "] " +
             "[id:"                      + param.id                        + "] " +
+            "[path:"                    + param.path                      + "]"  +
             "[class_name:"              + param.class_name                + "] " +
             "[tribe_name:"              + param.tribe_name                + "] " +
             "[drop_item_id1:"           + param.drop_item_id1             + "] " +

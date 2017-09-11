@@ -13,6 +13,7 @@ public class EnemyBaseMaster : ScriptableObject{
     {
         public string name;        //    名前
         public int id;        //    ID
+        public string path;        //    リソース
         public string tribe_name;        //    種族
         public string class_name;        //    階級
         public int drop_item_id1;        //    ドロップアイテム1

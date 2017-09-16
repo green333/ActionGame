@@ -146,8 +146,10 @@ public class EnemyGenerator : MonoBehaviour
             }
 
             // 三種類目の敵の生成を試みる
-            RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand);
-            if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand))
+            {
+                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+            }
 
         }
 

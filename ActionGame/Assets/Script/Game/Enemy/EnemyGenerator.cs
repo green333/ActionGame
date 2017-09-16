@@ -125,7 +125,7 @@ public class EnemyGenerator : MonoBehaviour
 
         // UnityEngine.Random.Rangeで使用する最大値
         // (UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
-        int frequency_rand_max = LoadEnemySpawnMaster.ONE_RECORD_ENEMY_MAX_COUNT + 1;
+        int frequency_rand_max = LoadEnemySpawnMaster.instance.FREQUENCY_MAX + 1;
 
         // 出現する敵の最大数、敵を生成する
         while (true)

@@ -12,13 +12,33 @@ using System.Collections.Generic;
 /// </summary>
 public class Enemy : MonoBehaviour
 {
-    /// <summary>　敵のレベル毎の成長データ </summary>
-    [SerializeField]
-    protected EnemyGrowthMaster.Param m_growthStatus;
+    /// <summary>　敵のパラメータークラス </summary>
+    protected class Parameter : EnemyGrowthMaster.Param
+    {
+        public int nowHp;
+        public Parameter(EnemyGrowthMaster.Param param)
+        {
+            id     = param.id;
+            level  = param.level;
+            hp     = param.hp;
+            atk    = param.atk;
+            def    = param.def;
+            spd    = param.spd;
+            exp    = param.exp;
+            nowHp  = param.hp;
+        }
+    }
 
+    /// <summary> 敵パラメーター </summary>
+    protected Parameter m_param = null;
+
+    /// <summary>
+    /// 生成時に敵情報を初期化
+    /// </summary>
+    /// <param name="param"></param>
     public void Initialize(EnemyGrowthMaster.Param param)
     {
-        m_growthStatus = param;
+        m_param = new Parameter(param);
     }
 
     /// <summary>
@@ -28,13 +48,18 @@ public class Enemy : MonoBehaviour
     {
   
     }
-       
+
+    /// <summary> 敵が死んだかどうか </summary>
+    /// <returns></returns>
+    public bool IsDead() { return m_param.nowHp == 0; }
+
     /// <summary>
-    /// 敵を生成させる
+    /// 敵にダメージを与える。TODO:引数は仮
     /// </summary>
-    /// <param name="growthParam"></param>
-    public void Spawn(EnemyGrowthMaster.Param growthParam)
+    /// <param name="playerAtk"></param>
+    public void AddDamage(int playerAtk)
     {
-        m_growthStatus = growthParam;
+        // TODO:仮
+        m_param.nowHp -= playerAtk;
     }
 }

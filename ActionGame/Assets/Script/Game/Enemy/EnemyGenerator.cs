@@ -14,7 +14,7 @@ public class EnemyGenerator : MonoBehaviour
     /// </summary>
     Dictionary<int, GameObject> m_resourcesList = null;
 
-    List<GameObject> m_enemyList = null;
+    Dictionary<GameObject,Enemy> m_enemyList = null;
 
     /// <summary>
     /// ステージIDと章IDから出現する敵のデータを読み込む
@@ -100,7 +100,6 @@ public class EnemyGenerator : MonoBehaviour
     {
         LogExtensions.OutputInfo("敵を生成します。ステージ詳細ID[" + stageDetaileId + "]");
 
-        m_enemyList     = new List<GameObject>();
         
         // 指定したステージ詳細IDに一致すてうステージ出現マスタを取得する
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
@@ -127,6 +126,8 @@ public class EnemyGenerator : MonoBehaviour
         // (UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
         int frequency_rand_max = LoadEnemySpawnMaster.instance.FREQUENCY_MAX + 1;
 
+        bool isError;
+
         // 出現する敵の最大数、敵を生成する
         while (true)
         {
@@ -134,26 +135,37 @@ public class EnemyGenerator : MonoBehaviour
             rand = UnityEngine.Random.Range(1, frequency_rand_max);
 
             // 一種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand,out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+            }
+            if(isError)
+            {
+                break;
             }
 
             // 二種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand,out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+            }
+            if (isError)
+            {
+                break;
             }
 
             // 三種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand,out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
             }
-
+            if (isError)
+            {
+                break;
+            }
         }
 
-        return true;
+        return !isError;
     }
 
     /// <summary>
@@ -164,9 +176,10 @@ public class EnemyGenerator : MonoBehaviour
     /// <param name="frequency">出現確率</param>
     /// <param name="rand">乱数</param>
     /// <returns>true:敵を生成した false:敵を生成しなかった</returns>
-    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand)
+    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand,out bool isError)
     {
         bool ret = false;
+        isError = false;
 
         do
         {
@@ -178,9 +191,24 @@ public class EnemyGenerator : MonoBehaviour
             if (frequency != 0 && rand > frequency) { break; }
 
             // インスタンスデータを作成する
-            GameObject temp = Instantiate(m_resourcesList[enemyId]);
-            temp.GetComponent<EnemyWolf>().Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
-            m_enemyList.Add(temp);
+            GameObject instance = Instantiate(m_resourcesList[enemyId]) as GameObject;
+            if(instance == null)
+            {
+                LogExtensions.OutputError("Instantia()に失敗しました。敵ID[" + enemyId + "]");
+                isError = true;
+                break;
+            }
+            // コンポーネントを取得する
+            Enemy component = GetComponent(instance,LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path);
+            if(component == null)
+            {
+                LogExtensions.OutputError("指定したプレハブが存在しません。敵ID[" + enemyId + "],path["+ LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path+"]");
+                isError = true;
+                break;
+            }
+            component.Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
+            m_enemyList.Add(instance, component);
+            
             ret = true;
 
         } while (false);
@@ -188,15 +216,46 @@ public class EnemyGenerator : MonoBehaviour
         return ret;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="instance">Instantiate()で作成したインスタンス</param>
+    /// <param name="path">敵基本に設定されているpath</param>
+    /// <returns>プレハブにアタッチしたEnemyを継承したコンポーネント</returns>
+    private Enemy GetComponent(GameObject instance,string path)
+    {
+        Enemy ret = null;
+        switch(path)
+        {
+            case "walker": ret = instance.GetComponent<EnemyWolf>(); break;
+            default: LogExtensions.OutputError("path[" + path + "]に紐づいたプレハブがありません。");break;
+        }
+        return ret;
+    }
+
+
     void Start()
     {
         if (LoadEnemyMasterData(1, 1))
         {
             if(LoadResources())
             {
+                m_enemyList = new Dictionary<GameObject, Enemy>();
                 CreateEnemyOfThisPlace(4);
             }
         }
     }
 
+    void Update()
+    {
+        foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
+        {
+            if(param.Value.IsDead())
+            {
+                // 死んだときのエフェクトを出す
+
+                // リストから削除する
+            }
+        }
+    }
 }

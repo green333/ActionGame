@@ -130,26 +130,19 @@ public class EnemyGenerator : MonoBehaviour
         // 出現する敵の最大数、敵を生成する
         while (true)
         {
+            // 出現確率
             rand = UnityEngine.Random.Range(1, frequency_rand_max);
-
-            // 敵出現マスタに設定した三種類の敵のうち、一体は必ず生成させる(出現確率がすべて設定されている場合、生成する数は一体だけだが、
-            // 出現確率が設定されていない敵がいる場合、生成する数は二体以上になる)
-            // TODO:ただ、出現確率が設定されていないものがいたときの挙動ができていない。
 
             // 一種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
-                // 確率によって生成ができなかったので、生成される確率を変動させる
-                rand = UnityEngine.Random.Range(1, frequency_rand_max - enemySpawnMasterParam.enemy1_frequency);
             }
 
             // 二種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
-                // 確率によって生成ができなかったので、次の敵は必ず生成されるよう乱数を0に設定する
-                rand = 0;
             }
 
             // 三種類目の敵の生成を試みる
@@ -168,6 +161,7 @@ public class EnemyGenerator : MonoBehaviour
     /// <param name="enemyLv">敵のレベル</param>
     /// <param name="frequency">出現確率</param>
     /// <param name="rand">乱数</param>
+    /// <returns>true:敵を生成した false:敵を生成しなかった</returns>
     private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand)
     {
         bool ret = false;
@@ -198,7 +192,7 @@ public class EnemyGenerator : MonoBehaviour
         {
             if(LoadResources())
             {
-                CreateEnemyOfThisPlace(3);
+                CreateEnemyOfThisPlace(4);
             }
         }
     }

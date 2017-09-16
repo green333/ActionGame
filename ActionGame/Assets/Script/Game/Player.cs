@@ -34,6 +34,9 @@ public class Player : MonoBehaviour
     /// <summary> アニメーション操作 </summary>
     private AnimationController animationController;
 
+    /// <summary> プレイヤー用のカメラ </summary>
+    private PlayerCamera playerCamera;
+
     /// <summary> アイテムリスト </summary>
     private List<ItemInfo> itemList = null;
 
@@ -86,6 +89,7 @@ public class Player : MonoBehaviour
         enableLvUpEffectExecute = false;
         move = Vector3.zero;
         animationController = GetComponent<AnimationController>();
+        playerCamera = Camera.main.transform.GetComponent<PlayerCamera>();
         animationController.Init();
         LoadPlayerData();
     }
@@ -110,7 +114,9 @@ public class Player : MonoBehaviour
             Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed
         );
 
-       CtrlAnimationState();
+        playerCamera.Following(transform.position);
+        playerCamera.Rotation(transform);
+        CtrlAnimationState();
     }
 
     /// <summary>

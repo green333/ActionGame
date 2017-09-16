@@ -16,6 +16,9 @@ public class LoadEnemySpawnMaster : TextMasterManager
     /// <summary>敵基本マスタリストを取得 </summary>
     public List<EnemySpawnMaster.Param> spawnList { get { return m_spawnList; } }
 
+    /// <summary> 出現確率の最大値 </summary>
+    public int FREQUENCY_MAX { get { return 100; } }
+    
     /// <summary>マスタデータのファイルパス </summary>
     const string filename = "Assets/Resources/MasterData/敵出現マスタ.txt";
 

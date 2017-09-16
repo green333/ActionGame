@@ -98,8 +98,6 @@ public class EnemyGenerator : MonoBehaviour
     /// <returns>生成成功:true 生成失敗:false</returns>
     public bool CreateEnemyOfThisPlace(int stageDetaileId)
     {
-        bool ret = false;
-
         LogExtensions.OutputInfo("敵を生成します。ステージ詳細ID[" + stageDetaileId + "]");
 
         m_enemyList     = new List<GameObject>();
@@ -125,11 +123,14 @@ public class EnemyGenerator : MonoBehaviour
 
         int rand = 0;
 
+        // UnityEngine.Random.Rangeで使用する最大値
+        // (UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
+        int frequency_rand_max = LoadEnemySpawnMaster.ONE_RECORD_ENEMY_MAX_COUNT + 1;
+
         // 出現する敵の最大数、敵を生成する
         while (true)
         {
-            // 出現する確率は1~100まで( UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
-            rand = UnityEngine.Random.Range(1, 101);
+            rand = UnityEngine.Random.Range(1, frequency_rand_max);
 
             // 敵出現マスタに設定した三種類の敵のうち、一体は必ず生成させる(出現確率がすべて設定されている場合、生成する数は一体だけだが、
             // 出現確率が設定されていない敵がいる場合、生成する数は二体以上になる)
@@ -140,7 +141,7 @@ public class EnemyGenerator : MonoBehaviour
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
                 // 確率によって生成ができなかったので、生成される確率を変動させる
-                rand = UnityEngine.Random.Range(1, 101 - enemySpawnMasterParam.enemy1_frequency);
+                rand = UnityEngine.Random.Range(1, frequency_rand_max - enemySpawnMasterParam.enemy1_frequency);
             }
 
             // 二種類目の敵の生成を試みる
@@ -156,7 +157,6 @@ public class EnemyGenerator : MonoBehaviour
             if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
 
         }
-
 
         return true;
     }

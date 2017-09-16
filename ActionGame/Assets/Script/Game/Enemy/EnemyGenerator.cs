@@ -64,15 +64,46 @@ public class EnemyGenerator : MonoBehaviour
     }
 
     /// <summary>
+    /// 敵リソースを読み込む
+    /// </summary>
+    /// <returns>リソースの読み込みに失敗した場合:false 読み込みに成功:true</returns>
+    public bool LoadResources()
+    {
+        LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
+
+        m_resourcesList = new Dictionary<int, GameObject>();
+
+        GameObject resource = null;
+        foreach(KeyValuePair<int, EnemyBaseMaster.Param> param in LoadEnemyBaseMaster.instance.enemeyBaseMasterList)
+        {
+            if(null == (resource = Resources.Load("EnemyData\\" + param.Value.path) as GameObject))
+            {
+                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\EnemyData\\" + param.Value.path);
+                break;
+            }
+            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\EnemyData\\" + param.Value.path);
+            m_resourcesList.Add(param.Value.id, resource);
+        }
+
+        LogExtensions.OutputInfo("敵リソースの読み込みを終了します");
+
+        return (m_resourcesList.Count != 0);
+    }
+
+    /// <summary>
     /// ステージ詳細ID、章IDに紐づく敵を生成する。
+    /// 指定した区間の敵データを生成する
     /// </summary>
     /// <param name="stageDetaileId">ステージ詳細ID</param>
     /// <returns>生成成功:true 生成失敗:false</returns>
     public bool CreateEnemyOfThisPlace(int stageDetaileId)
     {
-        m_resourcesList = new Dictionary<int, GameObject>();
-        m_enemyList     = new List<GameObject>();
+        bool ret = false;
 
+        LogExtensions.OutputInfo("敵を生成します。ステージ詳細ID[" + stageDetaileId + "]");
+
+        m_enemyList     = new List<GameObject>();
+        
         // 指定したステージ詳細IDに一致すてうステージ出現マスタを取得する
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
         for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
@@ -86,7 +117,7 @@ public class EnemyGenerator : MonoBehaviour
         }
 
         // 読み込みに失敗した場合
-        if(enemySpawnMasterParam == null)
+        if (enemySpawnMasterParam == null)
         {
             LogExtensions.OutputError("指定したステージ詳細IDに一致する敵出現マスタが存在しません。 stategDetailId = " + stageDetaileId);
             return false;
@@ -105,26 +136,27 @@ public class EnemyGenerator : MonoBehaviour
             // TODO:ただ、出現確率が設定されていないものがいたときの挙動ができていない。
 
             // 一種類目の敵の生成を試みる
-            if(RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
                 // 確率によって生成ができなかったので、生成される確率を変動させる
                 rand = UnityEngine.Random.Range(1, 101 - enemySpawnMasterParam.enemy1_frequency);
             }
-            
+
             // 二種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
                 // 確率によって生成ができなかったので、次の敵は必ず生成されるよう乱数を0に設定する
                 rand = 0;
             }
 
             // 三種類目の敵の生成を試みる
             RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand);
-            if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)){ break; }
+            if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
 
         }
+
 
         return true;
     }
@@ -149,12 +181,6 @@ public class EnemyGenerator : MonoBehaviour
             // 満たしていない場合はcontinue
             if (frequency != 0 && rand > frequency) { break; }
 
-            // コピーする元データとなるリソースが追加されていなければ追加する
-            if (!m_resourcesList.ContainsKey(enemyId))
-            {
-                m_resourcesList.Add(enemyId, Resources.Load("EnemyData\\" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path) as GameObject);
-            }
-
             // インスタンスデータを作成する
             GameObject temp = Instantiate(m_resourcesList[enemyId]);
             temp.GetComponent<EnemyWolf>().Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
@@ -170,7 +196,10 @@ public class EnemyGenerator : MonoBehaviour
     {
         if (LoadEnemyMasterData(1, 1))
         {
-            CreateEnemyOfThisPlace(4);
+            if(LoadResources())
+            {
+                CreateEnemyOfThisPlace(3);
+            }
         }
     }
 

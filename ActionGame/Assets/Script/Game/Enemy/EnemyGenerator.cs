@@ -248,18 +248,26 @@ public class EnemyGenerator : MonoBehaviour
 
     void Update()
     {
+        // 削除するオブジェクトキーリスト
+        GameObject[] deleteKeyList = Enumerable.Repeat<GameObject>(null, m_enemyList.Count).ToArray();
+        int index = 0;
+
+        //  死んだ敵がいるかをチェックする
         foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
         {
-            if(Input.GetKeyDown(KeyCode.A))
-            {
-                param.Value.AddDamage(1);
-            }
             if(param.Value.IsDead())
             {
-                // 死んだときのエフェクトを出す
-
-                // リストから削除する
+                deleteKeyList[index++] = param.Key;
             }
+        }
+
+        // 削除を行う
+        foreach (GameObject key in deleteKeyList)
+        {
+            if(key == null) { continue; }
+            m_enemyList[key].DeadAction();
+            m_enemyList.Remove(key);
+            Destroy(key);
         }
     }
 }

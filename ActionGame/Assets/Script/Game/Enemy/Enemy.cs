@@ -71,6 +71,9 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     public bool IsDead() { return m_param.nowHp == 0; }
 
+    /// <summary>死んだ時の行動を記述する </summary>
+    public virtual void DeadAction() { LogExtensions.OutputWarn("DeadAction()をオーバーライドしていません。 enemyId = " + m_param.id + ",level = " + m_param.level); }
+
     /// <summary>
     /// 敵にダメージを与える。TODO:引数は仮
     /// </summary>
@@ -79,6 +82,7 @@ public class Enemy : MonoBehaviour
     {
         // TODO:仮
         m_param.nowHp -= playerAtk;
-        m_enemyUI.SubHPValue(playerAtk);
+        if(m_param.nowHp < 0) { m_param.nowHp = 0; }
+            m_enemyUI.SubHPValue(playerAtk);
     }
 }

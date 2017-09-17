@@ -76,12 +76,12 @@ public class EnemyGenerator : MonoBehaviour
         GameObject resource = null;
         foreach(KeyValuePair<int, EnemyBaseMaster.Param> param in LoadEnemyBaseMaster.instance.enemeyBaseMasterList)
         {
-            if(null == (resource = Resources.Load("EnemyData\\" + param.Value.path) as GameObject))
+            if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.path) as GameObject))
             {
-                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\EnemyData\\" + param.Value.path);
+                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
                 break;
             }
-            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\EnemyData\\" + param.Value.path);
+            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
             m_resourcesList.Add(param.Value.id, resource);
         }
 

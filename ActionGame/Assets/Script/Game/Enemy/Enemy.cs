@@ -48,12 +48,15 @@ public class Enemy : MonoBehaviour
     public void Initialize(EnemyGrowthMaster.Param param)
     {
         m_param = new Parameter(param);
-            
+
+        // TODO:今は座標を適当に決める
+        this.transform.position = new Vector3(UnityEngine.Random.Range(-50.0f, 50.0f),0.0f, UnityEngine.Random.Range(-50.0f, 50.0f));
+
         // UI情報を初期化
         m_enemyUIObj = Instantiate(m_enemyUIPrefab);
         m_enemyUIObj.transform.parent = gameObject.transform;
         m_enemyUI = m_enemyUIObj.GetComponent<EnemyUI>();
-        m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 10.5f, 0));
+        m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 2.5f, 0));
     }
 
     /// <summary>

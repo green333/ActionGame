@@ -40,12 +40,13 @@ public class Enemy : MonoBehaviour
 
     /// <summary> プレハブにアタッチされたスクリプト </summary>
     protected EnemyUI m_enemyUI = null;
- 
+
+    private int m_spawnTime = 0;
     /// <summary>
     /// 生成時に敵情報を初期化
     /// </summary>
     /// <param name="param"></param>
-    public void Initialize(EnemyGrowthMaster.Param param)
+    public void Initialize(EnemyGrowthMaster.Param param,int spawnTime)
     {
         m_param = new Parameter(param);
 
@@ -60,6 +61,46 @@ public class Enemy : MonoBehaviour
 
         // タグ名を設定する
         this.gameObject.tag = "Enemy";
+
+        // 敵が出現するまでの時間
+        m_spawnTime = spawnTime;
+
+        // 非アクティブ
+        StartCoroutine(Spawn());
+
+    }
+
+    /// <summary>
+    /// 敵出現処理
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Spawn()
+    {
+        // 衝突判定、物理演算、ﾓﾃﾞﾙ描画をすべて行わないようにする
+        Renderer[]  rendererList    = GetComponentsInChildren<Renderer>();
+        Collider    collider        = GetComponent<Collider>();
+        Rigidbody   rigidBody       = GetComponent<Rigidbody>();
+        rigidBody.isKinematic   = true;
+        rigidBody.useGravity    = false;
+        collider.enabled        = false;
+        enabled                 = false;
+        foreach (Renderer re in rendererList)
+        {
+           re.enabled = false;
+        }
+
+
+        yield return new WaitForSeconds(m_spawnTime);
+
+        // すべて元にもどす
+        foreach (Renderer re in rendererList)
+        {
+            re.enabled = true;
+        }
+        rigidBody.isKinematic   = false;
+        rigidBody.useGravity    = true;
+        collider.enabled        = true;
+        enabled                 = true;
     }
 
     /// <summary>

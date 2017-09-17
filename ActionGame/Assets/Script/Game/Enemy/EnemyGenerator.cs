@@ -135,7 +135,7 @@ public class EnemyGenerator : MonoBehaviour
             rand = UnityEngine.Random.Range(1, frequency_rand_max);
 
             // 一種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand,out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand, enemySpawnMasterParam.enemy1_respawn_time, out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
             }
@@ -145,7 +145,7 @@ public class EnemyGenerator : MonoBehaviour
             }
 
             // 二種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand,out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand, enemySpawnMasterParam.enemy2_respawn_time, out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
             }
@@ -155,7 +155,7 @@ public class EnemyGenerator : MonoBehaviour
             }
 
             // 三種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand,out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand, enemySpawnMasterParam.enemy3_respawn_time,  out isError))
             {
                 if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
             }
@@ -176,7 +176,7 @@ public class EnemyGenerator : MonoBehaviour
     /// <param name="frequency">出現確率</param>
     /// <param name="rand">乱数</param>
     /// <returns>true:敵を生成した false:敵を生成しなかった</returns>
-    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand,out bool isError)
+    private bool RandomCreateEnemy(int enemyId,int enemyLv,int frequency,int rand,int respawnTime, out bool isError)
     {
         bool ret = false;
         isError = false;
@@ -206,7 +206,7 @@ public class EnemyGenerator : MonoBehaviour
                 isError = true;
                 break;
             }
-            component.Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv]);
+            component.Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv], respawnTime);
             m_enemyList.Add(instance, component);
             
             ret = true;
@@ -271,5 +271,35 @@ public class EnemyGenerator : MonoBehaviour
             m_enemyList.Remove(key);
             Destroy(key);
         }
+            
+        // リスポーン
+        Respawn();
+    }
+
+    void Respawn()
+    {
+        bool enableSpawn = true;
+        int stageDetailId = 4;
+        for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
+        {
+            if (LoadEnemySpawnMaster.instance.spawnList[i].stage_detail_id != stageDetailId)
+            {
+                continue;
+            }
+
+            if(m_enemyList.Count == LoadEnemySpawnMaster.instance.spawnList[i].respawn_max)
+            {
+                enableSpawn = false;
+            }
+            break;
+        }
+
+
+        if(enableSpawn == false)
+        {
+            return;
+        }
+
+        CreateEnemyOfThisPlace(stageDetailId);
     }
 }

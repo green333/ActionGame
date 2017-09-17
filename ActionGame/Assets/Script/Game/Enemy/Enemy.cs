@@ -32,6 +32,8 @@ public class Enemy : MonoBehaviour
     /// <summary> 敵パラメーター </summary>
     protected Parameter m_param = null;
 
+    public EnemyUI m_enemyUI = null;
+ 
     /// <summary>
     /// 生成時に敵情報を初期化
     /// </summary>
@@ -39,6 +41,8 @@ public class Enemy : MonoBehaviour
     public void Initialize(EnemyGrowthMaster.Param param)
     {
         m_param = new Parameter(param);
+        m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 10.5f, 0));
+
     }
 
     /// <summary>

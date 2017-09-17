@@ -32,7 +32,9 @@ public class Enemy : MonoBehaviour
     /// <summary> 敵パラメーター </summary>
     protected Parameter m_param = null;
 
-    public EnemyUI m_enemyUI = null;
+    [SerializeField] private GameObject m_enemyUIPrefab = null;
+    protected EnemyUI m_enemyUI = null;
+    private GameObject m_enemyUIObj = null;
  
     /// <summary>
     /// 生成時に敵情報を初期化
@@ -41,7 +43,13 @@ public class Enemy : MonoBehaviour
     public void Initialize(EnemyGrowthMaster.Param param)
     {
         m_param = new Parameter(param);
+
+        m_enemyUIObj = Instantiate(m_enemyUIPrefab);
+        m_enemyUIObj.transform.parent = gameObject.transform;
+        m_enemyUI = m_enemyUIObj.GetComponent<EnemyUI>();
         m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 10.5f, 0));
+
+        //m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 10.5f, 0));
 
     }
 

@@ -453,5 +453,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 375d3fb6bb4c66547944370853137edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_enemyUI: {fileID: 114000010089359014, guid: 9b69bb24437b3634f8d4e39b9b08b71c,
+  m_enemyUIPrefab: {fileID: 1000010193134548, guid: 9b69bb24437b3634f8d4e39b9b08b71c,
     type: 2}

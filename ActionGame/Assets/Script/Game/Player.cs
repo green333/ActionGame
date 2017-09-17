@@ -60,7 +60,8 @@ public class Player : MonoBehaviour
     private Vector3 move;
 
     /// <summary> ゲームパッドのキーコード </summary>
-    private enum PadKeyCode {
+    private enum PadKeyCode
+    {
         CIRCLE = KeyCode.Joystick1Button2,
         CROSS = KeyCode.Joystick1Button1,
         SQUARE = KeyCode.Joystick1Button0,
@@ -92,6 +93,7 @@ public class Player : MonoBehaviour
         playerCamera = Camera.main.transform.GetComponent<PlayerCamera>();
         animationController.Init();
         LoadPlayerData();
+        playerCamera.Init(transform);
     }
 
     /// <summary>
@@ -108,15 +110,12 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        move.Set(
-            Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed,
-            move.y,
-            Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed
-        );
-
         playerCamera.Following(transform.position);
         playerCamera.Rotation(transform);
         CtrlAnimationState();
+
+        move = playerCamera.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime * moveSpeed
+            + playerCamera.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime * moveSpeed;
     }
 
     /// <summary>
@@ -325,7 +324,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        moveSpeed = 200.0f;
+        moveSpeed = 400.0f;
         rotSpeed = 30.0f;
     }
 }

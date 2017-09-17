@@ -327,4 +327,17 @@ public class Player : MonoBehaviour
         moveSpeed = 400.0f;
         rotSpeed = 30.0f;
     }
+
+    /// <summary>
+    /// プレイヤーの攻撃を敵にあってた時の処理
+    /// </summary>
+    /// <param name="collider"></param>
+    void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Enemy")
+        {
+            // TODO:ダメージは仮
+            collider.gameObject.SendMessage("AddDamage", 1);  
+        }
+    }
 }

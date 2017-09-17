@@ -57,6 +57,9 @@ public class Enemy : MonoBehaviour
         m_enemyUIObj.transform.parent = gameObject.transform;
         m_enemyUI = m_enemyUIObj.GetComponent<EnemyUI>();
         m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 2.5f, 0));
+
+        // タグ名を設定する
+        this.gameObject.tag = "Enemy";
     }
 
     /// <summary>
@@ -80,9 +83,13 @@ public class Enemy : MonoBehaviour
     /// <param name="playerAtk"></param>
     public void AddDamage(int playerAtk)
     {
+        // TODO:エフェクトがないため当たったか当たってないかがわかりづらいため、ログ出力する
+        LogExtensions.OutputInfo("攻撃がヒットしました！");
+
         // TODO:仮
         m_param.nowHp -= playerAtk;
         if(m_param.nowHp < 0) { m_param.nowHp = 0; }
             m_enemyUI.SubHPValue(playerAtk);
     }
+
 }

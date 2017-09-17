@@ -255,9 +255,11 @@ public class EnemyGenerator : MonoBehaviour
         //  死んだ敵がいるかをチェックする
         foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
         {
+            // 敵が死んでいる場合、削除リストに追加してcontinueする
             if(param.Value.IsDead())
             {
                 deleteKeyList[index++] = param.Key;
+                continue;
             }
         }
 

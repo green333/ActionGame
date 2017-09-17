@@ -250,6 +250,10 @@ public class EnemyGenerator : MonoBehaviour
     {
         foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
         {
+            if(Input.GetKeyDown(KeyCode.A))
+            {
+                param.Value.AddDamage(1);
+            }
             if(param.Value.IsDead())
             {
                 // 死んだときのエフェクトを出す

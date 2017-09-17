@@ -79,5 +79,6 @@ public class Enemy : MonoBehaviour
     {
         // TODO:仮
         m_param.nowHp -= playerAtk;
+        m_enemyUI.SubHPValue(playerAtk);
     }
 }

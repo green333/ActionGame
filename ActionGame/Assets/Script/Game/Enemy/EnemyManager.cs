@@ -267,8 +267,15 @@ public class EnemyManager : MonoBehaviour
         foreach (GameObject key in deleteKeyList)
         {
             if(key == null) { continue; }
-            if (m_enemyList[key].DeadAction())
+
+            // 削除していい場合は削除する
+            if (m_enemyList[key].IsDelete())
             {
+                // 経験値を取得する
+                m_enemyList[key].GetEXP();
+                // アイテムをステージ上に落とす
+                m_enemyList[key].ItemDrop();
+                // リストからの削除とインスタンスの削除を行う。
                 m_enemyList.Remove(key);
                 Destroy(key);
             }

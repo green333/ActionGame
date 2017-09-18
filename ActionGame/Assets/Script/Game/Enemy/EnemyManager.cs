@@ -5,9 +5,9 @@ using System.Linq;
 using System;
 
 /// <summary>
-/// 敵を生成させるクラス
+/// 敵を管理するクラス
 /// </summary>
-public class EnemyGenerator : MonoBehaviour
+public class EnemyManager : MonoBehaviour
 {
     /// <summary>
     /// Resourceから読み込んだデータ

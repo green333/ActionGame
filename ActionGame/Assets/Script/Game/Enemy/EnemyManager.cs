@@ -304,11 +304,11 @@ public class EnemyManager : MonoBehaviour
         }
 
 
-        if(enableSpawn == false)
+        // 敵の数が減り、リスポーン処理が行える場合行う
+        if(enableSpawn)
         {
-            return;
+            CreateEnemyOfThisPlace(stageDetailId);
         }
 
-        CreateEnemyOfThisPlace(stageDetailId);
     }
 }

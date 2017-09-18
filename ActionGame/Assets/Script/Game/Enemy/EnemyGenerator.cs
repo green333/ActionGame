@@ -259,6 +259,13 @@ public class EnemyGenerator : MonoBehaviour
             if(param.Value.IsDead())
             {
                 deleteKeyList[index++] = param.Key;
+
+
+                Vector3 genPos = new Vector3(0,1,0) + param.Key.transform.position;
+                GameObject obj = ItemController.Instance.Generate(ItemController.ITEM_TYPE.HERBS, genPos);
+                obj.GetComponent<Herbs>().Init(Item.POSSESSOR.ENEMY);
+
+
                 continue;
             }
         }

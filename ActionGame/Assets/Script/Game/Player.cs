@@ -110,8 +110,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        playerCamera.Following(transform.position);
-        playerCamera.Rotation(transform);
+        playerCamera.Controll(transform);
         CtrlAnimationState();
 
         move = playerCamera.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime * moveSpeed

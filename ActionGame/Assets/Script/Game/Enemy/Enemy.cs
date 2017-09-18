@@ -80,7 +80,6 @@ public class Enemy : MonoBehaviour
         Renderer[]  rendererList    = GetComponentsInChildren<Renderer>();
         Collider    collider        = GetComponent<Collider>();
         Rigidbody   rigidBody       = GetComponent<Rigidbody>();
-        rigidBody.isKinematic   = true;
         rigidBody.useGravity    = false;
         collider.enabled        = false;
         enabled                 = false;
@@ -97,7 +96,6 @@ public class Enemy : MonoBehaviour
         {
             re.enabled = true;
         }
-        rigidBody.isKinematic   = false;
         rigidBody.useGravity    = true;
         collider.enabled        = true;
         enabled                 = true;
@@ -115,8 +113,12 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     public bool IsDead() { return m_param.nowHp == 0; }
 
-    /// <summary>死んだ時の行動を記述する </summary>
-    public virtual void DeadAction() { LogExtensions.OutputWarn("DeadAction()をオーバーライドしていません。 enemyId = " + m_param.id + ",level = " + m_param.level); }
+
+    /// <summary>
+    /// 死んだときの行動を記述する
+    /// </summary>
+    /// <returns>trueを返すと削除が行われる。</returns>
+    public virtual bool DeadAction() { LogExtensions.OutputWarn("DeadAction()をオーバーライドしていません。 enemyId = " + m_param.id + ",level = " + m_param.level);return true; }
 
     /// <summary>
     /// 敵にダメージを与える。TODO:引数は仮

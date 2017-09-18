@@ -267,9 +267,11 @@ public class EnemyGenerator : MonoBehaviour
         foreach (GameObject key in deleteKeyList)
         {
             if(key == null) { continue; }
-            m_enemyList[key].DeadAction();
-            m_enemyList.Remove(key);
-            Destroy(key);
+            if (m_enemyList[key].DeadAction())
+            {
+                m_enemyList.Remove(key);
+                Destroy(key);
+            }
         }
             
         // リスポーン

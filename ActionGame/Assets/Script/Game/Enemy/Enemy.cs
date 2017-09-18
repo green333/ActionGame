@@ -48,13 +48,6 @@ public class Enemy : MonoBehaviour
     /// <summary>敵を削除していいかどうか </summary>
     protected bool m_IsDelete = false;
 
-    public class DropItemInfo : ItemInfo
-    {
-        public int randDropnum;
-    }
-    /// <summary>ドロップアイテムリスト </summary>
-    private DropItemInfo[] m_dropItemList = null;
-
     /// <summary>
     /// 生成時に敵情報を初期化
     /// </summary>
@@ -62,7 +55,6 @@ public class Enemy : MonoBehaviour
     public void Initialize(EnemyGrowthMaster.Param param,int spawnTime)
     {
         m_param = new Parameter(param);
-        m_dropItemList = Enumerable.Repeat<DropItemInfo>(null, 3).ToArray();
 
         // TODO:今は座標を適当に決める
         this.transform.position = new Vector3(UnityEngine.Random.Range(-50.0f, 50.0f),0.0f, UnityEngine.Random.Range(-50.0f, 50.0f));
@@ -163,5 +155,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void ItemDrop()
     {
+        // TODO:以下のプロパティからドロップ情報を取得できるため、メンバ変数として持たす必要はなし。
+        // この関数は敵が死亡し、削除される手前で呼ばれる。
+        // 敵が落とすアイテムの増加乱数については死亡時に決定するため、ここで決める(フロー上ここで何ら問題がないため)
+        //LoadEnemyBaseMaster.instance.enemeyBaseMasterList[m_param.id];
     }
 }

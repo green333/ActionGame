@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// アイテム情報
@@ -15,12 +16,18 @@ public class LoadItemMaster : TextMasterManager
     /// <summary>
     /// 自身のインスタンス
     /// </summary>
-    static LoadItemMaster _instance = new LoadItemMaster();
+    static LoadItemMaster m_instance = new LoadItemMaster();
 
     /// <summary>
     /// インスタンス取得プロパティ
     /// </summary>
-    static public LoadItemMaster instance { get { return _instance; } }
+    static public LoadItemMaster instance { get { return m_instance; } }
+
+    /// <summary> アイテムマスタリスト </summary>
+    private Dictionary<int, ItemMaster.Param> m_itemList = null;
+
+    /// <summary> アイテムマスタリストを取得 </summary>
+    public Dictionary<int,ItemMaster.Param> itemList { get { return m_itemList; } }
 
     /// <summary>
     /// マスターデータのファイルパス
@@ -51,7 +58,30 @@ public class LoadItemMaster : TextMasterManager
 
         return param;
     }
-    
+
+    /// <summary>
+    /// アイテムマスタを全件読み込む
+    /// </summary>
+    public void LoadItemInfo()
+    {
+        m_itemList = new Dictionary<int, ItemMaster.Param>();
+
+        base.Open(filename);
+        string[] allLine = GetAllLine();
+        base.Close();
+
+        ItemMaster.Param param = null;
+        foreach (string line in allLine)
+        {
+            if (line == "")
+            {
+                break;
+            }
+            param = JsonUtility.FromJson<ItemMaster.Param>(line);
+            m_itemList.Add(param.id, param);
+        }
+    }
+
     /// <summary>
     /// アイテムパラメーターをログに出力する
     /// </summary>

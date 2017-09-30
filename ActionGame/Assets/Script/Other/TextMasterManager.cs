@@ -214,6 +214,15 @@ public class TextMasterManager : TextLoader
         return ret;
     }
 
+    /// <summary>
+    /// 全テキストデータを取得する
+    /// </summary>
+    /// <returns></returns>
+    protected string[] GetAllLine()
+    {
+        return stream.ReadToEnd().Split(new String[] { "\r\n" }, StringSplitOptions.None);
+    }
+
 
     /// <summary>
     /// カンマ区切りされた文字列リストに一致する行データを取得する

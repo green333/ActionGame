@@ -71,7 +71,7 @@ public class Enemy : MonoBehaviour
         // 敵が出現するまでの時間
         m_spawnTime = spawnTime;
 
-        // 非アクティブ
+        // リスポーン処理を行う。
         StartCoroutine(Spawn());
 
     }
@@ -82,6 +82,8 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     IEnumerator Spawn()
     {
+        // enabledをfalseにすると、コルーチン処理が行えないためリスポーン処理が実装できない。
+
         // 衝突判定、物理演算、ﾓﾃﾞﾙ描画をすべて行わないようにする
         Renderer[]  rendererList    = GetComponentsInChildren<Renderer>();
         Collider    collider        = GetComponent<Collider>();

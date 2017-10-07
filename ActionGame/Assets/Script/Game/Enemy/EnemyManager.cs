@@ -64,10 +64,10 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 敵リソースを読み込む
+    /// 敵のプレハブを読み込む
     /// </summary>
     /// <returns>リソースの読み込みに失敗した場合:false 読み込みに成功:true</returns>
-    public bool LoadResources()
+    private bool LoadPrefabs()
     {
         LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
 
@@ -233,12 +233,11 @@ public class EnemyManager : MonoBehaviour
         return ret;
     }
 
-
-    void Start()
+    public void LoadEnemyData()
     {
         if (LoadEnemyMasterData(1, 1))
         {
-            if(LoadResources())
+            if (LoadPrefabs())
             {
                 m_enemyList = new Dictionary<GameObject, Enemy>();
                 CreateEnemyOfThisPlace(4);
@@ -246,18 +245,24 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        LoadEnemyData();
+    }
+
     void Update()
     {
         // 削除するオブジェクトキーリスト
         GameObject[] deleteKeyList = Enumerable.Repeat<GameObject>(null, m_enemyList.Count).ToArray();
         int index = 0;
-
+   
         //  死んだ敵がいるかをチェックする
         foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
         {
             // 敵が死んでいる場合、削除リストに追加してcontinueする
             if(param.Value.IsDead())
             {
+                // 以下を一度だけ行うようにしたい
                 deleteKeyList[index++] = param.Key;
 
 

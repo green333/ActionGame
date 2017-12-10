@@ -113,19 +113,6 @@ public class EnemySpawnMaster : ScriptableObject{
 }
 
 /// <summary>
-/// ステージ詳細マスタパラメーター
-/// </summary>
-public class undefined : ScriptableObject{
-    [System.SerializableAttribute]
-    public class Param{
-        public int stage_id;        /// <summary> ステージID </summary>
-        public int id;        /// <summary> ID </summary>
-        public string name;        /// <summary> 名前 </summary>
-        public string adjacent;        /// <summary> 隣接ID </summary>
-    }
-}
-
-/// <summary>
 /// BGMマスタパラメーター
 /// </summary>
 public class BGMMaster : ScriptableObject{

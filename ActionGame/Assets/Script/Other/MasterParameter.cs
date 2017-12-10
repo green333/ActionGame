@@ -4,45 +4,41 @@ using System.Collections.Generic;
 
 
 /// <summary>
-/// 敵基本マスタパラメーター
+/// 敵成長マスタパラメーター
 /// </summary>
-public class EnemyBaseMaster : ScriptableObject{
-
+public class EnemyGrowthMaster : ScriptableObject{
     [System.SerializableAttribute]
-    public class Param
-    {
-        public string name;        //    名前
-        public int id;        //    ID
-        public string path;        //    リソース
-        public string tribe_name;        //    種族
-        public string class_name;        //    階級
-        public int drop_item_id1;        //    ドロップアイテム1
-        public int drop_item_num1;        //    個数
-        public int drop_item_add_rnd1;        //    個数増加乱数
-        public int drop_item_id2;        //    ドロップアイテム2
-        public int drop_item_num2;        //    個数
-        public int drop_item_add_rnd2;        //    個数増加乱数
-        public int rare_drop_item_id1;        //    レアドロップアイテム
-        public int rare_drop_item_num1;        //    個数
-        public int rare_drop_item_add_rnd1;        //    個数増加乱数
+    public class Param{
+        public int id;        /// <summary> ID </summary>
+        public int level;        /// <summary> レベル </summary>
+        public int hp;        /// <summary> 体力 </summary>
+        public int atk;        /// <summary> 攻撃力 </summary>
+        public int def;        /// <summary> 防御力 </summary>
+        public int spd;        /// <summary> 素早さ </summary>
+        public int exp;        /// <summary> 取得経験値 </summary>
     }
 }
 
 /// <summary>
-/// 敵成長マスタパラメーター
+/// 敵基本マスタパラメーター
 /// </summary>
-public class EnemyGrowthMaster : ScriptableObject{
-
+public class EnemyBaseMaster : ScriptableObject{
     [System.SerializableAttribute]
-    public class Param
-    {
-        public int id;        //    ID
-        public int level;        //    レベル
-        public int hp;        //    体力
-        public int atk;        //    攻撃力
-        public int def;        //    防御力
-        public int spd;        //    素早さ
-        public int exp;        //    取得経験値
+    public class Param{
+        public string name;        /// <summary> 名前 </summary>
+        public int id;        /// <summary> ID </summary>
+        public string path;        /// <summary> リソース </summary>
+        public string tribe_name;        /// <summary> 種族 </summary>
+        public string class_name;        /// <summary> 階級 </summary>
+        public int drop_item_id1;        /// <summary> ドロップアイテム1 </summary>
+        public int drop_item_num1;        /// <summary> 個数 </summary>
+        public int drop_item_add_rnd1;        /// <summary> 個数増加乱数 </summary>
+        public int drop_item_id2;        /// <summary> ドロップアイテム2 </summary>
+        public int drop_item_num2;        /// <summary> 個数 </summary>
+        public int drop_item_add_rnd2;        /// <summary> 個数増加乱数 </summary>
+        public int rare_drop_item_id1;        /// <summary> レアドロップアイテム </summary>
+        public int rare_drop_item_num1;        /// <summary> 個数 </summary>
+        public int rare_drop_item_add_rnd1;        /// <summary> 個数増加乱数 </summary>
     }
 }
 
@@ -50,16 +46,14 @@ public class EnemyGrowthMaster : ScriptableObject{
 /// プレイヤー基本マスタパラメーター
 /// </summary>
 public class PlayerBaseMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public int level;        //    レベル
-        public int hp;        //    体力
-        public int atk;        //    攻撃力
-        public int def;        //    防御力
-        public int spd;        //    素早さ
-        public int next_exp;        //    経験値
+    public class Param{
+        public int level;        /// <summary> レベル </summary>
+        public int hp;        /// <summary> 体力 </summary>
+        public int atk;        /// <summary> 攻撃力 </summary>
+        public int def;        /// <summary> 防御力 </summary>
+        public int spd;        /// <summary> 素早さ </summary>
+        public int next_exp;        /// <summary> 経験値 </summary>
     }
 }
 
@@ -67,15 +61,13 @@ public class PlayerBaseMaster : ScriptableObject{
 /// アイテムマスタパラメーター
 /// </summary>
 public class ItemMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public string name;        //    名前
-        public int id;        //    ID
-        public string kind;        //    種類
-        public int effect;        //    効果
-        public string desc;        //    説明
+    public class Param{
+        public string name;        /// <summary> 名前 </summary>
+        public int id;        /// <summary> ID </summary>
+        public string kind;        /// <summary> 種類 </summary>
+        public int effect;        /// <summary> 効果 </summary>
+        public int desc;        /// <summary> 説明 </summary>
     }
 }
 
@@ -83,17 +75,15 @@ public class ItemMaster : ScriptableObject{
 /// ステージマスタパラメーター
 /// </summary>
 public class StageMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public string name;        //    名前
-        public int id;        //    ID
-        public int chapter;        //    章
-        public string normal_bgm_name;        //    通常BGM
-        public string battle_bgm_name;        //    戦闘BGM
-        public string boss_bgm_name;        //    BOSS戦BGM
-        public string event_bgm_name;        //    イベントBGM
+    public class Param{
+        public string name;        /// <summary> 名前 </summary>
+        public int id;        /// <summary> ID </summary>
+        public int chapter;        /// <summary> 章 </summary>
+        public string normal_bgm_name;        /// <summary> 通常BGM </summary>
+        public string battle_bgm_name;        /// <summary> 戦闘BGM </summary>
+        public string boss_bgm_name;        /// <summary> BOSS戦BGM </summary>
+        public string event_bgm_name;        /// <summary> イベントBGM </summary>
     }
 }
 
@@ -101,26 +91,24 @@ public class StageMaster : ScriptableObject{
 /// 敵出現マスタパラメーター
 /// </summary>
 public class EnemySpawnMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public int stage_id;        //    ステージID
-        public int chapter_id;        //    章
-        public int stage_detail_id;        //    ステージ詳細マスタID
-        public int respawn_max;        //    出現する敵の最大数
-        public int enemy1_id;        //    敵１
-        public int enemy1_lv;        //    出現レベル
-        public int enemy1_respawn_time;        //    沸き時間(秒)
-        public int enemy1_frequency;        //    出現確率(％)
-        public int enemy2_id;        //    敵２
-        public int enemy2_lv;        //    出現レベル
-        public int enemy2_respawn_time;        //    沸き時間(秒)
-        public int enemy2_frequency;        //    出現確率(％)
-        public int enemy3_id;        //    敵３
-        public int enemy3_lv;        //    出現レベル
-        public int enemy3_respawn_time;        //    沸き時間(秒)
-        public int enemy3_frequency;        //    出現確率(％)
+    public class Param{
+        public int stage_id;        /// <summary> ステージID </summary>
+        public int chapter_id;        /// <summary> 章 </summary>
+        public int stage_detail_id;        /// <summary> ステージ詳細マスタID </summary>
+        public int respawn_max;        /// <summary> 出現する敵の最大数 </summary>
+        public int enemy1_id;        /// <summary> 敵１ </summary>
+        public int enemy1_lv;        /// <summary> 出現レベル </summary>
+        public int enemy1_respawn_time;        /// <summary> 沸き時間(秒) </summary>
+        public int enemy1_frequency;        /// <summary> 出現確率(％) </summary>
+        public int enemy2_id;        /// <summary> 敵２ </summary>
+        public int enemy2_lv;        /// <summary> 出現レベル </summary>
+        public int enemy2_respawn_time;        /// <summary> 沸き時間(秒) </summary>
+        public int enemy2_frequency;        /// <summary> 出現確率(％) </summary>
+        public int enemy3_id;        /// <summary> 敵３ </summary>
+        public int enemy3_lv;        /// <summary> 出現レベル </summary>
+        public int enemy3_respawn_time;        /// <summary> 沸き時間(秒) </summary>
+        public int enemy3_frequency;        /// <summary> 出現確率(％) </summary>
     }
 }
 
@@ -128,14 +116,12 @@ public class EnemySpawnMaster : ScriptableObject{
 /// ステージ詳細マスタパラメーター
 /// </summary>
 public class undefined : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public int stage_id;        //    ステージID
-        public int id;        //    ID
-        public string name;        //    名前
-        public string adjacent;        //    隣接ID
+    public class Param{
+        public int stage_id;        /// <summary> ステージID </summary>
+        public int id;        /// <summary> ID </summary>
+        public string name;        /// <summary> 名前 </summary>
+        public string adjacent;        /// <summary> 隣接ID </summary>
     }
 }
 
@@ -143,12 +129,10 @@ public class undefined : ScriptableObject{
 /// BGMマスタパラメーター
 /// </summary>
 public class BGMMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public string name;        //    名前
-        public int id;        //    ID
+    public class Param{
+        public string name;        /// <summary> 名前 </summary>
+        public int id;        /// <summary> ID </summary>
     }
 }
 
@@ -156,16 +140,14 @@ public class BGMMaster : ScriptableObject{
 /// 武器マスタパラメーター
 /// </summary>
 public class WeaponMaster : ScriptableObject{
-
     [System.SerializableAttribute]
-    public class Param
-    {
-        public string name;        //    名前
-        public int id;        //    ID
-        public string type;        //    種類
-        public int atk;        //    攻撃力
-        public int def;        //    防御力
-        public int spd;        //    素早さ
+    public class Param{
+        public string name;        /// <summary> 名前 </summary>
+        public int id;        /// <summary> ID </summary>
+        public string type;        /// <summary> 種類 </summary>
+        public int atk;        /// <summary> 攻撃力 </summary>
+        public int def;        /// <summary> 防御力 </summary>
+        public int spd;        /// <summary> 素早さ </summary>
     }
 }
 

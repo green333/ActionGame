@@ -1,3 +1,26 @@
+function GetOutputSheetNameList(csvOutputSheet)
+{
+    // シート名が記載され始めてる行番号
+    const BEGIN_SHEET_NAME_ROW_LINE = 3;
+
+    const SHEET_NAME_COLUMN_LINE = 1; // シート名が記載されている列番号
+    const CLASS_NAME_COLUMN_LINE = 2; // クラス名が記載されている列番号
+
+    var ret = [];
+    for(var i = BEGIN_SHEET_NAME_ROW_LINE; i < csvOutputSheet.length; ++i)
+    {
+        var temp = csvOutputSheet[i];
+
+        // シート名、クラス名どちらかが定義されていなければcontinueさせる
+        if(temp[SHEET_NAME_COLUMN_LINE] == "" || temp[CLASS_NAME_COLUMN_LINE] == "")
+        {
+            continue;
+        }
+        ret[temp[SHEET_NAME_COLUMN_LINE]] = temp[CLASS_NAME_COLUMN_LINE];
+    }    
+
+    return ret;
+}
 //--------------------------------------------------------------------------------------------------
 // MasterParamtere.csを出力する
 //--------------------------------------------------------------------------------------------------
@@ -11,34 +34,16 @@ function outputMasterParameter()
 
     // CSV出力シートの番号
     const CSV_OUTPUT_SHEET_NUM = 0;
-    
-    // CSV出力シートのみここで取得
-    var csvOutputSheet = sheetList[CSV_OUTPUT_SHEET_NUM].getDataRange().getValues();
-    
-    // シート名が記載され始めてる行番号
-    const BEGIN_SHEET_NAME_ROW_LINE = 3;
-    
-    const SHEET_NAME_COLUMN_LINE = 1; // シート名が記載されている列番号
-    const CLASS_NAME_COLUMN_LINE = 2; // クラス名が記載されている列番号
-    
-    // シート名とクラス名の連想配列
-    var masterParameterClassNameList = {};
-    for(var i = BEGIN_SHEET_NAME_ROW_LINE; i < csvOutputSheet.length; ++i)
-    {
-        var temp = csvOutputSheet[i];
 
-        // シート名、クラス名どちらかが定義されていなければcontinueさせる
-        if(temp[SHEET_NAME_COLUMN_LINE] == "" || temp[CLASS_NAME_COLUMN_LINE] == "")
-        {
-            continue;
-        }
-        masterParameterClassNameList[temp[SHEET_NAME_COLUMN_LINE]] = temp[CLASS_NAME_COLUMN_LINE];
-    }
+    // シート名とクラス名の連想配列
+    var masterParameterClassNameList =  GetOutputSheetNameList(sheetList[CSV_OUTPUT_SHEET_NUM].getDataRange().getValues());
+
+    var csharpCreateer = new CSharp();
 
     // CSharpインスタンスにusingを追加
-    AddUsingList('UnityEngine');
-    AddUsingList('System.Collections');
-    AddUsingList('System.Collections.Generic');
+    csharpCreateer.AddUsing('UnityEngine');
+    csharpCreateer.AddUsing('System.Collections');
+    csharpCreateer.AddUsing('System.Collections.Generic');
 
     // 0番目のシートはCSV出力用シートなので飛ばす
     var i = CSV_OUTPUT_SHEET_NUM + 1;
@@ -107,11 +112,11 @@ function outputMasterParameter()
         classData.elementList.push(classParamData);
 
         // CSharpインスタンスにクラス情報を追加
-        AddElementList(classData);
+        csharpCreateer.AddElement(classData);
     } 
 
     // 設定された情報からCSharpのスクリプト文を作成する
-    masterParameterString = CreateCSharpString();
+    masterParameterString = CreateCSharpString(csharpCreateer);
 
     // 文字列をバイトに変換する
     var blobMasterParameter         = Utilities.newBlob("","text/csv","MasterParameter.cs").setDataFromString(masterParameterString,"UTF8");

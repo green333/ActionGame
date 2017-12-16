@@ -23,10 +23,25 @@ var VARIABLE_TYPE = {
 //--------------------------------------------------------------------------------------------------
 function CSharp()
 {
-  this.usingList = [];
-  this.elementList = [];
+  this.usingList    = [];
+  this.elementList  = [];
 }
-var g_csharp = new CSharp();
+
+//--------------------------------------------------------------------------------------------------
+// 作成するクラス
+//--------------------------------------------------------------------------------------------------
+CSharp.prototype.AddElement = function(element)
+{
+  this.elementList.push(element);
+}
+//--------------------------------------------------------------------------------------------------
+// 設定された情報をもとに変数を作成する
+//--------------------------------------------------------------------------------------------------
+CSharp.prototype.AddUsing = function(using)
+{
+  this.usingList.push(using);
+}
+
 //--------------------------------------------------------------------------------------------------
 // 変数データ
 // @param string  accessModifiers 変数のアクセスレベル(ACCESS_MODIFIRESで設定する)
@@ -96,30 +111,14 @@ function Class(accessModifiers,name,parentName,summary,attribute,tabSpaceNum)
 }
 
 //--------------------------------------------------------------------------------------------------
-// 作成するクラス
-//--------------------------------------------------------------------------------------------------
-function AddElementList(element)
-{
-  g_csharp.elementList.push(element);
-}
-
-//--------------------------------------------------------------------------------------------------
 // 設定された情報をもとに変数を作成する
 //--------------------------------------------------------------------------------------------------
-function AddUsingList(using)
-{
-  g_csharp.usingList.push(using);
-}
-
-//--------------------------------------------------------------------------------------------------
-// 設定された情報をもとに変数を作成する
-//--------------------------------------------------------------------------------------------------
-function CreateCSharpString()
+function CreateCSharpString(csharpInfo)
 {
   var csharpStr = '';
 
   // using文を作成
-  g_csharp.usingList.forEach(function(usingStr){
+  csharpInfo.usingList.forEach(function(usingStr){
     csharpStr += 'using ' + usingStr + ";\n";
   });
 
@@ -130,7 +129,7 @@ function CreateCSharpString()
   }
 
   // CSharpに定義されるものを作成していく
-  g_csharp.elementList.forEach(function(element){
+  csharpInfo.elementList.forEach(function(element){
     // 何が定義されているかによって処理を変える
 
     switch(element.elementType)

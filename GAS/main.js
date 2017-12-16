@@ -3,7 +3,7 @@
 // スプレッドシート起動時に、CSV出力シートに入力されているシート名一覧に該当するシートを、
 // json形式のCSVファイルに出力するためのボタンをメニューバーに追加する。
 //--------------------------------------------------------------------------------------------------
-function executeStartingSpreadsheet()
+function onOpen()
 { 
   //　スプレットシートAPPを取得
   var spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -12,8 +12,8 @@ function executeStartingSpreadsheet()
   var entries = 
   [
     // ボタン名とボタンが押されたときに呼ばれる関数名
-    {name : "ALL_JSONファイル出力",  functionName : "outputAllJsonTextFile"},
-    {name : "マスタパラメーター出力",  functionName : "outputMasterParameter"},
+    {name : "ALL_JSONファイル出力",  functionName : "outputAllJsonTextFile"},null,
+    {name : "マスタパラメーター出力",  functionName : "outputMasterParameter"},null,
   ];
   
   // 全シートを取得

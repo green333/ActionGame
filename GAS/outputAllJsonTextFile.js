@@ -20,14 +20,15 @@ function toJsonTextFile(values,filename)
   const COL_TYPE_NUM = 0; // 型が定義されている場所
   const COL_NAME_NUM = 1; // 変数名が定義されている場所
   
-  // 2は変数の説明欄なので飛ばす
-  // 開始インデックス
+  // データ開始インデックス
   const START_INDEX = 3;
-  var jsonStr = '';
+
+  // マスターデータをjson形式で出力する
+  var masterJsonStr = '';
   
   for(var i = START_INDEX; i < values.length; ++i)
   {
-    jsonStr += '{';
+    masterJsonStr += '{';
     
     var strtempList = [];
     for(var j = 0; j < values[i].length; ++j)
@@ -38,32 +39,27 @@ function toJsonTextFile(values,filename)
       {
         continue;
       }
-      strtemp = "\"" + values[COL_NAME_NUM][j] + "\":"; // 変数名
-      
-      // 型が文字列の場合、jsonとして出力する場合""で囲む必要がある
-      if(values[COL_TYPE_NUM][j] == "string")
-      {
-        if(values[i][j]  == ""){
-          continue;
-        }
-        strtemp += "\"" + values[i][j] + "\"";
-        //values[i][j] == "" ? jsonStr += "null" : jsonStr += "\"" + values[i][j] + "\"";      
-      }else{
-        if(values[i][j] == ""){
-          continue;
-        }          
-        strtemp += values[i][j];  
 
-        //values[i][j] == "" ?  jsonStr += "null" :  jsonStr += values[i][j];   
+      // 値が設定されていない場合、出力しない
+      if(values[i][j]  == "")
+      {
+        continue;
       }
-      
+
+      // 変数名を出力
+      strtemp = "\"" + values[COL_NAME_NUM][j] + "\":";
+
+      // 値を出力(文字列の場合""で囲んで出力する)
+      strtemp += ((values[COL_TYPE_NUM][j] == "string") ? ("\"" + values[i][j] + "\"") : values[i][j]);
+
       strtempList.push(strtemp);
     }
-    jsonStr += strtempList.join(',') + '}\n';
+
+    masterJsonStr += strtempList.join(',') + '}\n';
   }
   
   // UTF8なBlobに変換
-  var blob = Utilities.newBlob("","text/plain",filename).setDataFromString(jsonStr,"UTF8");
+  var blob = Utilities.newBlob("","text/plain",filename).setDataFromString(masterJsonStr,"UTF8");
   
   // ファイルを作成する
   createFile(blob,filename);

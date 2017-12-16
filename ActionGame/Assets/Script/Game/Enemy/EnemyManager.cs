@@ -79,7 +79,8 @@ public class EnemyManager : MonoBehaviour
             if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.path) as GameObject))
             {
                 LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
-                break;
+                //break;
+                continue;
             }
             LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
             m_resourcesList.Add(param.Value.id, resource);
@@ -191,6 +192,12 @@ public class EnemyManager : MonoBehaviour
             if (frequency != 0 && rand > frequency) { break; }
 
             // インスタンスデータを作成する
+            if(!m_resourcesList.ContainsKey(enemyId))
+            {
+                // プレハブの読み込みに失敗している場合、インスタンス化はしない。
+                LogExtensions.OutputError("プレハブが見つかりません。敵ID[" + enemyId + "],プレハブ名[" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path + "]");
+                break;
+            }
             GameObject instance = Instantiate(m_resourcesList[enemyId]) as GameObject;
             if(instance == null)
             {

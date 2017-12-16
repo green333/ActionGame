@@ -41,9 +41,9 @@ function outputMasterParameter()
     var csharpCreateer = new CSharp();
 
     // CSharpインスタンスにusingを追加
-    csharpCreateer.AddUsing('UnityEngine');
-    csharpCreateer.AddUsing('System.Collections');
-    csharpCreateer.AddUsing('System.Collections.Generic');
+    csharpCreateer.AddUsingList('UnityEngine');
+    csharpCreateer.AddUsingList('System.Collections');
+    csharpCreateer.AddUsingList('System.Collections.Generic');
 
     // 0番目のシートはCSV出力用シートなので飛ばす
     var i = CSV_OUTPUT_SHEET_NUM + 1;
@@ -101,26 +101,20 @@ function outputMasterParameter()
         var className = masterParameterClassNameList[sheetName];
         
         // そのシートに定義された内容からマスタパラメータークラスを作成する
-        var classData = new Class(ACCESS_MODIFIRES.PUBLIC,className,"ScriptableObject",sheetName + "パラメーター",null);
-        var classParamData = new Class(ACCESS_MODIFIRES.PUBLIC,'Param',null,null,'System.SerializableAttribute',1);
+        var classData = new ClassInfo(ACCESS_MODIFIRES.PUBLIC,className,"ScriptableObject",sheetName + "パラメーター");
+        var classParamData = new ClassInfo(ACCESS_MODIFIRES.PUBLIC,'Param',null,null,'System.SerializableAttribute');
         for(var j = 0; j < valueTypeList.length; ++j)
         {
             // クラスの要素として変数を追加する
-            classParamData.elementList.push(new Variable(ACCESS_MODIFIRES.PUBLIC,valueTypeList[j],valueNameList[j],valueCommentList[j],null,1));
+            classParamData.AddElementList(new VariableInfo(ACCESS_MODIFIRES.PUBLIC,valueTypeList[j],valueNameList[j],valueCommentList[j]));
         }
         // クラスの要素としてクラスを追加する
-        classData.elementList.push(classParamData);
+        classData.AddElementList(classParamData);
 
         // CSharpインスタンスにクラス情報を追加
-        csharpCreateer.AddElement(classData);
+        csharpCreateer.AddClassInfoList(classData);
     } 
 
-    // 設定された情報からCSharpのスクリプト文を作成する
-    masterParameterString = CreateCSharpString(csharpCreateer);
-
-    // 文字列をバイトに変換する
-    var blobMasterParameter         = Utilities.newBlob("","text/csv","MasterParameter.cs").setDataFromString(masterParameterString,"UTF8");
-    
-    // ファイルを作成する
-    createFile(blobMasterParameter,"MasterParameter.cs");
+    // 設定された情報をもとに.csを作成する
+    CreateCSharpFile(csharpCreateer);
 }

@@ -86,6 +86,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        LoadPlayerBaseMaster.instance.Init();
         rig = GetComponent<Rigidbody>();
         enableLvUpEffectExecute = false;
         move = Vector3.zero;
@@ -115,6 +116,7 @@ public class Player : MonoBehaviour
 
         move = playerCamera.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime * moveSpeed
             + playerCamera.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime * moveSpeed;
+
     }
 
     /// <summary>

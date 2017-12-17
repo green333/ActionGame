@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// プレイヤー基本パラメータ
@@ -18,13 +19,47 @@ public class LoadPlayerBaseMaster : TextMasterManager
 
     const string filename = "Assets/Resources/MasterData/プレイヤー基本マスタ.txt";
 
+    /// <summary>プレイヤーマスタリスト</summary>
+    private Dictionary<int,PlayerBaseMaster.Param> m_playerList = null;
+
+    /// <summary>プレイヤー本マスタリストを取得 </summary>
+    public Dictionary<int,PlayerBaseMaster.Param> playerList { get { return m_playerList; } }
+
     /// <summary>
     /// プレイヤーのレベル上限値
     /// </summary>
     static public readonly int PLAYER_LEVEL_MAX = 100;
 
-    const string COL_LEVEL = "level";
 
+    public bool Init()
+    {
+        LogExtensions.OutputInfo("プレイヤーマスタを読み込みます。");
+
+        bool ret = false;
+        base.Open(filename);
+
+        string[] lineAll = base.GetLineAll();
+        if (lineAll != null)
+        {
+            m_playerList = new Dictionary<int, PlayerBaseMaster.Param>(lineAll.Length);
+            PlayerBaseMaster.Param temp = null;
+            foreach (string line in lineAll)
+            {
+                temp = JsonUtility.FromJson<PlayerBaseMaster.Param>(line);
+                m_playerList.Add(temp.level,temp);
+            }
+
+            ret = true;
+            LogExtensions.OutputInfo("プレイヤーマスタの読み込みに成功しました。");
+        }
+        else
+        {
+            LogExtensions.OutputError("プレイヤーマスタの読み込みに失敗しました。");
+        }
+        base.Close();
+
+        return ret;
+    }
     /// <summary>
     /// 指定したレベルに一致するプレイヤー情報を取得する
     /// </summary>
@@ -32,19 +67,12 @@ public class LoadPlayerBaseMaster : TextMasterManager
     /// <returns></returns>
     public PlayerBaseMaster.Param GetPlayerInfo(int lv)
     {
-        PlayerBaseMaster.Param param = null;
-        base.Open(filename);
-
-        
-        string getJsonStr = base.Search(base.VariableToJson(COL_LEVEL, lv));
-
-        base.Close();
-        if(getJsonStr != null)
+        if(PLAYER_LEVEL_MAX < lv)
         {
-            param = JsonUtility.FromJson<PlayerBaseMaster.Param>(getJsonStr);
+            lv = PLAYER_LEVEL_MAX;
         }
 
-        return param;
+        return m_playerList[lv];
     }
 
     /// <summary>

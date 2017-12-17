@@ -34,11 +34,6 @@ public class LoadItemMaster : TextMasterManager
     /// </summary>
     const string filename = "Assets/Resources/MasterData/アイテムマスタ.txt";
 
-    /// <summary>
-    /// 名前カラム
-    /// </summary>
-    const string COL_NAME = "name";
-
     public bool Init()
     {
         LogExtensions.OutputInfo("アイテムマスタを読み込みます。");

@@ -22,13 +22,6 @@ public class LoadEnemySpawnMaster : TextMasterManager
     /// <summary>マスタデータのファイルパス </summary>
     const string filename = "Assets/Resources/MasterData/敵出現マスタ.txt";
 
-    /// <summary>検索に使用するマスターのカラム </summary>
-    const string COL_STAGE_ID   = "stage_id";
-    const string COL_CHAPTER_ID = "chapter_id";
-
-    // 敵出現マスタの一レコードに設定できる敵の数
-    public const int ONE_RECORD_ENEMY_MAX_COUNT= 3;
-
     public bool Init()
     {
         LogExtensions.OutputInfo("敵出現マスタを読み込みます。");

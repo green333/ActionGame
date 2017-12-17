@@ -21,9 +21,6 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// <summary>マスターデータのファイルパス</summary>
     const string filename = "Assets/Resources/MasterData/敵基本マスタ.txt";
 
-    /// <summary> 検索に使用するマスターのカラム </summary>
-    const string COL_NAME = "name";
-
     public bool Init()
     {
         LogExtensions.OutputInfo("敵基本マスタを読み込みます。");

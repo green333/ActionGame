@@ -24,11 +24,6 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     /// <summary>　マスタデータのファイルパス </summary>
     const string filename = "Assets/Resources/MasterData/敵成長マスタ.txt";
 
-    /// <summary> 検索に使用するマスターのカラム</summary>
-    const string COL_ID         = "id";
-    const string COL_LEVEL      = "level";
-
-
     public bool Init()
     {
         LogExtensions.OutputInfo("敵成長マスタを読み込みます。");

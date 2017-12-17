@@ -55,7 +55,13 @@ function toJsonTextFile(values,filename)
       strtempList.push(strtemp);
     }
 
-    masterJsonStr += strtempList.join(',') + '}\n';
+    masterJsonStr += strtempList.join(',') + '}';
+
+    // データが最後の行でなければ改行する
+    if( (values.length - 1) != i)
+    {
+      masterJsonStr += '\n';
+    }
   }
   
   // UTF8なBlobに変換

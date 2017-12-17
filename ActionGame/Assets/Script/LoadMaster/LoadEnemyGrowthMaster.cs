@@ -28,74 +28,44 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     const string COL_ID         = "id";
     const string COL_LEVEL      = "level";
 
-    /// <summary>
-    /// 敵出現マスタから敵成長マスタを読み込む
-    /// </summary>
-    /// <param name="param">敵出現マスタ</param>
-    /// <returns>読み込み成功:true 読み込み失敗:false</returns>
-    public bool LoadEnemyGrowthInfo(List<EnemySpawnMaster.Param> param)
+
+    public bool Init()
     {
-        m_enemyGrowthMasterList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>();
- 
-        int[] enemyIdList   = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-        int[] enemyLvList   = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-        int index = 0;
+        LogExtensions.OutputInfo("敵成長マスタを読み込みます。");
 
-        for (int i = 0; i < param.Count; ++i)
-        {
-            if (Array.IndexOf(enemyIdList, param[i].enemy1_id) == -1)
-            {
-                enemyIdList[index] = param[i].enemy1_id;
-                enemyLvList[index] = param[i].enemy1_lv;
-                ++index;
-            }
-            if (Array.IndexOf(enemyIdList, param[i].enemy2_id) == -1)
-            {
-                enemyIdList[index] = param[i].enemy2_id;
-                enemyLvList[index] = param[i].enemy2_lv;
-                ++index;
-            }
-            if (Array.IndexOf(enemyIdList, param[i].enemy3_id) == -1)
-            {
-                enemyIdList[index] = param[i].enemy3_id;
-                enemyLvList[index] = param[i].enemy3_lv;
-                ++index;
-            }
-        }
-
-        List<string> searchList = new List<string>();
-        for(int i = 0; i < index; ++i)
-        {
-            searchList.Add(base.VariableToJson(COL_ID, enemyIdList[i]) + "," + base.VariableToJson(COL_LEVEL, enemyLvList[i]));
-        }
-
+        bool ret = false;
         base.Open(filename);
-        string[] getJsnoStrList = base.SearchList(searchList, searchList.Count);
+
+        string[] lineAll = base.GetLineAll();
+        if (lineAll != null)
+        {
+            m_enemyGrowthMasterList = new Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>>(lineAll.Length);
+
+            EnemyGrowthMaster.Param temp = null;
+            foreach (string line in lineAll)
+            {
+                temp = JsonUtility.FromJson<EnemyGrowthMaster.Param>(line);
+
+                if (m_enemyGrowthMasterList.ContainsKey(temp.id))
+                {
+                    m_enemyGrowthMasterList[temp.id].Add(temp.level, temp);
+                }
+                else
+                {
+                    m_enemyGrowthMasterList.Add(temp.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp.level, temp } });
+                }
+            }
+            LogExtensions.OutputInfo("敵成長マスタの読み込みに成功しました。");
+            ret = true;
+        }
+        else
+        {
+            LogExtensions.OutputError("敵成長マスタの読み込みに失敗しました。");
+        }
         base.Close();
 
-        EnemyGrowthMaster.Param temp = null;
-        foreach (string getJsonStr in getJsnoStrList)
-        {
-            if (getJsonStr == string.Empty)
-            {
-                break;
-            }
-
-            temp = JsonUtility.FromJson<EnemyGrowthMaster.Param>(getJsonStr);
-
-            if (m_enemyGrowthMasterList.ContainsKey(temp.id) && !m_enemyGrowthMasterList[temp.id].ContainsKey(temp.level))
-            {
-                m_enemyGrowthMasterList[temp.id].Add(temp.level, temp);
-            }
-            else
-            {
-                m_enemyGrowthMasterList.Add(temp.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp.level, temp } });
-            }
-        }
-
-        return (m_enemyGrowthMasterList.Count != 0);
+        return ret;
     }
-    
 
     /// <summary>
     /// 敵成長パラメーターをログに出力する

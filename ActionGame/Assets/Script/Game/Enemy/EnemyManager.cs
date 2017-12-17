@@ -16,51 +16,25 @@ public class EnemyManager : MonoBehaviour
 
     Dictionary<GameObject,Enemy> m_enemyList = null;
 
-    /// <summary>
-    /// ステージIDと章IDから出現する敵のデータを読み込む
-    /// </summary>
-    /// <param name="stageId">ステージID</param>
-    /// <param name="chapterId">章ID</param>
-    /// <returns>読み込み成功:true 失敗:false</returns>
-    public bool LoadEnemyMasterData(int stageId,int chapterId)
+    void Awake()
     {
-        bool ret = false;
-
-        LogExtensions.OutputInfo("敵データの読み込みを開始します");
-
         do
         {
-            // 章毎の敵出現マスタを読み込む
-            if (!LoadEnemySpawnMaster.instance.LoadEnemySpawanInfo(stageId, chapterId))
+            if (!LoadEnemyBaseMaster.instance.Init())
             {
-                LogExtensions.OutputError("敵出現マスタの読み込みに失敗しました。stageId=" + stageId + ",chapterId=" + chapterId);
                 break;
             }
-            LoadEnemySpawnMaster.instance.DebugLog();
 
-            // 出現する敵の基本マスタを読み込む
-            if (!LoadEnemyBaseMaster.instance.LoadEnemyBaseInfo(LoadEnemySpawnMaster.instance.spawnList))
+            if (!LoadEnemySpawnMaster.instance.Init())
             {
-                LogExtensions.OutputError("敵基本マスタの読み込みに失敗しました。");
                 break;
             }
-            LoadEnemyBaseMaster.instance.DebugLog();
-
-            // 出現する敵の成長データを読み込み
-            if (!LoadEnemyGrowthMaster.instance.LoadEnemyGrowthInfo(LoadEnemySpawnMaster.instance.spawnList))
+            if (!LoadEnemyGrowthMaster.instance.Init())
             {
-                LogExtensions.OutputError("敵成長マスタの読み込みに失敗しました。");
                 break;
             }
-            LoadEnemyGrowthMaster.instance.DebugLog();
-
-            ret = true;
-
         } while (false);
-
-        LogExtensions.OutputInfo("敵データの読み込みを終了します。");
-
-        return ret;
+  
     }
 
     /// <summary>
@@ -242,13 +216,10 @@ public class EnemyManager : MonoBehaviour
 
     public void LoadEnemyData()
     {
-        if (LoadEnemyMasterData(1, 1))
+        if (LoadPrefabs())
         {
-            if (LoadPrefabs())
-            {
-                m_enemyList = new Dictionary<GameObject, Enemy>();
-                CreateEnemyOfThisPlace(4);
-            }
+            m_enemyList = new Dictionary<GameObject, Enemy>();
+            CreateEnemyOfThisPlace(4);
         }
     }
 
@@ -259,6 +230,7 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
+        return;
         // 削除するオブジェクトキーリスト
         GameObject[] deleteKeyList = Enumerable.Repeat<GameObject>(null, m_enemyList.Count).ToArray();
         int index = 0;

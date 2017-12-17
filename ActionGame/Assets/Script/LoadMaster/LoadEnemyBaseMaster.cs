@@ -24,42 +24,34 @@ public class LoadEnemyBaseMaster : TextMasterManager
     /// <summary> 検索に使用するマスターのカラム </summary>
     const string COL_NAME = "name";
 
-
-    /// <summary>
-    /// 敵出現マスタから敵成長マスタを読み込む
-    /// </summary>
-    /// <param name="param">敵出現マスタリスト</param>
-    /// <returns>読み込み成功:true 読み込み失敗:false</returns>
-    public bool LoadEnemyBaseInfo(List<EnemySpawnMaster.Param> param)
+    public bool Init()
     {
-        m_enemyBaseMasterList = new Dictionary<int, EnemyBaseMaster.Param>();
+        LogExtensions.OutputInfo("敵基本マスタを読み込みます。");
 
-        int[] selectIdList = Enumerable.Repeat<int>(0, param.Count * 3).ToArray();
-        int index = 0;
-        for (int i = 0; i < param.Count; ++i)
-        {
-            selectIdList[index++] = param[i].enemy1_id;
-            selectIdList[index++] = param[i].enemy2_id;
-            selectIdList[index++] = param[i].enemy3_id;
-        }
-
-        string[] selectList = Array.ConvertAll(selectIdList, delegate (int value) { return value.ToString(); });
-
+        bool ret = false;
         base.Open(filename);
-        string[] getJsonStr = base.SearchList(selectList);
-        base.Close();
 
-        EnemyBaseMaster.Param temp = null;
-        foreach (string str in getJsonStr)
+        string[] lineAll = base.GetLineAll();
+        if(lineAll != null)
         {
-            if (str != string.Empty)
+            m_enemyBaseMasterList = new Dictionary<int, EnemyBaseMaster.Param>(lineAll.Length);
+            EnemyBaseMaster.Param temp = null;
+            foreach (string line in lineAll)
             {
-                temp = JsonUtility.FromJson<EnemyBaseMaster.Param>(str);
+                temp = JsonUtility.FromJson<EnemyBaseMaster.Param>(line);
                 m_enemyBaseMasterList.Add(temp.id, temp);
             }
-        }
 
-        return (m_enemyBaseMasterList.Count != 0);
+            ret = true;
+            LogExtensions.OutputInfo("敵基本マスタの読み込みに成功しました。");
+        }
+        else
+        {
+            LogExtensions.OutputError("敵基本マスタの読み込みに失敗しました。");
+        }
+        base.Close();
+
+        return ret;
     }
 
     /// <summary>

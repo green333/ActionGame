@@ -29,30 +29,36 @@ public class LoadEnemySpawnMaster : TextMasterManager
     // 敵出現マスタの一レコードに設定できる敵の数
     public const int ONE_RECORD_ENEMY_MAX_COUNT= 3;
 
-    /// <summary>
-    /// 指定したステージIDと章IDに出現する敵の情報を読み込む
-    /// </summary>
-    /// <param name="stage_id"></param>
-    /// <param name="chapter_id"></param>
-    /// <returns>読み込み成功:true 読み込み失敗:false</returns>
-    public bool LoadEnemySpawanInfo(int stage_id,int chapter_id)
+    public bool Init()
     {
-        m_spawnList = new List<EnemySpawnMaster.Param>();
+        LogExtensions.OutputInfo("敵出現マスタを読み込みます。");
 
-        string searchJson =  base.VariableToJson(COL_STAGE_ID, stage_id) + "," + base.VariableToJson(COL_CHAPTER_ID, chapter_id);
-
+        bool ret = false;
         base.Open(filename);
-        List<string> getJsonStrList = base.SearchMultiple(searchJson);
+
+        string[] lineAll = base.GetLineAll();
+        if (lineAll != null)
+        {
+            m_spawnList = new List<EnemySpawnMaster.Param>(lineAll.Length);
+            EnemySpawnMaster.Param temp = null;
+            foreach (string line in lineAll)
+            {
+                temp = JsonUtility.FromJson<EnemySpawnMaster.Param>(line);
+                m_spawnList.Add(temp);
+            }
+
+            ret = true;
+            LogExtensions.OutputInfo("敵出現マスタの読み込みに成功しました。");
+        }
+        else
+        {
+            LogExtensions.OutputError("敵出現マスタの読み込みに失敗しました。");
+        }
         base.Close();
 
-        for(int i = 0; i < getJsonStrList.Count;++i)
-        {
-            m_spawnList.Add(JsonUtility.FromJson<EnemySpawnMaster.Param>(getJsonStrList[i]));
-        }
-
-        return (m_spawnList.Count != 0);
+        return ret;
     }
-
+ 
     /// <summary>
     /// 敵出現パラメーターをログに出力する
     /// </summary>

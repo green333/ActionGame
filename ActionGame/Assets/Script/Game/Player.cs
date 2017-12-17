@@ -153,6 +153,7 @@ public class Player : MonoBehaviour
             // アイテム情報を読み込む
             itemList = new List<ItemInfo>();
             ItemInfo itemInfo = new ItemInfo();
+            LoadItemMaster.instance.Init();
             itemInfo.param = LoadItemMaster.instance.GetItemInfo(PLAYER_INIT_HAVE_ITEM_NAME);
             itemInfo.num = PLAYER_INIT_HAVE_ITEM_NUM;
             itemList.Add(itemInfo);

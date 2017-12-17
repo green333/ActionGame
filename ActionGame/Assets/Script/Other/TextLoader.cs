@@ -30,6 +30,11 @@ public class TextLoader{
         stream.Close();
     }
 
+    protected string[] GetLineAll()
+    {
+        return stream.ReadToEnd().Split('\n');
+    }
+
     /// <summary>
     /// テキストから一行読み込む
     /// ファイル終端ならstring.Emptyを返す

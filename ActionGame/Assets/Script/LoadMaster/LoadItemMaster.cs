@@ -24,10 +24,10 @@ public class LoadItemMaster : TextMasterManager
     static public LoadItemMaster instance { get { return m_instance; } }
 
     /// <summary> アイテムマスタリスト </summary>
-    private Dictionary<int, ItemMaster.Param> m_itemList = null;
+    private Dictionary<string, ItemMaster.Param> m_itemList = null;
 
     /// <summary> アイテムマスタリストを取得 </summary>
-    public Dictionary<int,ItemMaster.Param> itemList { get { return m_itemList; } }
+    public Dictionary<string, ItemMaster.Param> itemList { get { return m_itemList; } }
 
     /// <summary>
     /// マスターデータのファイルパス
@@ -39,6 +39,36 @@ public class LoadItemMaster : TextMasterManager
     /// </summary>
     const string COL_NAME = "name";
 
+    public bool Init()
+    {
+        LogExtensions.OutputInfo("アイテムマスタを読み込みます。");
+
+        bool ret = false;
+        base.Open(filename);
+
+        string[] lineAll = base.GetLineAll();
+        if (lineAll != null)
+        {
+            m_itemList = new Dictionary<string, ItemMaster.Param>();
+            ItemMaster.Param temp = null;
+            foreach (string line in lineAll)
+            {
+                temp = JsonUtility.FromJson<ItemMaster.Param>(line);
+                m_itemList.Add(temp.name, temp);
+            }
+
+            ret = true;
+            LogExtensions.OutputInfo("アイテムマスタの読み込みに成功しました。");
+        }
+        else
+        {
+            LogExtensions.OutputError("アイテムマスタの読み込みに失敗しました。");
+        }
+        base.Close();
+
+        return ret;
+    }
+
     /// <summary>
     /// 指定した名前に一致するアイテム情報を取得する
     /// </summary>
@@ -47,39 +77,13 @@ public class LoadItemMaster : TextMasterManager
     public ItemMaster.Param GetItemInfo(string name)
     {
         ItemMaster.Param param = null;
-        base.Open(filename);
 
-        string getJsonStr = base.Search(base.VariableToJson(COL_NAME, name));
-        if (getJsonStr != string.Empty)
+        if(m_itemList.ContainsKey(name))
         {
-            param = JsonUtility.FromJson<ItemMaster.Param>(getJsonStr);
+            param = m_itemList[name];
         }
-        base.Close();
 
         return param;
-    }
-
-    /// <summary>
-    /// アイテムマスタを全件読み込む
-    /// </summary>
-    public void LoadItemInfo()
-    {
-        m_itemList = new Dictionary<int, ItemMaster.Param>();
-
-        base.Open(filename);
-        string[] allLine = GetAllLine();
-        base.Close();
-
-        ItemMaster.Param param = null;
-        foreach (string line in allLine)
-        {
-            if (line == "")
-            {
-                break;
-            }
-            param = JsonUtility.FromJson<ItemMaster.Param>(line);
-            m_itemList.Add(param.id, param);
-        }
     }
 
     /// <summary>

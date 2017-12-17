@@ -67,7 +67,7 @@ public class ItemMaster : ScriptableObject{
         public int id;    /// <summary> ID </summary>
         public string kind;    /// <summary> 種類 </summary>
         public int effect;    /// <summary> 効果 </summary>
-        public int desc;    /// <summary> 説明 </summary>
+        public string desc;    /// <summary> 説明 </summary>
     }
 }
 

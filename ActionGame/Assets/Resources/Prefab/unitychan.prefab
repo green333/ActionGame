@@ -738,8 +738,8 @@ GameObject:
   - 95: {fileID: 95000011732458924}
   - 54: {fileID: 54000012123909422}
   - 65: {fileID: 65000013461548358}
-  - 114: {fileID: 114000011256815146}
-  - 114: {fileID: 114000011942421862}
+  - 114: {fileID: 114000012622124760}
+  - 114: {fileID: 114000011853555952}
   m_Layer: 0
   m_Name: unitychan
   m_TagString: Player
@@ -4480,7 +4480,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100276}
-  m_LocalRotation: {x: -0.093746535, y: 0.6978551, z: 0.707469, w: 0.060806714}
+  m_LocalRotation: {x: -0.09374654, y: 0.6978552, z: 0.70746905, w: 0.060806718}
   m_LocalPosition: {x: -0.05543403, y: 0.0017306843, z: 0.098653734}
   m_LocalScale: {x: 1.0000004, y: 1.0000006, z: 1.0000005}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6498,7 +6498,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114000011256815146
+--- !u!114 &114000011853555952
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -6509,7 +6509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef0ae6a962432f4782c1a13eaa08f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114000011942421862
+--- !u!114 &114000012622124760
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

@@ -14,7 +14,7 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     Dictionary<int, GameObject> m_resourcesList = null;
 
-    Dictionary<GameObject,Enemy> m_enemyList = null;
+    Dictionary<GameObject, Enemy> m_enemyList = null;
 
     /// <summary>
     /// 敵のプレハブを読み込む
@@ -25,23 +25,65 @@ public class EnemyManager : MonoBehaviour
         LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
 
         m_resourcesList = new Dictionary<int, GameObject>();
-
+        SaveData.Instance.stageId = SaveData.Instance.chapter = 1;
+        // 現在のステージIDと章IDから出現する敵
         GameObject resource = null;
-        foreach(KeyValuePair<int, EnemyBaseMaster.Param> param in LoadEnemyBaseMaster.instance.enemeyBaseMasterList)
+        EnemyBaseMaster.Param enemyBaseParam = null;
+        foreach (EnemySpawnMaster.Param param in LoadEnemySpawnMaster.instance.spawnList)
         {
-            if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.Path) as GameObject))
+            // ステージID、または章IDが違っていたらcontinue
+            if (param.Stage_id != SaveData.Instance.stageId && param.Chapter_id != SaveData.Instance.chapter)
             {
-                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
-                //break;
                 continue;
             }
-            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
-            m_resourcesList.Add(param.Value.Id, resource);
+            // 出現する敵が設定されていない場合、EnemyX_idには0が入っている
+
+            // 一体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy1_id != 0 && !m_resourcesList.ContainsKey(param.Enemy1_id))
+            {
+                AddPrefabList(param.Enemy1_id);
+            }
+            // 二体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy2_id != 0 && !m_resourcesList.ContainsKey(param.Enemy2_id))
+            {
+                AddPrefabList(param.Enemy2_id);
+            }
+            // 三体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy3_id != 0 && !m_resourcesList.ContainsKey(param.Enemy3_id))
+            {
+                AddPrefabList(param.Enemy3_id);
+            }
         }
 
         LogExtensions.OutputInfo("敵リソースの読み込みを終了します");
 
         return (m_resourcesList.Count != 0);
+    }
+
+    /// <summary>
+    /// プレハブを読み込み、リストに追加する
+    /// </summary>
+    /// <param name="enemyId">敵管理ID</param>
+    private void AddPrefabList(int enemyId)
+    {
+        if(!LoadEnemyBaseMaster.instance.enemeyBaseMasterList.ContainsKey(enemyId))
+        {
+            EnemyBaseMaster.Param enemyBaseParam = LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId];
+            GameObject resource = null;
+            if (null == (resource = Resources.Load("Prefab\\EnemyData\\" + enemyBaseParam.Path) as GameObject))
+            {
+                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+            }
+            else
+            {
+                LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+                m_resourcesList.Add(enemyId, resource);
+            }
+        }else
+        {
+            // 敵基本マスタには存在しない敵の管理IDが敵出現マスタに設定されている。
+            LogExtensions.OutputError("敵出現マスタに敵基本マスタにはない敵管理IDが設定されています。敵管理ID[" + enemyId + "]");
+        }
     }
 
     /// <summary>

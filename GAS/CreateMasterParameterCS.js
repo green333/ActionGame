@@ -102,11 +102,19 @@ function outputMasterParameter()
         
         // そのシートに定義された内容からマスタパラメータークラスを作成する
         var classData = new ClassInfo(ACCESS_MODIFIRES.PUBLIC,className,"ScriptableObject",sheetName + "パラメーター");
-        var classParamData = new ClassInfo(ACCESS_MODIFIRES.PUBLIC,'Param',null,null,'System.SerializableAttribute');
+        var classParamData = new ClassInfo(ACCESS_MODIFIRES.PUBLIC,'Param',null,null);
+        
+        // メンバ変数を作成
         for(var j = 0; j < valueTypeList.length; ++j)
         {
             // クラスの要素として変数を追加する
-            classParamData.AddElementList(new VariableInfo(ACCESS_MODIFIRES.PUBLIC,valueTypeList[j],valueNameList[j],valueCommentList[j]));
+            classParamData.AddElementList(new VariableInfo(ACCESS_MODIFIRES.PRIVATE,valueTypeList[j],valueNameList[j],valueCommentList[j],'SerializeField'));
+        }
+        // プロパティを作成
+        for(var j = 0; j < valueTypeList.length; ++j)
+        {
+            var propertyName = valueNameList[j].slice( 0, 1 ).toUpperCase() + valueNameList[j].slice( 1 );
+            classParamData.AddElementList(new PropertyInfo(ACCESS_MODIFIRES.PUBLIC,valueTypeList[j],propertyName,PROPETY_TYPE.GET,'取得プロパティ: ' + valueCommentList[j]));
         }
         // クラスの要素としてクラスを追加する
         classData.AddElementList(classParamData);

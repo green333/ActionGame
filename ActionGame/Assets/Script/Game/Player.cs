@@ -310,7 +310,7 @@ public class Player : MonoBehaviour
 
             case STEP.ATTACK:
                 Stop();
-                if (animationController.GetIsEndAnimation()) step = STEP.MOVE;
+                if (animationController.IsEndAnimation()) step = STEP.MOVE;
                 break;
         }
     }

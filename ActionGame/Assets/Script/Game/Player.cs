@@ -228,9 +228,8 @@ public class Player : MonoBehaviour
         LoadPlayerBaseMaster.instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
 
-        while (true)
+        for(int i = LoadPlayerBaseMaster.PLAYER_LEVEL_MAX - status.param.level; i < LoadPlayerBaseMaster.PLAYER_LEVEL_MAX; ++i)
         {
-
             // 必要経験値に満たしているかを算出する
             subExp = status.exp - status.param.next_exp;
 

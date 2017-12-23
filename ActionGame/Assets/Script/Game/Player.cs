@@ -151,6 +151,8 @@ public class Player : MonoBehaviour
             itemInfo.num = PLAYER_INIT_HAVE_ITEM_NUM;
             itemList.Add(itemInfo);
 
+            // 初期のステージIDと章IDを設定
+            SaveData.Instance.stageId = SaveData.Instance.chapter = 1;
         }
         else
         {

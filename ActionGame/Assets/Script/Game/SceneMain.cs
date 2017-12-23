@@ -8,6 +8,35 @@ public class SceneMain : MonoBehaviour
 
     private void Awake()
     {
+        // 各マスタの読み込みを行う。
+        bool isMasterLoadSuccess = false;
+        do
+        {
+            if (!LoadEnemyBaseMaster.instance.Init())
+            {
+                return;
+            }
+            if (!LoadEnemySpawnMaster.instance.Init())
+            {
+                return;
+            }
+            if (!LoadEnemyGrowthMaster.instance.Init())
+            {
+                return;
+            }
+            if (!LoadPlayerBaseMaster.instance.Init())
+            {
+                return;
+            }
+
+            isMasterLoadSuccess = true;
+        } while (false);
+       
+        // マスタデータの読み込みに失敗した場合
+        if(!isMasterLoadSuccess)
+        {
+            // TODO:タイトル画面に戻すとかの処理が必要
+        }
         playerPrefab = Resources.Load<GameObject>("Prefab/unitychan");
     }
 

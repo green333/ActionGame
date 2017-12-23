@@ -86,7 +86,6 @@ public class Player : MonoBehaviour
     /// </summary>
     public void Init()
     {
-        LoadPlayerBaseMaster.instance.Init();
         rig = GetComponent<Rigidbody>();
         enableLvUpEffectExecute = false;
         move = Vector3.zero;

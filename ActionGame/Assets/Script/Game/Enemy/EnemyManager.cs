@@ -17,24 +17,7 @@ public class EnemyManager : MonoBehaviour
     Dictionary<GameObject,Enemy> m_enemyList = null;
 
     void Awake()
-    {
-        do
-        {
-            if (!LoadEnemyBaseMaster.instance.Init())
-            {
-                break;
-            }
-
-            if (!LoadEnemySpawnMaster.instance.Init())
-            {
-                break;
-            }
-            if (!LoadEnemyGrowthMaster.instance.Init())
-            {
-                break;
-            }
-        } while (false);
-  
+    {  
     }
 
     /// <summary>

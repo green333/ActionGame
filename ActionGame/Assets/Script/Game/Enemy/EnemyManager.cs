@@ -25,10 +25,8 @@ public class EnemyManager : MonoBehaviour
         LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
 
         m_resourcesList = new Dictionary<int, GameObject>();
-        SaveData.Instance.stageId = SaveData.Instance.chapter = 1;
+
         // 現在のステージIDと章IDから出現する敵
-        GameObject resource = null;
-        EnemyBaseMaster.Param enemyBaseParam = null;
         foreach (EnemySpawnMaster.Param param in LoadEnemySpawnMaster.instance.spawnList)
         {
             // ステージID、または章IDが違っていたらcontinue
@@ -66,7 +64,7 @@ public class EnemyManager : MonoBehaviour
     /// <param name="enemyId">敵管理ID</param>
     private void AddPrefabList(int enemyId)
     {
-        if(!LoadEnemyBaseMaster.instance.enemeyBaseMasterList.ContainsKey(enemyId))
+        if(LoadEnemyBaseMaster.instance.enemeyBaseMasterList.ContainsKey(enemyId))
         {
             EnemyBaseMaster.Param enemyBaseParam = LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId];
             GameObject resource = null;
@@ -82,7 +80,7 @@ public class EnemyManager : MonoBehaviour
         }else
         {
             // 敵基本マスタには存在しない敵の管理IDが敵出現マスタに設定されている。
-            LogExtensions.OutputError("敵出現マスタに敵基本マスタにはない敵管理IDが設定されています。敵管理ID[" + enemyId + "]");
+            LogExtensions.OutputError("敵出現マスタに、敵基本マスタに存在しない敵管理IDが設定されています。敵管理ID[" + enemyId + "],ステージID[" + SaveData.Instance.stageId + "],章ID[" + SaveData.Instance.chapter + "]");
         }
     }
 

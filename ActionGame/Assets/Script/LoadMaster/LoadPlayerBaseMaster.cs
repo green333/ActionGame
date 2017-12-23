@@ -46,7 +46,7 @@ public class LoadPlayerBaseMaster : TextMasterManager
             foreach (string line in lineAll)
             {
                 temp = JsonUtility.FromJson<PlayerBaseMaster.Param>(line);
-                m_playerList.Add(temp.level,temp);
+                m_playerList.Add(temp.Level,temp);
             }
 
             ret = true;
@@ -82,12 +82,12 @@ public class LoadPlayerBaseMaster : TextMasterManager
     public void DebugLog(PlayerBaseMaster.Param param)
     {
         LogExtensions.OutputInfo("[プレイヤー基本マスタ] => " +
-            "[level:"       + param.level       + "] "  +
-            "[hp:"          + param.hp          + "] "  +
-            "[atk:"         + param.atk         + "] "  +
-            "[def:"         + param.def         + "] "  +
-            "[spd:"         + param.spd         + "] "  +
-            "[next_exp:"    + param.next_exp    + "]"
+            "[level:"       + param.Level       + "] "  +
+            "[hp:"          + param.Hp          + "] "  +
+            "[atk:"         + param.Atk         + "] "  +
+            "[def:"         + param.Def         + "] "  +
+            "[spd:"         + param.Spd         + "] "  +
+            "[next_exp:"    + param.Next_exp    + "]"
             );
     }
 }

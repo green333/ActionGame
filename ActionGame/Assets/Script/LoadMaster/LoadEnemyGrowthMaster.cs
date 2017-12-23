@@ -41,13 +41,13 @@ public class LoadEnemyGrowthMaster : TextMasterManager
             {
                 temp = JsonUtility.FromJson<EnemyGrowthMaster.Param>(line);
 
-                if (m_enemyGrowthMasterList.ContainsKey(temp.id))
+                if (m_enemyGrowthMasterList.ContainsKey(temp.Id))
                 {
-                    m_enemyGrowthMasterList[temp.id].Add(temp.level, temp);
+                    m_enemyGrowthMasterList[temp.Id].Add(temp.Level, temp);
                 }
                 else
                 {
-                    m_enemyGrowthMasterList.Add(temp.id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp.level, temp } });
+                    m_enemyGrowthMasterList.Add(temp.Id, new Dictionary<int, EnemyGrowthMaster.Param> { { temp.Level, temp } });
                 }
             }
             LogExtensions.OutputInfo("敵成長マスタの読み込みに成功しました。");
@@ -69,13 +69,13 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     public void DebugLog(EnemyGrowthMaster.Param param)
     {
         LogExtensions.OutputInfo("[敵成長マスタ] => "+
-             "[id:"     + param.id      + "] " +
-             "[level:"  + param.level   + "] " +
-             "[hp:"     + param.hp      + "] " +
-             "[atk:"    + param.atk     + "] " +
-             "[def:"    + param.def     + "] " +
-             "[spd:"    + param.spd     + "] " +
-             "[exp:"    + param.exp     + "] " 
+             "[id:"     + param.Id      + "] " +
+             "[level:"  + param.Level   + "] " +
+             "[hp:"     + param.Hp      + "] " +
+             "[atk:"    + param.Atk     + "] " +
+             "[def:"    + param.Def     + "] " +
+             "[spd:"    + param.Spd     + "] " +
+             "[exp:"    + param.Exp     + "] " 
         );
     }
 

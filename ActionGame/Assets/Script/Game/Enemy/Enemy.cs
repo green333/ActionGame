@@ -14,20 +14,11 @@ using System.Linq;
 public class Enemy : MonoBehaviour
 {
     /// <summary>　敵のパラメータークラス </summary>
-    protected class Parameter : EnemyGrowthMaster.Param
+    protected class Parameter
     {
         public int nowHp;
-        public Parameter(EnemyGrowthMaster.Param param)
-        {
-            id     = param.id;
-            level  = param.level;
-            hp     = param.hp;
-            atk    = param.atk;
-            def    = param.def;
-            spd    = param.spd;
-            exp    = param.exp;
-            nowHp  = param.hp;
-        }
+        public int baseEnemyId;
+        public int level;
     }
 
     /// <summary> 敵パラメーター </summary>
@@ -54,7 +45,10 @@ public class Enemy : MonoBehaviour
     /// <param name="param"></param>
     public void Initialize(EnemyGrowthMaster.Param param,int spawnTime)
     {
-        m_param = new Parameter(param);
+        m_param = new Parameter();
+        m_param.nowHp = param.Hp;
+        m_param.baseEnemyId = param.Id;
+        m_param.level = param.Level;
 
         // TODO:今は座標を適当に決める
         this.transform.position = new Vector3(UnityEngine.Random.Range(-50.0f, 50.0f),0.0f, UnityEngine.Random.Range(-50.0f, 50.0f));
@@ -63,7 +57,7 @@ public class Enemy : MonoBehaviour
         m_enemyUIObj = Instantiate(m_enemyUIPrefab);
         m_enemyUIObj.transform.parent = gameObject.transform;
         m_enemyUI = m_enemyUIObj.GetComponent<EnemyUI>();
-        m_enemyUI.Initialize(m_param.hp, transform.position + new Vector3(0, 2.5f, 0));
+        m_enemyUI.Initialize(m_param.nowHp, transform.position + new Vector3(0, 2.5f, 0));
 
         // タグ名を設定する
         this.gameObject.tag = "Enemy";
@@ -149,7 +143,7 @@ public class Enemy : MonoBehaviour
     /// <returns>経験値</returns>
     public int GetEXP()
     {
-        return m_param.exp;
+        return LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[m_param.baseEnemyId][m_param.level].Exp;
     }
 
     /// <summary>

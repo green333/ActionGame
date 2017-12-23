@@ -49,7 +49,7 @@ public class LoadItemMaster : TextMasterManager
             foreach (string line in lineAll)
             {
                 temp = JsonUtility.FromJson<ItemMaster.Param>(line);
-                m_itemList.Add(temp.name, temp);
+                m_itemList.Add(temp.Name, temp);
             }
 
             ret = true;
@@ -88,11 +88,11 @@ public class LoadItemMaster : TextMasterManager
     public void DebugLog(ItemInfo itemInfo)
     {
         LogExtensions.OutputInfo("[アイテムマスタ] => " +
-            "[id:"      + itemInfo.param.id     + "] " +
-            "[name:"    + itemInfo.param.name   + "] " +
-            "[kind:"    + itemInfo.param.kind   + "] " +
-            "[effect:"  + itemInfo.param.effect + "] " +
-            "[desc:"    + itemInfo.param.desc   + "] " +
+            "[id:"      + itemInfo.param.Id     + "] " +
+            "[name:"    + itemInfo.param.Name   + "] " +
+            "[kind:"    + itemInfo.param.Kind   + "] " +
+            "[effect:"  + itemInfo.param.Effect + "] " +
+            "[desc:"    + itemInfo.param.Desc   + "] " +
             "[num:"     + itemInfo.num          + "] "
         );
     }

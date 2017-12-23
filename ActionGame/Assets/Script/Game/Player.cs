@@ -185,7 +185,7 @@ public class Player : MonoBehaviour
         do
         {
             // すでにレベルがMAXなら加算処理はする必要ないのでreturn
-            if (status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            if (status.param.Level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
                 break;
             }
@@ -194,7 +194,7 @@ public class Player : MonoBehaviour
             status.exp += addExp;
 
             // レベルアップに必要な経験値に達していない場合はbreak
-            if (status.exp < status.param.next_exp)
+            if (status.exp < status.param.Next_exp)
             {
                 break;
             }
@@ -219,10 +219,10 @@ public class Player : MonoBehaviour
         LoadPlayerBaseMaster.instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
 
-        for(int i = LoadPlayerBaseMaster.PLAYER_LEVEL_MAX - status.param.level; i < LoadPlayerBaseMaster.PLAYER_LEVEL_MAX; ++i)
+        for(int i = LoadPlayerBaseMaster.PLAYER_LEVEL_MAX - status.param.Level; i < LoadPlayerBaseMaster.PLAYER_LEVEL_MAX; ++i)
         {
             // 必要経験値に満たしているかを算出する
-            subExp = status.exp - status.param.next_exp;
+            subExp = status.exp - status.param.Next_exp;
 
             // 0を下回す場合、レベルアップに必要な経験値に到達していないのでbreak;
             if (subExp < 0) { break; }
@@ -231,9 +231,9 @@ public class Player : MonoBehaviour
             status.exp = subExp;
 
             // 次のレベルのステータスを取得
-            status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(status.param.level + 1);
+            status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(status.param.Level + 1);
 
-            if (status.param.level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
+            if (status.param.Level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
                 status.exp = 0;
                 break;

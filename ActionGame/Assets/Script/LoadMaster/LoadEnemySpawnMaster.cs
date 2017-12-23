@@ -60,21 +60,21 @@ public class LoadEnemySpawnMaster : TextMasterManager
     {
 
         LogExtensions.OutputInfo("[敵出現マスタ] => " +
-             "[stage_id:"               + param.stage_id            + "] " +
-             "[chapter_id:"             + param.chapter_id          + "] " +
-             "[stage_detail_id:"        + param.stage_detail_id     + "] " +
-             "[enemy1_lv:"              + param.enemy1_lv           + "] " +
-             "[enemy1_id:"              + param.enemy1_id           + "] " +
-             "[enemy1_respawn_time:"    + param.enemy1_respawn_time + "] " +
-             "[enemy1_frequency:"       + param.enemy1_frequency    + "] " +
-             "[enemy2_lv:"              + param.enemy2_lv           + "] " +
-             "[enemy2_id:"              + param.enemy2_id           + "] " +
-             "[enemy2_respawn_time:"    + param.enemy2_respawn_time + "] " +
-             "[enemy2_frequency:"       + param.enemy2_frequency    + "] " +
-             "[enemy3_lv:"              + param.enemy3_lv           + "] " +
-             "[enemy3_id:"              + param.enemy3_id           + "] " +
-             "[enemy3_respawn_time:"    + param.enemy3_respawn_time + "] " +
-             "[enemy3_frequency:"       + param.enemy3_frequency    + "] "
+             "[stage_id:"               + param.Stage_id            + "] " +
+             "[chapter_id:"             + param.Chapter_id          + "] " +
+             "[stage_detail_id:"        + param.Stage_detail_id     + "] " +
+             "[enemy1_lv:"              + param.Enemy1_lv           + "] " +
+             "[enemy1_id:"              + param.Enemy1_id           + "] " +
+             "[enemy1_respawn_time:"    + param.Enemy1_respawn_time + "] " +
+             "[enemy1_frequency:"       + param.Enemy1_frequency    + "] " +
+             "[enemy2_lv:"              + param.Enemy2_lv           + "] " +
+             "[enemy2_id:"              + param.Enemy2_id           + "] " +
+             "[enemy2_respawn_time:"    + param.Enemy2_respawn_time + "] " +
+             "[enemy2_frequency:"       + param.Enemy2_frequency    + "] " +
+             "[enemy3_lv:"              + param.Enemy3_lv           + "] " +
+             "[enemy3_id:"              + param.Enemy3_id           + "] " +
+             "[enemy3_respawn_time:"    + param.Enemy3_respawn_time + "] " +
+             "[enemy3_frequency:"       + param.Enemy3_frequency    + "] "
 
         );
     }

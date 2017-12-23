@@ -36,7 +36,7 @@ public class LoadEnemyBaseMaster : TextMasterManager
             foreach (string line in lineAll)
             {
                 temp = JsonUtility.FromJson<EnemyBaseMaster.Param>(line);
-                m_enemyBaseMasterList.Add(temp.id, temp);
+                m_enemyBaseMasterList.Add(temp.Id, temp);
             }
 
             ret = true;
@@ -58,20 +58,20 @@ public class LoadEnemyBaseMaster : TextMasterManager
     public void DebugLog(EnemyBaseMaster.Param param)
     {
         LogExtensions.OutputInfo("[敵基本マスタ] => " +
-            "[name:"                    + param.name                      + "] " +
-            "[id:"                      + param.id                        + "] " +
-            "[path:"                    + param.path                      + "]"  +
-            "[class_name:"              + param.class_name                + "] " +
-            "[tribe_name:"              + param.tribe_name                + "] " +
-            "[drop_item_id1:"           + param.drop_item_id1             + "] " +
-            "[drop_item_num1:"          + param.drop_item_num1            + "] " +
-            "[drop_item_add_rnd1:"      + param.drop_item_add_rnd1        + "] " +
-            "[drop_item_name2:"         + param.drop_item_id2             + "] " +
-            "[drop_item_num2:"          + param.drop_item_num2            + "] " +
-            "[drop_item_add_rnd2:"      + param.drop_item_add_rnd2        + "] " +
-            "[rare_drop_item_id1:"      + param.rare_drop_item_id1        + "] " +
-            "[rare_drop_item_num1:"     + param.rare_drop_item_num1       + "] " +
-            "[rare_drop_item_add_rnd1:" + param.rare_drop_item_add_rnd1   + "] " 
+            "[name:"                    + param.Name                      + "] " +
+            "[id:"                      + param.Id                        + "] " +
+            "[path:"                    + param.Path                      + "]"  +
+            "[class_name:"              + param.Class_name                + "] " +
+            "[tribe_name:"              + param.Tribe_name                + "] " +
+            "[drop_item_id1:"           + param.Drop_item_id1             + "] " +
+            "[drop_item_num1:"          + param.Drop_item_num1            + "] " +
+            "[drop_item_add_rnd1:"      + param.Drop_item_add_rnd1        + "] " +
+            "[drop_item_name2:"         + param.Drop_item_id2             + "] " +
+            "[drop_item_num2:"          + param.Drop_item_num2            + "] " +
+            "[drop_item_add_rnd2:"      + param.Drop_item_add_rnd2        + "] " +
+            "[rare_drop_item_id1:"      + param.Rare_drop_item_id1        + "] " +
+            "[rare_drop_item_num1:"     + param.Rare_drop_item_num1       + "] " +
+            "[rare_drop_item_add_rnd1:" + param.Rare_drop_item_add_rnd1   + "] " 
             );
     }
 

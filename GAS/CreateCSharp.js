@@ -1,9 +1,15 @@
-// 変数かクラスを判定するタイプ
+// 変数かクラスかプロパティを判定するタイプ
 var ELEMENT_TYPE = {
   VARIABLE:1,
   CLASS:2,
+  PROPERTY:3,
 };
 
+// プロパティのタイプ
+var PROPETY_TYPE = {
+  GET:'get',
+  SET:'set',
+};
 // アクセス修飾子
 var ACCESS_MODIFIRES = {
   PUBLIC:'public',
@@ -72,6 +78,34 @@ function VariableInfo(accessModifiers,type,name,summary,attribute){
 
   // 自身の属性
   this.elementType = ELEMENT_TYPE.VARIABLE;
+}
+
+//--------------------------------------------------------------------------------------------------
+// 作成するプロパティの情報
+// @param string  accessModifiers プロパティのアクセスレベル(ACCESS_MODIFIRESで設定する)
+// @param string  type            プロパティの戻り値の型(VARIABLE_TYPEで設定する)
+// @param string  name            プロパティ名(指定した名前をすべて小文字にしたものがreturnするものとなる)
+// @param string  summary         変数の概要(引数指定なし、またはnull指定の場合はコメントなし)
+//--------------------------------------------------------------------------------------------------
+function PropertyInfo(accessModifiers,type,name,propetyType,summary)
+{
+  // アクセス修飾子
+  this.accessModifiers = accessModifiers;
+
+  // 変数の型
+  this.type = type;
+
+  // 変数名
+  this.name = name;
+
+  // プロパティのタイプ
+  this.propetyType = propetyType;
+
+  // 変数の概要
+  this.summary = (typeof summary !== 'undefined') ? summary : null; 
+
+  // 自身の属性
+  this.elementType = ELEMENT_TYPE.PROPERTY;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -170,8 +204,16 @@ function CreateVariable(vriableData,allTabSpace)
 
   allTabSpace = (typeof allTabSpace != 'undefined') ?  allTabSpace : '';
   
+  var variableString = '';
+
+  // 属性を作成
+  if(vriableData.attribute !== null)
+  {
+    variableString += allTabSpace + '[' + vriableData.attribute + ']\n';
+  }
+
   // アクセス修飾子 型 変数名 // コメント
-  var variableString = allTabSpace + vriableData.accessModifiers + ' ' + vriableData.type + ' ' + vriableData.name + ';';
+  variableString += allTabSpace + vriableData.accessModifiers + ' ' + vriableData.type + ' ' + vriableData.name + ';';
   
   if(vriableData.summary != null){
     variableString += tabSpace + '/// <summary> ' + vriableData.summary + ' </summary>';
@@ -179,6 +221,43 @@ function CreateVariable(vriableData,allTabSpace)
 
   variableString += '\n';
   return variableString;
+}
+
+//--------------------------------------------------------------------------------------------------
+// 設定された情報をもとにプロパティを作成する
+// @param PropertyInfo propertyData プロパティ情報をもとに、プロパティ文を作成する
+// @param string allTabSpace 作成する変数の先頭にスペースをつける(引数指定なしの場合スペースをつけない)
+//--------------------------------------------------------------------------------------------------
+function CreateProperty(propertyData,allTabSpace)
+{
+  var tabSpace = GetTabSpaceString(1);
+
+  allTabSpace = (typeof allTabSpace != 'undefined') ?  allTabSpace : '';
+  
+  // アクセス修飾子 型 プロパティ名 // コメント
+  var propertyString =  allTabSpace + 
+                        propertyData.accessModifiers + ' ' + 
+                        propertyData.type + ' ' + 
+                        propertyData.name + '{ ';
+                        
+  if(propertyData.propetyType == PROPETY_TYPE.GET)
+  {
+    propertyString += propertyData.propetyType +' { return ' +
+    propertyData.name.slice( 0, 1 ).toLowerCase() + propertyData.name.slice( 1 ) +
+    '; }' ;     
+  }else{
+    propertyString += propertyData.propetyType +' { ' +
+    propertyData.name.slice( 0, 1 ).toLowerCase() + propertyData.name.slice( 1 ) +
+    ' = value; }';    
+  }
+  propertyString += ' }';
+
+  if(propertyData.summary != null){
+    propertyString += tabSpace + '/// <summary> ' + propertyData.summary + ' </summary>';
+  }
+
+  propertyString += '\n';
+  return propertyString;
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -218,10 +297,21 @@ function CreateClass(classData,allTabSpace)
 
     // クラス内に定義するメンバー情報の先頭にスペースを適用する
     var chileTabSpace = allTabSpace +  GetTabSpaceString(1);
-    if(element.elementType ==ELEMENT_TYPE.CLASS){
-      classString += CreateClass(element,chileTabSpace);
-    }else{
-      classString += CreateVariable(element,chileTabSpace);
+
+    switch(element.elementType)
+    {
+      case ELEMENT_TYPE.CLASS:
+        classString += CreateClass(element,chileTabSpace);
+        break;
+
+      case ELEMENT_TYPE.VARIABLE:
+        classString += CreateVariable(element,chileTabSpace);
+        break;
+      
+      case ELEMENT_TYPE.PROPERTY:
+        classString += CreateProperty(element,chileTabSpace);
+        break;
+
     }
   }); 
 

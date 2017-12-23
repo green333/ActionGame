@@ -11,13 +11,13 @@ public class LoadStageMaster : TextMasterManager
     public void DebugLog(StageMaster.Param param)
     {
         LogExtensions.OutputInfo("[ステージマスタ] => " +
-            "[name:"                + param.name            + "] " +
-            "[id:"                  + param.id              + "] " +
-            "[chapter:"             + param.chapter         + "] " +
-            "[normal_bgm_name:"     + param.normal_bgm_name + "] " +
-            "[event_bgm_name:"      + param.event_bgm_name  + "] " +
-            "[battle_bgm_name:"     + param.battle_bgm_name + "] " +
-            "[boss_bgm_name:"       + param.boss_bgm_name   + "] "
+            "[name:"                + param.Name            + "] " +
+            "[id:"                  + param.Id              + "] " +
+            "[chapter:"             + param.Chapter         + "] " +
+            "[normal_bgm_name:"     + param.Normal_bgm_name + "] " +
+            "[event_bgm_name:"      + param.Event_bgm_name  + "] " +
+            "[battle_bgm_name:"     + param.Battle_bgm_name + "] " +
+            "[boss_bgm_name:"       + param.Boss_bgm_name   + "] "
         );
     }
 

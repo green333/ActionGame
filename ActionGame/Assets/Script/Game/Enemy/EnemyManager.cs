@@ -16,10 +16,6 @@ public class EnemyManager : MonoBehaviour
 
     Dictionary<GameObject,Enemy> m_enemyList = null;
 
-    void Awake()
-    {  
-    }
-
     /// <summary>
     /// 敵のプレハブを読み込む
     /// </summary>
@@ -33,14 +29,14 @@ public class EnemyManager : MonoBehaviour
         GameObject resource = null;
         foreach(KeyValuePair<int, EnemyBaseMaster.Param> param in LoadEnemyBaseMaster.instance.enemeyBaseMasterList)
         {
-            if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.path) as GameObject))
+            if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.Path) as GameObject))
             {
-                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
+                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
                 //break;
                 continue;
             }
-            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.path);
-            m_resourcesList.Add(param.Value.id, resource);
+            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
+            m_resourcesList.Add(param.Value.Id, resource);
         }
 
         LogExtensions.OutputInfo("敵リソースの読み込みを終了します");
@@ -63,7 +59,7 @@ public class EnemyManager : MonoBehaviour
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
         for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
         {
-            if (LoadEnemySpawnMaster.instance.spawnList[i].stage_detail_id != stageDetaileId)
+            if (LoadEnemySpawnMaster.instance.spawnList[i].Stage_detail_id != stageDetaileId)
             {
                 continue;
             }
@@ -93,9 +89,9 @@ public class EnemyManager : MonoBehaviour
             rand = UnityEngine.Random.Range(1, frequency_rand_max);
 
             // 一種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy1_id, enemySpawnMasterParam.enemy1_lv, enemySpawnMasterParam.enemy1_frequency, rand, enemySpawnMasterParam.enemy1_respawn_time, out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.Enemy1_id, enemySpawnMasterParam.Enemy1_lv, enemySpawnMasterParam.Enemy1_frequency, rand, enemySpawnMasterParam.Enemy1_respawn_time, out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if(isError)
             {
@@ -103,9 +99,9 @@ public class EnemyManager : MonoBehaviour
             }
 
             // 二種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy2_id, enemySpawnMasterParam.enemy2_lv, enemySpawnMasterParam.enemy2_frequency, rand, enemySpawnMasterParam.enemy2_respawn_time, out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.Enemy2_id, enemySpawnMasterParam.Enemy2_lv, enemySpawnMasterParam.Enemy2_frequency, rand, enemySpawnMasterParam.Enemy2_respawn_time, out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if (isError)
             {
@@ -113,9 +109,9 @@ public class EnemyManager : MonoBehaviour
             }
 
             // 三種類目の敵の生成を試みる
-            if (RandomCreateEnemy(enemySpawnMasterParam.enemy3_id, enemySpawnMasterParam.enemy3_lv, enemySpawnMasterParam.enemy3_frequency, rand, enemySpawnMasterParam.enemy3_respawn_time,  out isError))
+            if (RandomCreateEnemy(enemySpawnMasterParam.Enemy3_id, enemySpawnMasterParam.Enemy3_lv, enemySpawnMasterParam.Enemy3_frequency, rand, enemySpawnMasterParam.Enemy3_respawn_time,  out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.respawn_max)) { break; }
+                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if (isError)
             {
@@ -152,7 +148,7 @@ public class EnemyManager : MonoBehaviour
             if(!m_resourcesList.ContainsKey(enemyId))
             {
                 // プレハブの読み込みに失敗している場合、インスタンス化はしない。
-                LogExtensions.OutputError("プレハブが見つかりません。敵ID[" + enemyId + "],プレハブ名[" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path + "]");
+                LogExtensions.OutputError("プレハブが見つかりません。敵ID[" + enemyId + "],プレハブ名[" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path + "]");
                 break;
             }
             GameObject instance = Instantiate(m_resourcesList[enemyId]) as GameObject;
@@ -163,10 +159,10 @@ public class EnemyManager : MonoBehaviour
                 break;
             }
             // コンポーネントを取得する
-            Enemy component = GetComponent(instance,LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path);
+            Enemy component = GetComponent(instance,LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path);
             if(component == null)
             {
-                LogExtensions.OutputError("指定したプレハブが存在しません。敵ID[" + enemyId + "],path["+ LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].path+"]");
+                LogExtensions.OutputError("指定したプレハブが存在しません。敵ID[" + enemyId + "],path["+ LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path+"]");
                 isError = true;
                 break;
             }
@@ -265,12 +261,12 @@ public class EnemyManager : MonoBehaviour
         int stageDetailId = 4;
         for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
         {
-            if (LoadEnemySpawnMaster.instance.spawnList[i].stage_detail_id != stageDetailId)
+            if (LoadEnemySpawnMaster.instance.spawnList[i].Stage_detail_id != stageDetailId)
             {
                 continue;
             }
 
-            if(m_enemyList.Count == LoadEnemySpawnMaster.instance.spawnList[i].respawn_max)
+            if(m_enemyList.Count == LoadEnemySpawnMaster.instance.spawnList[i].Respawn_max)
             {
                 enableSpawn = false;
             }

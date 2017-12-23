@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 初期化
     /// </summary>
-    private void Start()
+    public void Init()
     {
         LoadPlayerBaseMaster.instance.Init();
         rig = GetComponent<Rigidbody>();
@@ -97,26 +97,18 @@ public class Player : MonoBehaviour
         playerCamera.Init(transform);
     }
 
-    /// <summary>
-    /// 固定フレームレートの更新
-    /// </summary>
-    private void FixedUpdate()
+    public void VelocityUpdate()
     {
-        // 移動
         rig.velocity = move;
     }
 
-    /// <summary>
-    /// 更新
-    /// </summary>
-    private void Update()
+    public void PlayerUpdate()
     {
         playerCamera.Controll(transform);
         CtrlAnimationState();
 
         move = playerCamera.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime * moveSpeed
             + playerCamera.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime * moveSpeed;
-
     }
 
     /// <summary>

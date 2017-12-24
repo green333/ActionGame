@@ -59,6 +59,9 @@ public class Player : MonoBehaviour
     /// <summary> 移動量 </summary>
     private Vector3 move;
 
+    /// <summary> 敵管理クラス </summary>
+    private EnemyManager enemyManager = null;
+
     /// <summary> ゲームパッドのキーコード </summary>
     private enum PadKeyCode
     {
@@ -94,6 +97,7 @@ public class Player : MonoBehaviour
         animationController.Init();
         LoadPlayerData();
         playerCamera.Init(transform);
+        enemyManager = GameObject.FindGameObjectWithTag("EnemyManager").GetComponent<EnemyManager>();
     }
 
     public void VelocityUpdate()
@@ -328,10 +332,22 @@ public class Player : MonoBehaviour
     /// <param name="collider"></param>
     void OnTriggerEnter(Collider collider)
     {
+        Enemy enemy = null;
         if (collider.gameObject.tag == "Enemy")
         {
+            enemy = enemyManager.EnemyList[collider.gameObject];
+
+            // すでに死んでいたらなにもしない
+            if (enemy.IsDead()) { return; }
+
             // TODO:ダメージは仮
-            collider.gameObject.SendMessage("AddDamage", 1);  
+            enemy.AddDamage(1);
+
+            if(enemy.IsDead())
+            {
+                AddExp(enemy.GetEXP());
+            }
+               
         }
     }
 }

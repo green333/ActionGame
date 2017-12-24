@@ -143,7 +143,9 @@ public class Enemy : MonoBehaviour
     /// <returns>経験値</returns>
     public int GetEXP()
     {
-        return LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[m_param.baseEnemyId][m_param.level].Exp;
+        int exp = LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[m_param.baseEnemyId][m_param.level].Exp;
+        LogExtensions.OutputInfo("敵から経験値" + exp.ToString() + "を取得しました");
+        return exp;
     }
 
     /// <summary>

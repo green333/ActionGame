@@ -22,7 +22,7 @@ public class EnemyManager : MonoBehaviour
     /// <returns>リソースの読み込みに失敗した場合:false 読み込みに成功:true</returns>
     private bool LoadPrefabs()
     {
-        LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
+        LogExtensions.OutputInfo("敵のプレハブデータの読み込みを開始します");
 
         m_resourcesList = new Dictionary<int, GameObject>();
 
@@ -53,7 +53,7 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
-        LogExtensions.OutputInfo("敵リソースの読み込みを終了します");
+        LogExtensions.OutputInfo("敵のプレハブデータの読み込みを終了します");
 
         return (m_resourcesList.Count != 0);
     }
@@ -70,11 +70,11 @@ public class EnemyManager : MonoBehaviour
             GameObject resource = null;
             if (null == (resource = Resources.Load("Prefab\\EnemyData\\" + enemyBaseParam.Path) as GameObject))
             {
-                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+                LogExtensions.OutputError("敵のプレハブデータの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
             }
             else
             {
-                LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+                LogExtensions.OutputInfo("敵のプレハブデータの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
                 m_resourcesList.Add(enemyId, resource);
             }
         }else

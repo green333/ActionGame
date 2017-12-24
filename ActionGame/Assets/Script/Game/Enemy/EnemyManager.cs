@@ -14,8 +14,15 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     Dictionary<int, GameObject> m_resourcesList = null;
 
+    /// <summary>
+    /// ステージ上に出現している敵のインスタンスリスト
+    /// </summary>
     Dictionary<GameObject, Enemy> m_enemyList = null;
 
+    /// <summary>
+    /// 敵インスタンスリスト取得プロパティ
+    /// </summary>
+    public Dictionary<GameObject,Enemy> EnemyList { get { return m_enemyList; } }
     /// <summary>
     /// 敵のプレハブを読み込む
     /// </summary>
@@ -94,17 +101,15 @@ public class EnemyManager : MonoBehaviour
     {
         LogExtensions.OutputInfo("敵を生成します。ステージ詳細ID[" + stageDetaileId + "]");
 
-        
-        // 指定したステージ詳細IDに一致すてうステージ出現マスタを取得する
+        // 指定したステージ詳細IDに一致するステージ出現マスタを取得する
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
-        for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
+        foreach(EnemySpawnMaster.Param param in LoadEnemySpawnMaster.instance.spawnList)
         {
-            if (LoadEnemySpawnMaster.instance.spawnList[i].Stage_detail_id != stageDetaileId)
+            if(param.Stage_id == SaveData.Instance.stageId && param.Chapter_id == SaveData.Instance.chapter && param.Stage_detail_id == stageDetaileId)
             {
-                continue;
+                enemySpawnMasterParam = param;
+                break;
             }
-            enemySpawnMasterParam = LoadEnemySpawnMaster.instance.spawnList[i];
-            break;
         }
 
         // 読み込みに失敗した場合
@@ -131,6 +136,7 @@ public class EnemyManager : MonoBehaviour
             // 一種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy1_id, enemySpawnMasterParam.Enemy1_lv, enemySpawnMasterParam.Enemy1_frequency, rand, enemySpawnMasterParam.Enemy1_respawn_time, out isError))
             {
+                // 生成できる限界数に到達していたらbreak
                 if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if(isError)
@@ -141,6 +147,7 @@ public class EnemyManager : MonoBehaviour
             // 二種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy2_id, enemySpawnMasterParam.Enemy2_lv, enemySpawnMasterParam.Enemy2_frequency, rand, enemySpawnMasterParam.Enemy2_respawn_time, out isError))
             {
+                // 生成できる限界数に到達していたらbreak
                 if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if (isError)
@@ -151,6 +158,7 @@ public class EnemyManager : MonoBehaviour
             // 三種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy3_id, enemySpawnMasterParam.Enemy3_lv, enemySpawnMasterParam.Enemy3_frequency, rand, enemySpawnMasterParam.Enemy3_respawn_time,  out isError))
             {
+                // 生成できる限界数に到達していたらbreak
                 if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
             }
             if (isError)
@@ -249,7 +257,6 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
-        return;
         // 削除するオブジェクトキーリスト
         GameObject[] deleteKeyList = Enumerable.Repeat<GameObject>(null, m_enemyList.Count).ToArray();
         int index = 0;
@@ -281,8 +288,6 @@ public class EnemyManager : MonoBehaviour
             // 削除していい場合は削除する
             if (m_enemyList[key].IsDelete())
             {
-                // 経験値を取得する
-                m_enemyList[key].GetEXP();
                 // アイテムをステージ上に落とす
                 m_enemyList[key].ItemDrop();
                 // リストからの削除とインスタンスの削除を行う。

@@ -10,13 +10,13 @@ public class LoadEnemyGrowthMaster : TextMasterManager
     static LoadEnemyGrowthMaster m_instance = new LoadEnemyGrowthMaster();
 
     /// <summary>　自身のインスタンスを取得 </summary>
-    static public LoadEnemyGrowthMaster instance { get { return m_instance; } }
+    static public LoadEnemyGrowthMaster Instance { get { return m_instance; } }
 
     /// <summary>敵管理ID,レベル毎の敵成長マスタリスト </summary>
     private Dictionary<int, Dictionary<int,EnemyGrowthMaster.Param>> m_enemyGrowthMasterList = null;
 
     /// <summary> 敵成長マスタを取得 </summary>
-    public Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>> enemyGrowthMasterList { get { return m_enemyGrowthMasterList; } } 
+    public Dictionary<int, Dictionary<int, EnemyGrowthMaster.Param>> EnemyGrowthMasterList { get { return m_enemyGrowthMasterList; } } 
 
     /// <summary> 敵の最大レベル </summary>
     public const int ENEMY_LEVEL_MAX = 120;

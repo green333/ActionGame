@@ -7,16 +7,16 @@ using System.Linq;
 public class LoadEnemyBaseMaster : TextMasterManager
 {
     /// <summary>自身のインスタンス</summary>
-    static LoadEnemyBaseMaster _instance = new LoadEnemyBaseMaster();
+    static LoadEnemyBaseMaster m_instance = new LoadEnemyBaseMaster();
 
     /// <summary>自身のインスタンスを取得</summary>
-    static public LoadEnemyBaseMaster instance { get { return _instance; } }
+    static public LoadEnemyBaseMaster Instance { get { return m_instance; } }
 
     /// <summary> 敵管理ID毎の敵基本マスタリスト </summary>
     private Dictionary<int, EnemyBaseMaster.Param> m_enemyBaseMasterList = null;
 
     /// <summary>敵基本マスタリストを取得 </summary>
-    public Dictionary<int,EnemyBaseMaster.Param> enemeyBaseMasterList { get { return m_enemyBaseMasterList; } }
+    public Dictionary<int,EnemyBaseMaster.Param> EnemeyBaseMasterList { get { return m_enemyBaseMasterList; } }
    
     /// <summary>マスターデータのファイルパス</summary>
     const string filename = "Assets/Resources/MasterData/敵基本マスタ.txt";

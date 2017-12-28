@@ -6,12 +6,12 @@ public class LoadWeaponMaster : TextMasterManager
     /// <summary>
     /// 自身のインスタンス
     /// </summary>
-    static LoadWeaponMaster _instance = new LoadWeaponMaster();
+    static LoadWeaponMaster m_instance = new LoadWeaponMaster();
 
     /// <summary>
     /// インスタンス取得プロパティ
     /// </summary>
-    static public LoadWeaponMaster instance { get { return _instance; } }
+    static public LoadWeaponMaster Instance { get { return m_instance; } }
 
     /// <summary>
     /// 武器マスタのファイルパス

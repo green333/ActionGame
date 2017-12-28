@@ -141,17 +141,16 @@ public class Player : MonoBehaviour
 
             // プレイヤーステータスを読み込む
             // (所持経験値パラムは0にしておくしておく)
-            status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
+            status.param = LoadPlayerBaseMaster.Instance.GetPlayerInfo(PLAYER_INIT_LEVEL);
             status.exp = 0;
 
             // 武器情報を読み込む
-            weaponParam = LoadWeaponMaster.instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
+            weaponParam = LoadWeaponMaster.Instance.GetWeaponInfo(PLAYER_INIT_WEAPON);
 
             // アイテム情報を読み込む
             itemList = new List<ItemInfo>();
             ItemInfo itemInfo = new ItemInfo();
-            LoadItemMaster.instance.Init();
-            itemInfo.param = LoadItemMaster.instance.GetItemInfo(PLAYER_INIT_HAVE_ITEM_NAME);
+            itemInfo.param = LoadItemMaster.Instance.GetItemInfo(PLAYER_INIT_HAVE_ITEM_NAME);
             itemInfo.num = PLAYER_INIT_HAVE_ITEM_NUM;
             itemList.Add(itemInfo);
 
@@ -169,13 +168,13 @@ public class Player : MonoBehaviour
         }
 
         //　ステータスをログに表示
-        LoadPlayerBaseMaster.instance.DebugLog(status.param);
+        LoadPlayerBaseMaster.Instance.DebugLog(status.param);
         // 武器情報をログに表示
-        LoadWeaponMaster.instance.DebugLog(weaponParam);
+        LoadWeaponMaster.Instance.DebugLog(weaponParam);
         // アイテム情報をログに表示
         for (int i = 0; i < itemList.Count; ++i)
         {
-            LoadItemMaster.instance.DebugLog(itemList[i]);
+            LoadItemMaster.Instance.DebugLog(itemList[i]);
         }
 
         LogExtensions.OutputInfo("プレイヤーデータの読み込みが終了しました");
@@ -222,7 +221,7 @@ public class Player : MonoBehaviour
         int subExp = 0;
 
         LogExtensions.OutputInfo("----------------------レベルアップ前のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.instance.DebugLog(status.param);
+        LoadPlayerBaseMaster.Instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
 
         for(int i = LoadPlayerBaseMaster.PLAYER_LEVEL_MAX - status.param.Level; i < LoadPlayerBaseMaster.PLAYER_LEVEL_MAX; ++i)
@@ -237,7 +236,7 @@ public class Player : MonoBehaviour
             status.exp = subExp;
 
             // 次のレベルのステータスを取得
-            status.param = LoadPlayerBaseMaster.instance.GetPlayerInfo(status.param.Level + 1);
+            status.param = LoadPlayerBaseMaster.Instance.GetPlayerInfo(status.param.Level + 1);
 
             if (status.param.Level == LoadPlayerBaseMaster.PLAYER_LEVEL_MAX)
             {
@@ -248,7 +247,7 @@ public class Player : MonoBehaviour
         }
 
         LogExtensions.OutputInfo("----------------------レベルアップ後のプレイヤーのステータス-----------------------------");
-        LoadPlayerBaseMaster.instance.DebugLog(status.param);
+        LoadPlayerBaseMaster.Instance.DebugLog(status.param);
         LogExtensions.OutputInfo("-----------------------------------------------------------------------------------------");
     }
 

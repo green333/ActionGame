@@ -134,7 +134,7 @@ public class Enemy : MonoBehaviour
         // TODO:仮
         m_param.nowHp -= playerAtk;
         if(m_param.nowHp < 0) { m_param.nowHp = 0; }
-            m_enemyUI.SubHPValue(playerAtk);
+        m_enemyUI.SubHPValue(playerAtk);
     }
 
     /// <summary>
@@ -143,7 +143,7 @@ public class Enemy : MonoBehaviour
     /// <returns>経験値</returns>
     public int GetEXP()
     {
-        int exp = LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[m_param.baseEnemyId][m_param.level].Exp;
+        int exp = LoadEnemyGrowthMaster.Instance.EnemyGrowthMasterList[m_param.baseEnemyId][m_param.level].Exp;
         LogExtensions.OutputInfo("敵から経験値" + exp.ToString() + "を取得しました");
         return exp;
     }

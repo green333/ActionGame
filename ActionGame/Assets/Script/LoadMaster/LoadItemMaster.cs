@@ -21,13 +21,13 @@ public class LoadItemMaster : TextMasterManager
     /// <summary>
     /// インスタンス取得プロパティ
     /// </summary>
-    static public LoadItemMaster instance { get { return m_instance; } }
+    static public LoadItemMaster Instance { get { return m_instance; } }
 
     /// <summary> アイテムマスタリスト </summary>
     private Dictionary<string, ItemMaster.Param> m_itemList = null;
 
     /// <summary> アイテムマスタリストを取得 </summary>
-    public Dictionary<string, ItemMaster.Param> itemList { get { return m_itemList; } }
+    public Dictionary<string, ItemMaster.Param> ItemList { get { return m_itemList; } }
 
     /// <summary>
     /// マスターデータのファイルパス

@@ -11,5 +11,10 @@ public class EnemyWolf : Enemy {
 	// Update is called once per frame
 	void Update () {
 	
-	}
+        // TODO:仮削除処理
+        if(IsDead())
+        {
+            Destroy(gameObject);
+        }
+    }
 }

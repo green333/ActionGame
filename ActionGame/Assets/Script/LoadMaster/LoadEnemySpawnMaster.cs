@@ -8,13 +8,13 @@ public class LoadEnemySpawnMaster : TextMasterManager
     static LoadEnemySpawnMaster m_instance = new LoadEnemySpawnMaster();
 
     /// <summary>自身のインスタンスを取得 </summary>
-    static public LoadEnemySpawnMaster instance { get { return m_instance; } }
+    static public LoadEnemySpawnMaster Instance { get { return m_instance; } }
 
     /// <summary>敵基本マスタリスト</summary>
     private List<EnemySpawnMaster.Param> m_spawnList = null;
 
     /// <summary>敵基本マスタリストを取得 </summary>
-    public List<EnemySpawnMaster.Param> spawnList { get { return m_spawnList; } }
+    public List<EnemySpawnMaster.Param> SpawnList { get { return m_spawnList; } }
 
     /// <summary> 出現確率の最大値 </summary>
     public int FREQUENCY_MAX { get { return 100; } }

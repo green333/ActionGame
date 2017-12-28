@@ -12,21 +12,25 @@ public class SceneMain : MonoBehaviour
         bool isMasterLoadSuccess = false;
         do
         {
-            if (!LoadEnemyBaseMaster.instance.Init())
+            if (!LoadEnemyBaseMaster.Instance.Init())
             {
-                return;
+                break;
             }
-            if (!LoadEnemySpawnMaster.instance.Init())
+            if (!LoadEnemySpawnMaster.Instance.Init())
             {
-                return;
+                break;
             }
-            if (!LoadEnemyGrowthMaster.instance.Init())
+            if (!LoadEnemyGrowthMaster.Instance.Init())
             {
-                return;
+                break;
             }
-            if (!LoadPlayerBaseMaster.instance.Init())
+            if (!LoadPlayerBaseMaster.Instance.Init())
             {
-                return;
+                break;
+            }
+            if(!LoadItemMaster.Instance.Init())
+            {
+                break;
             }
 
             isMasterLoadSuccess = true;

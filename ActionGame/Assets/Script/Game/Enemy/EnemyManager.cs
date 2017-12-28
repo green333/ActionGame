@@ -14,34 +14,86 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     Dictionary<int, GameObject> m_resourcesList = null;
 
-    Dictionary<GameObject,Enemy> m_enemyList = null;
+    /// <summary>
+    /// ステージ上に出現している敵のインスタンスリスト
+    /// </summary>
+    Dictionary<GameObject, Enemy> m_enemyList = null;
 
+    /// <summary>
+    /// ステージに出現する敵の最大数
+    /// </summary>
+    private int m_enemyCountMax = 0;
+
+    /// <summary>
+    /// 敵インスタンスリスト取得プロパティ
+    /// </summary>
+    public Dictionary<GameObject,Enemy> EnemyList { get { return m_enemyList; } }
     /// <summary>
     /// 敵のプレハブを読み込む
     /// </summary>
     /// <returns>リソースの読み込みに失敗した場合:false 読み込みに成功:true</returns>
     private bool LoadPrefabs()
     {
-        LogExtensions.OutputInfo("敵リソースの読み込みを開始します");
+        LogExtensions.OutputInfo("敵のプレハブデータの読み込みを開始します");
 
         m_resourcesList = new Dictionary<int, GameObject>();
 
-        GameObject resource = null;
-        foreach(KeyValuePair<int, EnemyBaseMaster.Param> param in LoadEnemyBaseMaster.instance.enemeyBaseMasterList)
+        // 現在のステージIDと章IDから出現する敵
+        foreach (EnemySpawnMaster.Param param in LoadEnemySpawnMaster.Instance.SpawnList)
         {
-            if(null == (resource = Resources.Load("Prefab\\EnemyData\\" + param.Value.Path) as GameObject))
+            // ステージID、または章IDが違っていたらcontinue
+            if (param.Stage_id != SaveData.Instance.stageId && param.Chapter_id != SaveData.Instance.chapter)
             {
-                LogExtensions.OutputError("敵リソースの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
-                //break;
                 continue;
             }
-            LogExtensions.OutputInfo("敵リソースの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + param.Value.Path);
-            m_resourcesList.Add(param.Value.Id, resource);
+            // 出現する敵が設定されていない場合、EnemyX_idには0が入っている
+
+            // 一体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy1_id != 0 && !m_resourcesList.ContainsKey(param.Enemy1_id))
+            {
+                AddPrefabList(param.Enemy1_id);
+            }
+            // 二体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy2_id != 0 && !m_resourcesList.ContainsKey(param.Enemy2_id))
+            {
+                AddPrefabList(param.Enemy2_id);
+            }
+            // 三体目の敵のプレハブデータを読み込み、リストに追加する
+            if (param.Enemy3_id != 0 && !m_resourcesList.ContainsKey(param.Enemy3_id))
+            {
+                AddPrefabList(param.Enemy3_id);
+            }
         }
 
-        LogExtensions.OutputInfo("敵リソースの読み込みを終了します");
+        LogExtensions.OutputInfo("敵のプレハブデータの読み込みを終了します");
 
         return (m_resourcesList.Count != 0);
+    }
+
+    /// <summary>
+    /// プレハブを読み込み、リストに追加する
+    /// </summary>
+    /// <param name="enemyId">敵管理ID</param>
+    private void AddPrefabList(int enemyId)
+    {
+        if(LoadEnemyBaseMaster.Instance.EnemeyBaseMasterList.ContainsKey(enemyId))
+        {
+            EnemyBaseMaster.Param enemyBaseParam = LoadEnemyBaseMaster.Instance.EnemeyBaseMasterList[enemyId];
+            GameObject resource = null;
+            if (null == (resource = Resources.Load("Prefab\\EnemyData\\" + enemyBaseParam.Path) as GameObject))
+            {
+                LogExtensions.OutputError("敵のプレハブデータの読み込みに失敗しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+            }
+            else
+            {
+                LogExtensions.OutputInfo("敵のプレハブデータの読み込みに成功しました。path = Resources\\Prefab\\EnemyData\\" + enemyBaseParam.Path);
+                m_resourcesList.Add(enemyId, resource);
+            }
+        }else
+        {
+            // 敵基本マスタには存在しない敵の管理IDが敵出現マスタに設定されている。
+            LogExtensions.OutputError("敵出現マスタに、敵基本マスタに存在しない敵管理IDが設定されています。敵管理ID[" + enemyId + "],ステージID[" + SaveData.Instance.stageId + "],章ID[" + SaveData.Instance.chapter + "]");
+        }
     }
 
     /// <summary>
@@ -54,17 +106,15 @@ public class EnemyManager : MonoBehaviour
     {
         LogExtensions.OutputInfo("敵を生成します。ステージ詳細ID[" + stageDetaileId + "]");
 
-        
-        // 指定したステージ詳細IDに一致すてうステージ出現マスタを取得する
+        // 指定したステージ詳細IDに一致するステージ出現マスタを取得する
         EnemySpawnMaster.Param enemySpawnMasterParam = null;
-        for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
+        foreach(EnemySpawnMaster.Param param in LoadEnemySpawnMaster.Instance.SpawnList)
         {
-            if (LoadEnemySpawnMaster.instance.spawnList[i].Stage_detail_id != stageDetaileId)
+            if(param.Stage_id == SaveData.Instance.stageId && param.Chapter_id == SaveData.Instance.chapter && param.Stage_detail_id == stageDetaileId)
             {
-                continue;
+                enemySpawnMasterParam = param;
+                break;
             }
-            enemySpawnMasterParam = LoadEnemySpawnMaster.instance.spawnList[i];
-            break;
         }
 
         // 読み込みに失敗した場合
@@ -78,7 +128,7 @@ public class EnemyManager : MonoBehaviour
 
         // UnityEngine.Random.Rangeで使用する最大値
         // (UnityEngine.Random.Range()はintだとmin <= x < maxの範囲で乱数を作成するため、maxには+1した値を渡す)
-        int frequency_rand_max = LoadEnemySpawnMaster.instance.FREQUENCY_MAX + 1;
+        int frequency_rand_max = LoadEnemySpawnMaster.Instance.FREQUENCY_MAX + 1;
 
         bool isError;
 
@@ -91,7 +141,8 @@ public class EnemyManager : MonoBehaviour
             // 一種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy1_id, enemySpawnMasterParam.Enemy1_lv, enemySpawnMasterParam.Enemy1_frequency, rand, enemySpawnMasterParam.Enemy1_respawn_time, out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
+                // 生成できる限界数に到達していたらbreak
+                if ((m_enemyList.Count >= m_enemyCountMax)) { break; }
             }
             if(isError)
             {
@@ -101,7 +152,8 @@ public class EnemyManager : MonoBehaviour
             // 二種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy2_id, enemySpawnMasterParam.Enemy2_lv, enemySpawnMasterParam.Enemy2_frequency, rand, enemySpawnMasterParam.Enemy2_respawn_time, out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
+                // 生成できる限界数に到達していたらbreak
+                if ((m_enemyList.Count >= m_enemyCountMax)) { break; }
             }
             if (isError)
             {
@@ -111,7 +163,8 @@ public class EnemyManager : MonoBehaviour
             // 三種類目の敵の生成を試みる
             if (RandomCreateEnemy(enemySpawnMasterParam.Enemy3_id, enemySpawnMasterParam.Enemy3_lv, enemySpawnMasterParam.Enemy3_frequency, rand, enemySpawnMasterParam.Enemy3_respawn_time,  out isError))
             {
-                if ((m_enemyList.Count >= enemySpawnMasterParam.Respawn_max)) { break; }
+                // 生成できる限界数に到達していたらbreak
+                if ((m_enemyList.Count >= m_enemyCountMax)) { break; }
             }
             if (isError)
             {
@@ -148,7 +201,7 @@ public class EnemyManager : MonoBehaviour
             if(!m_resourcesList.ContainsKey(enemyId))
             {
                 // プレハブの読み込みに失敗している場合、インスタンス化はしない。
-                LogExtensions.OutputError("プレハブが見つかりません。敵ID[" + enemyId + "],プレハブ名[" + LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path + "]");
+                LogExtensions.OutputError("プレハブが見つかりません。敵ID[" + enemyId + "],プレハブ名[" + LoadEnemyBaseMaster.Instance.EnemeyBaseMasterList[enemyId].Path + "]");
                 break;
             }
             GameObject instance = Instantiate(m_resourcesList[enemyId]) as GameObject;
@@ -159,14 +212,14 @@ public class EnemyManager : MonoBehaviour
                 break;
             }
             // コンポーネントを取得する
-            Enemy component = GetComponent(instance,LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path);
+            Enemy component = GetComponent(instance,LoadEnemyBaseMaster.Instance.EnemeyBaseMasterList[enemyId].Path);
             if(component == null)
             {
-                LogExtensions.OutputError("指定したプレハブが存在しません。敵ID[" + enemyId + "],path["+ LoadEnemyBaseMaster.instance.enemeyBaseMasterList[enemyId].Path+"]");
+                LogExtensions.OutputError("指定したプレハブが存在しません。敵ID[" + enemyId + "],path["+ LoadEnemyBaseMaster.Instance.EnemeyBaseMasterList[enemyId].Path+"]");
                 isError = true;
                 break;
             }
-            component.Initialize(LoadEnemyGrowthMaster.instance.enemyGrowthMasterList[enemyId][enemyLv], respawnTime);
+            component.Initialize(LoadEnemyGrowthMaster.Instance.EnemyGrowthMasterList[enemyId][enemyLv], respawnTime);
             m_enemyList.Add(instance, component);
             
             ret = true;
@@ -198,7 +251,15 @@ public class EnemyManager : MonoBehaviour
         if (LoadPrefabs())
         {
             m_enemyList = new Dictionary<GameObject, Enemy>();
-            CreateEnemyOfThisPlace(4);
+
+            foreach(EnemySpawnMaster.Param param in LoadEnemySpawnMaster.Instance.SpawnList)
+            {
+                if(param.Stage_id == SaveData.Instance.stageId && param.Chapter_id == SaveData.Instance.chapter)
+                {
+                    m_enemyCountMax += param.Respawn_max;
+                    CreateEnemyOfThisPlace(param.Stage_detail_id);
+                }
+            }
         }
     }
 
@@ -209,12 +270,11 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
-        return;
         // 削除するオブジェクトキーリスト
         GameObject[] deleteKeyList = Enumerable.Repeat<GameObject>(null, m_enemyList.Count).ToArray();
         int index = 0;
-   
-        //  死んだ敵がいるかをチェックする
+
+           //  死んだ敵がいるかをチェックする
         foreach (KeyValuePair<GameObject, Enemy> param in m_enemyList)
         {
             // 敵が死んでいる場合、削除リストに追加してcontinueする
@@ -241,8 +301,6 @@ public class EnemyManager : MonoBehaviour
             // 削除していい場合は削除する
             if (m_enemyList[key].IsDelete())
             {
-                // 経験値を取得する
-                m_enemyList[key].GetEXP();
                 // アイテムをステージ上に落とす
                 m_enemyList[key].ItemDrop();
                 // リストからの削除とインスタンスの削除を行う。
@@ -259,14 +317,14 @@ public class EnemyManager : MonoBehaviour
     {
         bool enableSpawn = true;
         int stageDetailId = 4;
-        for (int i = 0; i < LoadEnemySpawnMaster.instance.spawnList.Count; ++i)
+        for (int i = 0; i < LoadEnemySpawnMaster.Instance.SpawnList.Count; ++i)
         {
-            if (LoadEnemySpawnMaster.instance.spawnList[i].Stage_detail_id != stageDetailId)
+            if (LoadEnemySpawnMaster.Instance.SpawnList[i].Stage_detail_id != stageDetailId)
             {
                 continue;
             }
 
-            if(m_enemyList.Count == LoadEnemySpawnMaster.instance.spawnList[i].Respawn_max)
+            if(m_enemyList.Count == m_enemyCountMax)
             {
                 enableSpawn = false;
             }

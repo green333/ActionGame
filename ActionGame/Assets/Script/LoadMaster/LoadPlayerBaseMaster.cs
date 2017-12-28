@@ -13,9 +13,9 @@ public class CharacterStatus
 
 public class LoadPlayerBaseMaster : TextMasterManager
 {
-    static LoadPlayerBaseMaster _instance = new LoadPlayerBaseMaster();
+    static LoadPlayerBaseMaster m_instance = new LoadPlayerBaseMaster();
 
-    static public LoadPlayerBaseMaster instance { get { return _instance; } }
+    static public LoadPlayerBaseMaster Instance { get { return m_instance; } }
 
     const string filename = "Assets/Resources/MasterData/プレイヤー基本マスタ.txt";
 
@@ -23,7 +23,7 @@ public class LoadPlayerBaseMaster : TextMasterManager
     private Dictionary<int,PlayerBaseMaster.Param> m_playerList = null;
 
     /// <summary>プレイヤー本マスタリストを取得 </summary>
-    public Dictionary<int,PlayerBaseMaster.Param> playerList { get { return m_playerList; } }
+    public Dictionary<int,PlayerBaseMaster.Param> PlayerList { get { return m_playerList; } }
 
     /// <summary>
     /// プレイヤーのレベル上限値
